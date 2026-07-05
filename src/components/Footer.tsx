@@ -66,6 +66,14 @@ export function Footer() {
               </li>
               <li>
                 <Link
+                  href="/a-domicilio"
+                  className="transition-colors duration-200 hover:text-mustard"
+                >
+                  {tNav("aDomicilio")}
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/carta"
                   className="transition-colors duration-200 hover:text-mustard"
                 >

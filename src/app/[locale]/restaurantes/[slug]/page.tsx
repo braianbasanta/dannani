@@ -1,7 +1,12 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { dineInLocations, getLocationByUrlSlug } from "@/data/locations";
+import {
+  dineInLocations,
+  getLocationByUrlSlug,
+  heroImageSrc,
+} from "@/data/locations";
 import { LocationDetail } from "@/components/LocationDetail";
+import { pageMetadata } from "@/lib/seo";
 
 export function generateStaticParams() {
   return dineInLocations.map((l) => ({ slug: l.urlSlug }));
@@ -16,10 +21,12 @@ export async function generateMetadata({
   const location = getLocationByUrlSlug("dine-in", slug);
   if (!location) return {};
 
-  return {
+  return pageMetadata({
     title: location.metaTitle,
     description: location.metaDescription,
-  };
+    path: `/restaurantes/${slug}`,
+    image: heroImageSrc(location),
+  });
 }
 
 export default async function RestauranteLocalPage({

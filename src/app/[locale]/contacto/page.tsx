@@ -1,17 +1,23 @@
 import type { Metadata } from "next";
+import { useTranslations } from "next-intl";
 import { locations } from "@/data/locations";
 import { ReservaCTA } from "@/components/ReservaCTA";
+import { DeliveryCTA } from "@/components/DeliveryCTA";
 import { ComoLlegar } from "@/components/ComoLlegar";
 import { SchemaOrg } from "@/components/SchemaOrg";
 import { breadcrumbSchema } from "@/lib/schema";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Contacto y Reservas",
   description:
     "Reserva mesa o pide para llevar en cualquiera de los 6 locales Da Nanni en Barcelona. Direcciones, teléfonos y horarios.",
-};
+  path: "/contacto",
+});
 
 export default function ContactoPage() {
+  const t = useTranslations("contacto");
+
   return (
     <>
       <SchemaOrg
@@ -22,14 +28,11 @@ export default function ContactoPage() {
       />
 
       <section className="mx-auto max-w-4xl px-4 py-16 font-sans text-teal-dark sm:py-20">
-        <p className="eyebrow">Contacto</p>
+        <p className="eyebrow">{t("eyebrow")}</p>
         <h1 className="mt-3 max-w-2xl font-display text-4xl leading-[1.05] tracking-tight sm:text-6xl">
-          Reserva o pide en tu Da Nanni
+          {t("title")}
         </h1>
-        <p className="mt-3 max-w-2xl text-teal-dark/70">
-          Las reservas online llegarán muy pronto. Mientras tanto, llama
-          directamente al local que prefieras y te atendemos encantados.
-        </p>
+        <p className="mt-3 max-w-2xl text-teal-dark/70">{t("intro")}</p>
 
         <ul className="mt-10 space-y-4">
           {locations.map((location) => (
@@ -44,6 +47,7 @@ export default function ContactoPage() {
               </div>
               <div className="flex flex-wrap gap-3">
                 <ComoLlegar location={location} />
+                <DeliveryCTA location={location} />
                 <ReservaCTA location={location} />
               </div>
             </li>

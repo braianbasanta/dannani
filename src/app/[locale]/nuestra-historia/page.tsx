@@ -6,12 +6,14 @@ import { SchemaOrg } from "@/components/SchemaOrg";
 import { breadcrumbSchema } from "@/lib/schema";
 import { HistoriaTimeline } from "@/components/HistoriaTimeline";
 import type { Milestone } from "@/components/HistoriaTimeline";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Nuestra Historia",
   description:
     "Da Nanni nace en 2017 de una familia napolitana en Barcelona. Descubre la historia detrás de nuestra sirena Partenope, nuestra mascota Nanni y cada local que hemos abierto.",
-};
+  path: "/nuestra-historia",
+});
 
 const gotic = getLocationBySlug("gotic")!;
 const ravalTakeAway = getLocationBySlug("raval-take-away")!;

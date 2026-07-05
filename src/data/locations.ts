@@ -10,6 +10,16 @@ export interface Coords {
   lng: number;
 }
 
+/** Tiendas del local en plataformas de delivery. URLs limpias de UTMs de
+ * Google (venían de los botones "Pedir" de Maps) y con los nuestros para
+ * poder atribuir en Glovo/Just Eat los pedidos que llegan desde la web. */
+export interface DeliveryLinks {
+  glovo?: string;
+  justEat?: string;
+}
+
+const WEB_UTM = "utm_source=dananni-web&utm_medium=referral";
+
 export interface Location {
   slug: string;
   /** slug usado en la URL pública (puede diferir de `slug` para evitar colisiones de datos, p.ej. Raval dine-in vs take-away). */
@@ -28,6 +38,9 @@ export interface Location {
   googleReviewCount?: number;
   phone: string;
   phoneHref: string;
+  /** Plataformas de delivery del local. Ausente = sin reparto a domicilio
+   * (solo recogida/mesa). Raval (Tallers 69 y 72) no tiene delivery hoy. */
+  delivery?: DeliveryLinks;
   hoursLabel: string;
   /** Todos los locales activos abren los 7 días con el mismo horario. */
   openingHours: OpeningHoursSpec[];
@@ -60,6 +73,13 @@ export const locations: Location[] = [
     googleReviewCount: 4218,
     phone: "936 63 85 60",
     phoneHref: "tel:+34936638560",
+    delivery: {
+      // OJO: verificar que la tienda "pizerria-da-nanni-barcelona" (con el
+      // typo) es la de Llibreteria y no la de Tallers 72 — Glovo no expone
+      // la dirección y existe otra tienda "pizzeria-da-nanni-barcelona".
+      glovo: `https://glovoapp.com/es/es/barcelona/stores/pizerria-da-nanni-barcelona?${WEB_UTM}`,
+      justEat: `https://www.just-eat.es/restaurants-pizzeria-da-nanni-llibreria-barcelona/menu?${WEB_UTM}`,
+    },
     hoursLabel: "Todos los días, 12:00–22:30h",
     openingHours: [{ opens: "12:00", closes: "22:30" }],
     description:
@@ -114,6 +134,9 @@ export const locations: Location[] = [
     googleReviewCount: 2811,
     phone: "933 19 79 73",
     phoneHref: "tel:+34933197973",
+    delivery: {
+      justEat: `https://www.just-eat.es/restaurants-pizzeria-da-nanni-barcelona-08003/menu?${WEB_UTM}`,
+    },
     hoursLabel: "Todos los días, 13:00–16:00h y 20:00–00:00h",
     openingHours: [
       { opens: "13:00", closes: "16:00" },
@@ -174,6 +197,9 @@ export const locations: Location[] = [
     googleReviewCount: 1833,
     phone: "930 11 71 66",
     phoneHref: "tel:+34930117166",
+    delivery: {
+      glovo: `https://glovoapp.com/es/es/barcelona/stores/pizzeria-da-nanni-rambla-del-poblenou-barcelona?${WEB_UTM}`,
+    },
     hoursLabel: "Todos los días, 13:00–00:00h (horario corrido)",
     openingHours: [{ opens: "13:00", closes: "00:00" }],
     description:
@@ -202,6 +228,10 @@ export const locations: Location[] = [
     googleReviewCount: 850,
     phone: "936 59 50 75",
     phoneHref: "tel:+34936595075",
+    delivery: {
+      glovo: `https://glovoapp.com/es/es/barcelona/stores/da-nanni-gracia-barcelona?${WEB_UTM}`,
+      justEat: `https://www.just-eat.es/restaurants-da-nanni-pizzeria-and-trattoria-08012/menu?${WEB_UTM}`,
+    },
     hoursLabel: "Todos los días, 13:00–16:00h y 20:00–00:00h",
     openingHours: [
       { opens: "13:00", closes: "16:00" },
@@ -228,6 +258,7 @@ export const getLocationByUrlSlug = (type: LocationType, urlSlug: string) =>
   locations.find((l) => l.type === type && l.urlSlug === urlSlug);
 
 export const dineInLocations = locations.filter((l) => l.type === "dine-in");
+export const deliveryLocations = locations.filter((l) => l.delivery);
 export const takeAwayLocations = locations.filter(
   (l) => l.type === "take-away"
 );

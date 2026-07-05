@@ -7,6 +7,7 @@ import { menuByLocationSlug } from "@/data/menu";
 import { reviewsByLocationSlug } from "@/data/reviews";
 import { mapsUrl } from "@/data/locations";
 import { ReservaCTA } from "@/components/ReservaCTA";
+import { DeliveryCTA } from "@/components/DeliveryCTA";
 import { ComoLlegar } from "@/components/ComoLlegar";
 import { GoogleRating } from "@/components/GoogleRating";
 import { ReviewsMarquee } from "@/components/ReviewsMarquee";
@@ -82,6 +83,7 @@ export function LocationDetail({
           </div>
           <div className="mt-7 flex flex-wrap gap-3">
             <ReservaCTA location={location} />
+            <DeliveryCTA location={location} variant="onDark" />
             <ComoLlegar location={location} variant="onDark" />
           </div>
         </div>
@@ -194,7 +196,10 @@ export function LocationDetail({
             <p className="font-display text-2xl">{location.name}</p>
             <p className="mt-1 text-cream/80">{location.hoursLabel}</p>
           </div>
-          <ReservaCTA location={location} />
+          <div className="flex flex-wrap gap-3">
+            <ReservaCTA location={location} />
+            <DeliveryCTA location={location} variant="onDark" />
+          </div>
         </div>
 
         <h2 className="mt-20 font-display text-3xl tracking-tight sm:text-4xl">

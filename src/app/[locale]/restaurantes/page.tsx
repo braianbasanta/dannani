@@ -1,17 +1,21 @@
 import { useTranslations } from "next-intl";
 import type { Metadata } from "next";
-import { dineInLocations } from "@/data/locations";
+import { Link } from "@/i18n/navigation";
+import { dineInLocations, heroImageSrc } from "@/data/locations";
 import { HubHero } from "@/components/HubHero";
 import { ComoLlegar } from "@/components/ComoLlegar";
 import { LocationsMapLazy } from "@/components/LocationsMapLazy";
 import { SchemaOrg } from "@/components/SchemaOrg";
 import { breadcrumbSchema } from "@/lib/schema";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Restaurantes Italianos en Barcelona – Trattoria Napolitana",
   description:
     "Cuatro restaurantes italianos Da Nanni en Barcelona: trattoria y pizza napolitana de horno de leña en Born, Raval, Gràcia y Poblenou. Reserva tu mesa.",
-};
+  path: "/restaurantes",
+  image: heroImageSrc(dineInLocations[0]),
+});
 
 export default function RestaurantesPage() {
   const t = useTranslations("restaurantes");
@@ -36,7 +40,16 @@ export default function RestaurantesPage() {
         <h2 className="font-display text-3xl tracking-tight text-teal-dark sm:text-4xl">
           {t("infoTitle")}
         </h2>
-        <p className="mt-3 max-w-[55ch] text-teal-dark/70">{t("intro")}</p>
+        <p className="mt-3 max-w-[55ch] text-teal-dark/70">
+          {t("intro")} {t("domicilioHint")}{" "}
+          <Link
+            href="/a-domicilio"
+            className="font-medium underline underline-offset-2 hover:text-mustard"
+          >
+            {t("domicilioLink")}
+          </Link>
+          .
+        </p>
 
         <div className="mt-8 rounded-[1.75rem] bg-teal-dark/5 p-2 ring-1 ring-teal-dark/10">
           <LocationsMapLazy locations={dineInLocations} />

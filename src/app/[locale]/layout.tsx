@@ -26,6 +26,18 @@ export const metadata: Metadata = {
   },
   description:
     "Pizza napolitana de masa de larga fermentación y trattoria italiana en 6 locales de Barcelona. Proyecto familiar napolitano desde 2017.",
+  openGraph: {
+    type: "website",
+    siteName: "Da Nanni",
+    locale: "es_ES",
+    title: "Da Nanni – Pizzería Napolitana y Restaurante Italiano en Barcelona",
+    description:
+      "Pizza napolitana de masa de larga fermentación y trattoria italiana en 6 locales de Barcelona. Proyecto familiar napolitano desde 2017.",
+    images: [{ url: "/images/og/home.jpg", width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export function generateStaticParams() {

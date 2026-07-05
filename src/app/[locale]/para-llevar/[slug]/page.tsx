@@ -1,7 +1,12 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { takeAwayLocations, getLocationByUrlSlug } from "@/data/locations";
+import {
+  takeAwayLocations,
+  getLocationByUrlSlug,
+  heroImageSrc,
+} from "@/data/locations";
 import { LocationDetail } from "@/components/LocationDetail";
+import { pageMetadata } from "@/lib/seo";
 
 export function generateStaticParams() {
   return takeAwayLocations.map((l) => ({ slug: l.urlSlug }));
@@ -16,10 +21,12 @@ export async function generateMetadata({
   const location = getLocationByUrlSlug("take-away", slug);
   if (!location) return {};
 
-  return {
+  return pageMetadata({
     title: location.metaTitle,
     description: location.metaDescription,
-  };
+    path: `/para-llevar/${slug}`,
+    image: heroImageSrc(location),
+  });
 }
 
 export default async function ParaLlevarLocalPage({

@@ -34,7 +34,7 @@ export function HubHero({
             : "grid-rows-2 md:grid-cols-2 md:grid-rows-1"
         }`}
       >
-        {locations.map((location) => (
+        {locations.map((location, index) => (
           <Link
             key={location.slug}
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -45,7 +45,8 @@ export function HubHero({
               src={heroImageSrc(location)}
               alt={location.name}
               fill
-              preload
+              // Solo las dos primeras compiten por el LCP; el resto carga normal
+              preload={index < 2}
               sizes={
                 four
                   ? "(min-width: 1024px) 25vw, 50vw"

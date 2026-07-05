@@ -3,6 +3,7 @@
     "home": "Inicio",
     "restaurantes": "Restaurantes",
     "paraLlevar": "Para Llevar",
+    "aDomicilio": "A Domicilio",
     "carta": "Carta",
     "nuestraHistoria": "Nuestra Historia",
     "contacto": "Contacto"
@@ -10,6 +11,9 @@
   "cta": {
     "reservarMesa": "Reservar mesa",
     "pedirParaLlevar": "Pedir para llevar",
+    "pedirDomicilio": "Pedir a domicilio",
+    "pedirGlovo": "Pedir en Glovo",
+    "pedirJustEat": "Pedir en Just Eat",
     "comoLlegar": "Ver en Google Maps",
     "verLocal": "Ver local",
     "verCarta": "Ver carta",
@@ -28,10 +32,12 @@
     "paraLlevar": "Para llevar"
   },
   "reserva": {
-    "modalTitleDineIn": "Reservas online próximamente",
-    "modalTitleTakeAway": "Pedidos online próximamente",
-    "modalBodyDineIn": "Todavía no tenemos reservas online en {name}. Mientras tanto, llámanos y te guardamos mesa.",
-    "modalBodyTakeAway": "Todavía no tenemos pedidos online en {name}. Mientras tanto, llámanos y te lo dejamos listo para recoger.",
+    "modalTitleDineIn": "Reserva tu mesa",
+    "modalTitleTakeAway": "Pide y recoge",
+    "modalTitleDomicilio": "Pide a domicilio",
+    "modalBodyDineIn": "Llama a {name} y te guardamos mesa.",
+    "modalBodyTakeAway": "Llama a {name} y te la dejamos recién hecha, lista para recoger.",
+    "modalBodyDomicilio": "{name} reparte a domicilio con estas plataformas:",
     "cerrar": "Cerrar"
   },
   "menuVideo": {
@@ -48,18 +54,26 @@
   },
   "home": {
     "eyebrow": "Trattoria & Pizzeria Napoletana · desde 2017",
-    "h1": "Pizzería napolitana y restaurante italiano en Barcelona",
-    "sub": "Una familia napolitana, seis locales y un mismo horno. Elige cómo comerla hoy:",
-    "panelRestaurantesTitle": "Restaurantes",
-    "panelRestaurantesText": "Cuatro trattorias para sentarte a la mesa: horno de leña, pasta fresca y vinos italianos.",
-    "panelRestaurantesBarrios": "Born · Raval · Poblenou · Gràcia",
-    "panelRestaurantesCta": "Reservar mesa",
-    "panelLlevarTitle": "Para llevar",
-    "panelLlevarText": "Pizza napolitana de bolsillo en 24 y 33 cm, lista en minutos para comer paseando.",
-    "panelLlevarBarrios": "Gòtic · Raval",
-    "panelLlevarCta": "Ver locales",
-    "localesTitle": "Nuestros locales en Barcelona",
-    "localesSubtitle": "Del Gòtic a Gràcia: seis maneras de vivir Nápoles sin salir de la ciudad.",
+    "h1": "Auténtica cocina napolitana en Barcelona",
+    "claim": "Una familia napolitana. Seis locales. La misma masa fermentada 48 horas.",
+    "ctaComerAqui": "Comer aquí",
+    "ctaParaLlevar": "Pizza para llevar",
+    "platosTitle": "Nuestros platos",
+    "platosSubtitle": "Grabados tal cual salen de nuestras cocinas. Toca uno y míralo de cerca.",
+    "platosVerVideo": "Ver video de {plato}",
+    "dondeTitle": "¿Dónde quieres disfrutar Da Nanni?",
+    "dondeRestaurantesTitle": "Restaurantes",
+    "dondeRestaurantesText": "Cuatro trattorias para sentarte a la mesa: horno de leña, pasta fresca y vinos italianos.",
+    "dondeRestaurantesBarrios": "Born · Raval · Poblenou · Gràcia",
+    "dondeRestaurantesCta": "Ver restaurantes",
+    "dondeLlevarTitle": "Pizza para llevar",
+    "dondeLlevarText": "Pizza napolitana de bolsillo en 24 y 33 cm, lista en minutos para comer paseando.",
+    "dondeLlevarBarrios": "Gòtic · Raval",
+    "dondeLlevarCta": "Ver locales",
+    "experienciaTitle": "Así se vive Da Nanni",
+    "experienciaSubtitle": "El horno, la sala y la cocina en movimiento: lo que pasa cada día en nuestros locales.",
+    "mapaTitle": "Encuentra tu Da Nanni",
+    "mapaSubtitle": "Seis locales del Gòtic a Gràcia. Deja que el mapa te diga cuál te queda más cerca.",
     "historiaTitle": "De Nápoles a Barcelona",
     "historiaTeaser": "La historia de la sirena Partenope y del pequeño Nanni: un proyecto familiar que trajo la cocina napolitana a Barcelona.",
     "historiaTeaser2": "Masa de larga fermentación, horno de leña e ingredientes que cruzan Italia para llegar a tu mesa.",
@@ -82,13 +96,41 @@
     "title": "Restaurantes italianos en Barcelona",
     "subtitle": "Pizza napolitana de horno de leña, pasta fresca y vinos italianos en cuatro barrios.",
     "intro": "Cuatro trattorias con el carácter de su barrio: elige la tuya y reserva mesa.",
-    "infoTitle": "Direcciones y horarios"
+    "infoTitle": "Direcciones y horarios",
+    "domicilioHint": "¿Hoy no sales de casa?",
+    "domicilioLink": "Pide a domicilio"
+  },
+  "contacto": {
+    "eyebrow": "Contacto",
+    "title": "Reserva o pide en tu Da Nanni",
+    "intro": "Llama al local que prefieras y te guardamos mesa o te dejamos tu pedido listo para recoger. Y si no quieres moverte de casa, pide a domicilio por Glovo o Just Eat."
+  },
+  "cartaPage": {
+    "eyebrow": "Nuestra carta",
+    "title": "Carta",
+    "intro": "Pizza napolitana de masa larga fermentada, antipasti y una selecta carta de vinos italianos. Los precios pueden variar ligeramente entre locales: elige el tuyo para ver su carta.",
+    "verLocal": "Ver el local",
+    "otrosLocales": "Carta de otros locales",
+    "sufijoParaLlevar": "(para llevar)"
   },
   "paraLlevar": {
     "title": "Pizza para llevar en Barcelona",
     "subtitle": "Pizza napolitana \"de bolsillo\" en formato 24 y 33 cm, recién salida del horno.",
     "intro": "Dos locales en el Gòtic y el Raval, pensados para pedir y seguir paseando.",
-    "infoTitle": "Direcciones y horarios"
+    "infoTitle": "Direcciones y horarios",
+    "domicilioHint": "¿Prefieres que te la llevemos a casa?",
+    "domicilioLink": "Pide a domicilio"
+  },
+  "domicilio": {
+    "eyebrow": "Glovo · Just Eat",
+    "title": "Pizza napolitana a domicilio en Barcelona",
+    "subtitle": "Del horno de leña a tu casa: pide en Glovo o Just Eat desde nuestros locales del Gòtic, Born, Poblenou y Gràcia.",
+    "infoTitle": "Elige tu local y pide",
+    "intro": "Cada local reparte en su zona. Elige el que tengas más cerca y pide directamente en su tienda de Glovo o Just Eat.",
+    "recogidaTitle": "¿Prefieres recogerla tú?",
+    "recogidaText": "En nuestros locales del Gòtic y el Raval te la preparamos al momento para llevar, y en las trattorias siempre tienes una mesa esperándote.",
+    "verParaLlevar": "Ver locales para llevar",
+    "verRestaurantes": "Ver restaurantes"
   },
   "mapa": {
     "cercaDeMi": "Ver el más cercano a mí",

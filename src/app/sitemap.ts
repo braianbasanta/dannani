@@ -10,6 +10,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/nuestra-historia",
     "/restaurantes",
     "/para-llevar",
+    "/a-domicilio",
     "/carta",
     "/contacto",
   ];
@@ -22,8 +23,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     (slug) => `/carta/${slug}`
   );
 
+  const lastModified = new Date();
+
   return [...staticRoutes, ...locationRoutes, ...cartaRoutes].map((path) => ({
     url: `${SITE_URL}${path}`,
+    lastModified,
     changeFrequency: path === "" ? "weekly" : "monthly",
     priority: path === "" ? 1 : path === "/restaurantes" ? 0.9 : 0.7,
   }));

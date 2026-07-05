@@ -1,17 +1,22 @@
 import type { Metadata } from "next";
+import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { locations } from "@/data/locations";
 import { menuByLocationSlug } from "@/data/menu";
 import { SchemaOrg } from "@/components/SchemaOrg";
 import { breadcrumbSchema } from "@/lib/schema";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Carta – Pizzas, Antipasti y Vinos",
   description:
     "Pizza napolitana, antipasti y vinos italianos. Consulta la carta y precios de cada local Da Nanni en Barcelona.",
-};
+  path: "/carta",
+});
 
 export default function CartaPage() {
+  const t = useTranslations("cartaPage");
+
   return (
     <>
       <SchemaOrg
@@ -22,15 +27,11 @@ export default function CartaPage() {
       />
 
       <section className="mx-auto max-w-4xl px-4 py-16 font-sans text-teal-dark sm:py-20">
-        <p className="eyebrow">Nuestra carta</p>
+        <p className="eyebrow">{t("eyebrow")}</p>
         <h1 className="mt-3 font-display text-4xl tracking-tight sm:text-6xl">
-          Carta
+          {t("title")}
         </h1>
-        <p className="mt-3 max-w-2xl text-teal-dark/70">
-          Pizza napolitana de masa larga fermentada, antipasti y una selecta
-          carta de vinos italianos. Los precios pueden variar ligeramente
-          entre locales: elige el tuyo para ver su carta.
-        </p>
+        <p className="mt-3 max-w-2xl text-teal-dark/70">{t("intro")}</p>
 
         <ul className="mt-10 grid gap-4 sm:grid-cols-2">
           {locations

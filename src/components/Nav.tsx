@@ -27,9 +27,9 @@ export function Nav() {
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
-  // Páginas cuyo hero (imagen oscura) pasa por debajo del nav transparente
+  // Páginas cuyo hero (imagen oscura) pasa por debajo del nav transparente.
+  // La home ya no: su hero nuevo es claro (texto sobre crema + video).
   const hasDarkHero =
-    pathname === "/" ||
     pathname === "/nuestra-historia" ||
     pathname.startsWith("/restaurantes") ||
     pathname.startsWith("/para-llevar");

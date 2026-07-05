@@ -46,13 +46,16 @@ Ambas páginas `[slug]/page.tsx` son casi idénticas: resuelven el location vía
 
 Helpers clave en `locations.ts`: `hrefFor(location)` (URL pública según type), `mapsUrl(location)` (deep link a Google Maps).
 
+Cada location puede tener `delivery: { glovo?, justEat? }` con las URLs de sus tiendas en esas plataformas (llevan UTMs propios `dananni-web` para atribución). Raval (Tallers 69 y 72) no tiene delivery hoy. Ese campo alimenta el CTA `<DeliveryCTA>`, la landing `/a-domicilio` (`deliveryLocations`) y el `OrderAction` del schema.
+
 ### Menú / carta
 
-`src/data/menu.ts` tiene los `MenuSection[]` por local, indexados en `menuByLocationSlug` por `slug` de location. **Solo Gràcia tiene precios reales confirmados hoy** (`graciaMenu`) — no inventar precios para el resto de locales; se completan cuando el cliente los entregue. `CartaSelector` (componente) deja elegir el local para ver su carta en `/carta`.
+`src/data/menu.ts` tiene los `MenuSection[]` por local, indexados en `menuByLocationSlug` por `slug` de location. Las tres cartas son reales (jul. 2026, entregadas por el cliente): `pizzaTakeAway` (Gòtic + Raval Take Away, formato 24/33 cm), `gracia` (la más completa) y `bornPoblenouTallers69` (compartida por las tres trattorias). No inventar precios ni platos.
 
 ### SEO / structured data
 
 - `src/lib/schema.ts` genera JSON-LD (Organization, Restaurant, BreadcrumbList) — `SITE_URL` está hardcodeado ahí (`https://www.dananni.es`) y se repite en `sitemap.ts` y el layout raíz; si cambia el dominio, actualizar los tres.
+- `src/lib/seo.ts` (`pageMetadata`) centraliza title/description + canonical + Open Graph de cada página. Toda página indexable nueva debe usarlo (las legales van con `robots: { index: false }`).
 - `<SchemaOrg data={...}>` (en `src/components/`) inyecta ese JSON-LD como `<script type="application/ld+json">` en cualquier página.
 - `src/app/sitemap.ts` y `src/app/robots.ts` generan sitemap/robots a partir de las mismas listas de `locations.ts` — al añadir un local o ruta estática nueva, actualizar `sitemap.ts` también.
 

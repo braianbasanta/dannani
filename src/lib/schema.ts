@@ -31,22 +31,61 @@ export function organizationSchema() {
   };
 }
 
+/** Separa "Carrer X, N, 080xx Barcelona" en streetAddress + postalCode. */
+function postalAddress(location: Location) {
+  const match = location.address.match(/^(.+?),\s*(08\d{3})\s+Barcelona$/);
+  return {
+    "@type": "PostalAddress",
+    streetAddress: match ? match[1] : location.address,
+    postalCode: match ? match[2] : undefined,
+    addressLocality: "Barcelona",
+    addressRegion: "Barcelona",
+    addressCountry: "ES",
+  };
+}
+
+/** Acción "Pedir online" que Google puede asociar al botón de pedidos. */
+function orderAction(url: string) {
+  return {
+    "@type": "OrderAction",
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate: url,
+      inLanguage: "es",
+      actionPlatform: [
+        "http://schema.org/DesktopWebPlatform",
+        "http://schema.org/MobileWebPlatform",
+      ],
+    },
+    deliveryMethod: ["http://purl.org/goodrelations/v1#DeliveryModeOwnFleet"],
+  };
+}
+
 export function restaurantSchema(location: Location, path: string) {
+  const gallery = ["01", "02", "03"].map(
+    (n) => `${SITE_URL}/images/${location.imageFolder}/${n}.jpg`
+  );
+  const images = [
+    `${SITE_URL}${heroImageSrc(location)}`,
+    ...gallery.filter((src) => src !== `${SITE_URL}${heroImageSrc(location)}`),
+  ].slice(0, 3);
+
+  const orderUrls = [
+    location.delivery?.glovo,
+    location.delivery?.justEat,
+  ].filter((url): url is string => Boolean(url));
+
   return {
     "@context": "https://schema.org",
     "@type": "Restaurant",
     "@id": `${SITE_URL}${path}#restaurant`,
     name: location.name,
     url: `${SITE_URL}${path}`,
-    image: `${SITE_URL}${heroImageSrc(location)}`,
-    telephone: location.phone,
+    image: images,
+    telephone: location.phoneHref.replace("tel:", ""),
     servesCuisine: ["Italian", "Neapolitan Pizza"],
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: location.address,
-      addressLocality: "Barcelona",
-      addressCountry: "ES",
-    },
+    priceRange: location.type === "take-away" ? "€" : "€€",
+    address: postalAddress(location),
     geo: {
       "@type": "GeoCoordinates",
       latitude: location.coords.lat,
@@ -59,9 +98,13 @@ export function restaurantSchema(location: Location, path: string) {
       opens: spec.opens,
       closes: spec.closes,
     })),
-    acceptsReservations: false,
+    // Las trattorias reservan por teléfono; los take away no aceptan reserva.
+    acceptsReservations: location.type === "dine-in",
     hasMenu: menuByLocationSlug[location.slug]
       ? `${SITE_URL}/carta/${location.slug}`
+      : undefined,
+    potentialAction: orderUrls.length
+      ? orderUrls.map(orderAction)
       : undefined,
     parentOrganization: { "@id": `${SITE_URL}/#organization` },
   };
