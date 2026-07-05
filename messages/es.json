@@ -1,0 +1,115 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "restaurantes": "Restaurantes",
+    "paraLlevar": "Para Llevar",
+    "carta": "Carta",
+    "nuestraHistoria": "Nuestra Historia",
+    "contacto": "Contacto"
+  },
+  "cta": {
+    "reservarMesa": "Reservar mesa",
+    "pedirParaLlevar": "Pedir para llevar",
+    "comoLlegar": "Ver en Google Maps",
+    "verLocal": "Ver local",
+    "verCarta": "Ver carta",
+    "verCartaCompleta": "Ver carta completa",
+    "llamar": "Llamar",
+    "verTodos": "Ver todos los locales"
+  },
+  "badges": {
+    "dineIn": "Para comer aquí",
+    "takeAway": "Para llevar",
+    "cercaPlaya": "A pie de playa"
+  },
+  "filtros": {
+    "todos": "Todos",
+    "conMesas": "Con mesas",
+    "paraLlevar": "Para llevar"
+  },
+  "reserva": {
+    "modalTitleDineIn": "Reservas online próximamente",
+    "modalTitleTakeAway": "Pedidos online próximamente",
+    "modalBodyDineIn": "Todavía no tenemos reservas online en {name}. Mientras tanto, llámanos y te guardamos mesa.",
+    "modalBodyTakeAway": "Todavía no tenemos pedidos online en {name}. Mientras tanto, llámanos y te lo dejamos listo para recoger.",
+    "cerrar": "Cerrar"
+  },
+  "menuVideo": {
+    "cerrar": "Cerrar video",
+    "cerrarFondo": "Cerrar",
+    "anterior": "Plato anterior",
+    "siguiente": "Plato siguiente"
+  },
+  "menu": {
+    "comida": "Comida",
+    "bebidas": "Bebidas",
+    "soloVegetariano": "Solo vegetariano",
+    "sinResultados": "No hay platos vegetarianos en esta sección."
+  },
+  "home": {
+    "eyebrow": "Trattoria & Pizzeria Napoletana · desde 2017",
+    "h1": "Pizzería napolitana y restaurante italiano en Barcelona",
+    "sub": "Una familia napolitana, seis locales y un mismo horno. Elige cómo comerla hoy:",
+    "panelRestaurantesTitle": "Restaurantes",
+    "panelRestaurantesText": "Cuatro trattorias para sentarte a la mesa: horno de leña, pasta fresca y vinos italianos.",
+    "panelRestaurantesBarrios": "Born · Raval · Poblenou · Gràcia",
+    "panelRestaurantesCta": "Reservar mesa",
+    "panelLlevarTitle": "Para llevar",
+    "panelLlevarText": "Pizza napolitana de bolsillo en 24 y 33 cm, lista en minutos para comer paseando.",
+    "panelLlevarBarrios": "Gòtic · Raval",
+    "panelLlevarCta": "Ver locales",
+    "localesTitle": "Nuestros locales en Barcelona",
+    "localesSubtitle": "Del Gòtic a Gràcia: seis maneras de vivir Nápoles sin salir de la ciudad.",
+    "historiaTitle": "De Nápoles a Barcelona",
+    "historiaTeaser": "La historia de la sirena Partenope y del pequeño Nanni: un proyecto familiar que trajo la cocina napolitana a Barcelona.",
+    "historiaTeaser2": "Masa de larga fermentación, horno de leña e ingredientes que cruzan Italia para llegar a tu mesa.",
+    "historiaCta": "Nuestra historia",
+    "resenasTitle": "Lo que dicen en Google",
+    "resenasSubtitle": "{rating} de valoración media con {count} reseñas repartidas en nuestros 6 locales.",
+    "resenasBadgeSufijo": "en Google"
+  },
+  "footer": {
+    "tagline": "Usamos solo los mejores ingredientes para lograr sabores excepcionales.",
+    "navegacion": "Navegación",
+    "locales": "Nuestros locales",
+    "legal": "Legal",
+    "privacidad": "Política de privacidad",
+    "avisoLegal": "Aviso legal",
+    "cookies": "Política de cookies",
+    "rights": "Da Nanni. Todos los derechos reservados."
+  },
+  "restaurantes": {
+    "title": "Restaurantes italianos en Barcelona",
+    "subtitle": "Pizza napolitana de horno de leña, pasta fresca y vinos italianos en cuatro barrios.",
+    "intro": "Cuatro trattorias con el carácter de su barrio: elige la tuya y reserva mesa.",
+    "infoTitle": "Direcciones y horarios"
+  },
+  "paraLlevar": {
+    "title": "Pizza para llevar en Barcelona",
+    "subtitle": "Pizza napolitana \"de bolsillo\" en formato 24 y 33 cm, recién salida del horno.",
+    "intro": "Dos locales en el Gòtic y el Raval, pensados para pedir y seguir paseando.",
+    "infoTitle": "Direcciones y horarios"
+  },
+  "mapa": {
+    "cercaDeMi": "Ver el más cercano a mí",
+    "localizando": "Localizando…",
+    "masCercano": "Tu Da Nanni más cercano:",
+    "aDistancia": "a {km} km",
+    "tuUbicacion": "Tu ubicación",
+    "error": "No pudimos obtener tu ubicación. Revisa los permisos del navegador."
+  },
+  "local": {
+    "desde": "desde",
+    "resenasGoogle": "{count} reseñas en Google",
+    "horario": "Horario",
+    "direccion": "Dirección",
+    "telefono": "Teléfono",
+    "galeria": "Fotos del local",
+    "cartaTitle": "Carta",
+    "cartaNoDisponible": "Estamos actualizando la carta de este local. Mientras tanto, consulta la carta general.",
+    "resenasTitle": "Lo que dicen en Google",
+    "resenaGoogle": "Reseña de Google",
+    "verTodasResenas": "Leer todas las reseñas en Google",
+    "otrosLocales": "Otros locales"
+  }
+}
