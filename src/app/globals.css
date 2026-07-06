@@ -111,7 +111,7 @@ p {
 }
 
 .marquee-track {
-  animation: marquee 180s linear infinite;
+  animation: marquee 640s linear infinite;
   will-change: transform;
 }
 

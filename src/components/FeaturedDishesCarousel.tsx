@@ -17,7 +17,7 @@ export function FeaturedDishesCarousel({ entries }: { entries: MediaEntry[] }) {
 
   return (
     <>
-      <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto px-[max(1rem,calc((100vw-72rem)/2))] scroll-px-[max(1rem,calc((100vw-72rem)/2))] pb-3 [scrollbar-width:none] sm:gap-4 [&::-webkit-scrollbar]:hidden">
+      <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 scroll-px-4 pb-3 [scrollbar-width:none] sm:gap-4 [&::-webkit-scrollbar]:hidden">
         {entries.map((entry, i) => (
           <button
             key={entry.item.name}

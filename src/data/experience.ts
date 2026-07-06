@@ -25,10 +25,10 @@ function clip(slug: string, alt: string): ExperienceClip {
   };
 }
 
-/** Video del hero de la home: la pizza saliendo del horno de leña. */
+/** Video del hero de la home: reel de elaboración, de la masa a la mesa. */
 export const heroClip = clip(
-  "horno-de-lena",
-  "Pizza napolitana saliendo del horno de leña de Da Nanni"
+  "de-la-masa-a-la-mesa",
+  "Reel de Da Nanni: de amasar la masa a la pizza napolitana en la mesa"
 );
 
 export const experienceClips: ExperienceClip[] = [

@@ -44,8 +44,9 @@ const aggregateRating =
 // hay que actualizar cada vez que se suma alguna reseña nueva en Google.
 const roundedReviewCount = Math.floor(totalReviewCount / 50) * 50;
 
-// Todas las reseñas reales (src/data/reviews.ts) de los 6 locales, con el
-// rating real de cada local (locations.ts) para las estrellas de su tarjeta.
+// Todas las reseñas reales (src/data/reviews.ts) de los 6 locales. Las
+// tarjetas muestran siempre 5 estrellas (decisión de Braian, jul-2026): son
+// reseñas seleccionadas, no un promedio del local.
 const marqueeReviews = Object.entries(reviewsByLocationSlug).flatMap(
   ([slug, reviews]) => {
     const location = locations.find((l) => l.slug === slug);
@@ -54,15 +55,21 @@ const marqueeReviews = Object.entries(reviewsByLocationSlug).flatMap(
       author: review.author,
       text: review.text,
       neighborhood: location.neighborhood,
-      rating: Math.round(location.googleRating ?? 5),
+      rating: 5,
     }));
   }
 );
 
+/**
+ * Title/description alineados con lo que más se busca (research jul. 2026,
+ * volúmenes mensuales en Barcelona): "restaurante italiano barcelona" (~2.900),
+ * "pizzería barcelona" (~2.400) y "pizzería napolitana barcelona" (~880).
+ * Keyword primero, marca al final; description ≤160 caracteres.
+ */
 const HOME_TITLE =
-  "Da Nanni – Pizzería Napolitana y Restaurante Italiano en Barcelona";
+  "Pizzería Napolitana y Restaurante Italiano en Barcelona | Da Nanni";
 const HOME_DESCRIPTION =
-  "Pizza napolitana de masa de larga fermentación en 6 locales de Barcelona: trattorias con horno de leña en Born, Raval, Gràcia y Poblenou, y pizza para llevar en el Gòtic y el Raval.";
+  "Pizzería napolitana y restaurante italiano en Barcelona. Pizza de masa fermentada 48 horas y horno de leña en 6 locales, del Born a Gràcia, también para llevar.";
 
 export const metadata: Metadata = {
   title: { absolute: HOME_TITLE },
@@ -99,32 +106,36 @@ function ArrowIcon() {
   );
 }
 
+/**
+ * CTA premium estilo "Positano": pill dorada con degradado y brillo interior,
+ * o ghost con borde que hereda el color del texto (pasar colores vía className
+ * según el fondo sobre el que viva el botón).
+ */
 function CtaPill({
   href,
-  color,
+  variant,
+  className = "",
   children,
 }: {
   href: "/restaurantes" | "/para-llevar" | "/nuestra-historia";
-  color: "mustard" | "teal";
+  variant: "gold" | "ghost";
+  className?: string;
   children: React.ReactNode;
 }) {
-  const colors =
-    color === "mustard"
-      ? "bg-mustard hover:bg-mustard-dark"
-      : "bg-teal hover:bg-teal-dark";
+  const base =
+    "inline-flex items-center justify-center rounded-full px-8 text-center font-sans text-sm font-bold uppercase tracking-[0.18em] transition-all duration-300 ease-fluid hover:-translate-y-0.5 active:scale-[0.98]";
+  const styles =
+    variant === "gold"
+      ? "bg-[linear-gradient(160deg,#e9b054_0%,#d98e2b_52%,#b8791f_100%)] py-4 text-teal-dark ring-1 ring-black/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.5),0_14px_34px_-8px_rgba(31,59,64,0.5),0_5px_14px_-3px_rgba(31,59,64,0.35)] hover:tracking-[0.22em] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.55),0_22px_46px_-10px_rgba(31,59,64,0.55),0_8px_20px_-4px_rgba(31,59,64,0.4)]"
+      : "border-2 border-current py-[0.85rem] backdrop-blur-sm";
   return (
-    <Link
-      href={href}
-      className={`group inline-flex items-center gap-3 rounded-full py-1.5 pl-6 pr-1.5 font-sans text-sm font-semibold text-cream shadow-card transition-all duration-500 ease-fluid hover:-translate-y-0.5 hover:shadow-card-hover active:scale-[0.98] ${colors}`}
-    >
+    <Link href={href} className={`${base} ${styles} ${className}`}>
       {children}
-      <span className="flex h-9 w-9 items-center justify-center rounded-full bg-cream/15 transition-transform duration-500 ease-fluid group-hover:translate-x-0.5">
-        <ArrowIcon />
-      </span>
     </Link>
   );
 }
 
+/** Tarjeta vertical estilo "fila de Netflix": póster con zoom sutil al hover. */
 function LocationTile({
   location,
   badge,
@@ -136,17 +147,17 @@ function LocationTile({
     <Link
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       href={hrefFor(location) as any}
-      className="group relative aspect-[4/3] overflow-hidden rounded-2xl"
+      className="group relative block aspect-[2/3] w-[220px] shrink-0 snap-start overflow-hidden rounded-2xl shadow-card transition-all duration-500 ease-fluid hover:scale-[1.02] hover:shadow-card-hover sm:w-[260px]"
     >
       <Image
         src={heroImageSrc(location)}
         alt={location.name}
         fill
-        sizes="(min-width: 1024px) 25vw, 50vw"
+        sizes="(min-width: 640px) 260px, 220px"
         loading="lazy"
-        className="object-cover transition-transform duration-700 ease-fluid group-hover:scale-[1.05]"
+        className="object-cover transition-transform duration-700 ease-fluid group-hover:scale-[1.06]"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-teal-dark/85 via-teal-dark/25 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-teal-dark/90 via-teal-dark/20 to-transparent" />
       <span
         aria-hidden
         className="absolute right-3 top-3 flex h-9 w-9 -translate-y-1 items-center justify-center rounded-full bg-cream/90 text-teal-dark opacity-0 backdrop-blur-sm transition-all duration-500 ease-fluid group-hover:translate-y-0 group-hover:opacity-100"
@@ -175,37 +186,59 @@ export default function HomePage() {
     <>
       <SchemaOrg data={organizationSchema()} />
 
-      {/* 1 · Hero: claim + video vertical del horno de leña dentro de una
-          silueta de iPhone (como un reel). Fondo claro con luz ambiental. */}
+      {/* 1 · Hero: claim + reel de elaboración. En móvil el video es el fondo
+          a pantalla completa con el texto encima; en desktop va dentro de una
+          silueta de iPhone sobre fondo claro con luz ambiental. */}
       <section className="relative overflow-hidden">
-        {/* Luz ambiental: rompe la planitud del cream sin tocar el contenido */}
-        <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+        {/* Fondo móvil: el reel con scrim de marca para legibilidad */}
+        <div aria-hidden className="absolute inset-0 md:hidden">
+          <AutoplayVideo
+            priority
+            src={heroClip.video}
+            poster={heroClip.poster}
+            className="h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-teal-dark/35" />
+          <div className="absolute inset-0 bg-gradient-to-t from-teal-dark/85 via-teal-dark/20 to-teal-dark/55" />
+        </div>
+
+        {/* Luz ambiental desktop: rompe la planitud del cream */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 -z-10 hidden md:block"
+        >
           <div className="absolute -top-32 right-[-8%] h-[32rem] w-[32rem] rounded-full bg-mustard/10 blur-3xl" />
           <div className="absolute bottom-[-35%] left-[-12%] h-[28rem] w-[28rem] rounded-full bg-teal/[0.08] blur-3xl" />
         </div>
 
-        <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 pb-16 pt-10 sm:pt-14 md:grid-cols-[1fr_auto] md:gap-16 md:pb-24 md:pt-16">
+        <div className="relative mx-auto grid min-h-[calc(100svh-4rem)] max-w-6xl content-center items-center gap-12 px-4 py-14 md:min-h-0 md:grid-cols-[1fr_auto] md:gap-16 md:pb-24 md:pt-16">
           <div>
             <p className="eyebrow animate-fade-up">{t("eyebrow")}</p>
-            <h1 className="mt-4 max-w-2xl animate-fade-up font-display text-4xl leading-[1.05] tracking-tight text-teal-dark [animation-delay:100ms] sm:text-5xl lg:text-6xl xl:text-7xl">
+            <h1 className="mt-4 max-w-2xl animate-fade-up font-display text-4xl leading-[1.05] tracking-tight text-cream [animation-delay:100ms] sm:text-5xl md:text-teal-dark lg:text-6xl xl:text-7xl">
               {t.rich("h1", {
                 i: (chunks) => (
-                  <em className="italic text-mustard-dark">{chunks}</em>
+                  <em className="italic text-mustard md:text-mustard-dark">
+                    {chunks}
+                  </em>
                 ),
               })}
             </h1>
-            <p className="mt-6 max-w-md animate-fade-up text-lg leading-relaxed text-teal-dark/75 [animation-delay:200ms]">
+            <p className="mt-6 max-w-md animate-fade-up text-lg leading-relaxed text-cream/85 [animation-delay:200ms] md:text-teal-dark/75">
               {t("claim")}
             </p>
-            <div className="mt-9 flex flex-wrap items-center gap-3 animate-fade-up [animation-delay:300ms]">
-              <CtaPill href="/restaurantes" color="mustard">
+            <div className="mt-9 flex flex-col gap-3 animate-fade-up [animation-delay:300ms] sm:flex-row sm:flex-wrap sm:items-center">
+              <CtaPill href="/restaurantes" variant="gold">
                 {t("ctaComerAqui")}
               </CtaPill>
-              <CtaPill href="/para-llevar" color="teal">
+              <CtaPill
+                href="/para-llevar"
+                variant="ghost"
+                className="bg-teal-dark/35 text-cream hover:bg-cream hover:text-teal-dark md:bg-transparent md:text-teal md:hover:bg-teal md:hover:text-cream"
+              >
                 {t("ctaParaLlevar")}
               </CtaPill>
             </div>
-            <div className="mt-8 flex items-center gap-2 animate-fade-up font-sans text-sm text-teal-dark/70 [animation-delay:400ms]">
+            <div className="mt-8 flex items-center gap-2 animate-fade-up font-sans text-sm text-cream/80 [animation-delay:400ms] md:text-teal-dark/70">
               <svg
                 width="16"
                 height="16"
@@ -215,7 +248,7 @@ export default function HomePage() {
               >
                 <path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.2l-6.1 3.4 1.4-6.8L2.2 9.1l6.9-.8L12 2z" />
               </svg>
-              <span className="font-semibold text-teal-dark">
+              <span className="font-semibold text-cream md:text-teal-dark">
                 {ratingFormat.format(aggregateRating)}
               </span>
               <span aria-hidden>·</span>
@@ -227,7 +260,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="mx-auto w-60 animate-fade-up [animation-delay:200ms] sm:w-72 lg:w-80">
+          <div className="mx-auto hidden w-72 animate-fade-up [animation-delay:200ms] md:block lg:w-80">
             <PhoneFrame className="md:rotate-[1.5deg]">
               <AutoplayVideo
                 priority
@@ -270,9 +303,13 @@ export default function HomePage() {
               {t("dondeTitle")}
             </h2>
           </Reveal>
+        </div>
 
-          <div className="mt-12 space-y-14 sm:space-y-16">
-            <Reveal>
+        {/* Filas estilo Netflix: cabecera alineada al contenedor, tarjetas
+            a sangre desde el borde izquierdo del viewport */}
+        <div className="mt-12 space-y-14 sm:space-y-16">
+          <Reveal>
+            <div className="mx-auto max-w-6xl px-4">
               <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.2em] text-teal-dark/50">
@@ -293,18 +330,20 @@ export default function HomePage() {
                   <ArrowIcon />
                 </Link>
               </div>
-              <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-                {dineInLocations.map((location) => (
-                  <LocationTile
-                    key={location.slug}
-                    location={location}
-                    badge={tBadges("dineIn")}
-                  />
-                ))}
-              </div>
-            </Reveal>
+            </div>
+            <div className="mt-6 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 scroll-px-4 pb-3 [scrollbar-width:none] sm:gap-4 [&::-webkit-scrollbar]:hidden">
+              {dineInLocations.map((location) => (
+                <LocationTile
+                  key={location.slug}
+                  location={location}
+                  badge={tBadges("dineIn")}
+                />
+              ))}
+            </div>
+          </Reveal>
 
-            <Reveal>
+          <Reveal>
+            <div className="mx-auto max-w-6xl px-4">
               <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.2em] text-teal-dark/50">
@@ -325,17 +364,17 @@ export default function HomePage() {
                   <ArrowIcon />
                 </Link>
               </div>
-              <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-                {takeAwayLocations.map((location) => (
-                  <LocationTile
-                    key={location.slug}
-                    location={location}
-                    badge={tBadges("takeAway")}
-                  />
-                ))}
-              </div>
-            </Reveal>
-          </div>
+            </div>
+            <div className="mt-6 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 scroll-px-4 pb-3 [scrollbar-width:none] sm:gap-4 [&::-webkit-scrollbar]:hidden">
+              {takeAwayLocations.map((location) => (
+                <LocationTile
+                  key={location.slug}
+                  location={location}
+                  badge={tBadges("takeAway")}
+                />
+              ))}
+            </div>
+          </Reveal>
         </div>
       </section>
 
@@ -358,11 +397,13 @@ export default function HomePage() {
             </p>
           </Reveal>
         </div>
-        <div className="relative mt-10 flex snap-x snap-mandatory gap-3 overflow-x-auto px-[max(1rem,calc((100vw-72rem)/2))] scroll-px-[max(1rem,calc((100vw-72rem)/2))] pb-3 [scrollbar-width:none] sm:mt-12 sm:gap-4 [&::-webkit-scrollbar]:hidden">
+        {/* Móvil: fila deslizable desde el borde izquierdo. Desktop: los 6
+            clips en un grid a todo el ancho del viewport, sin scroll lateral. */}
+        <div className="relative mt-10 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 scroll-px-4 pb-3 [scrollbar-width:none] sm:mt-12 sm:gap-4 [&::-webkit-scrollbar]:hidden lg:grid lg:grid-cols-6 lg:overflow-visible lg:pb-0">
           {experienceClips.map((clip) => (
             <div
               key={clip.slug}
-              className="relative aspect-[9/16] w-[200px] shrink-0 snap-start overflow-hidden rounded-2xl bg-black/20 sm:w-[240px]"
+              className="relative aspect-[9/16] w-[200px] shrink-0 snap-start overflow-hidden rounded-2xl bg-black/20 sm:w-[240px] lg:w-auto"
             >
               <AutoplayVideo
                 src={clip.video}
@@ -458,7 +499,11 @@ export default function HomePage() {
               {t("historiaTeaser2")}
             </p>
             <div className="mt-8">
-              <CtaPill href="/nuestra-historia" color="teal">
+              <CtaPill
+                href="/nuestra-historia"
+                variant="ghost"
+                className="text-teal hover:bg-teal hover:text-cream"
+              >
                 {t("historiaCta")}
               </CtaPill>
             </div>

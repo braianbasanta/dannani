@@ -9,7 +9,9 @@ export function Footer() {
   return (
     <footer className="border-t border-teal-dark/10 bg-teal-dark text-cream">
       <div className="mx-auto max-w-6xl px-4 py-14">
-        <div className="grid gap-10 md:grid-cols-[1.1fr_1.8fr_0.9fr_0.9fr]">
+        {/* La columna ancha es la de locales: 6 direcciones necesitan sitio
+            para no partirse en columnas estrechas e interminables */}
+        <div className="grid gap-10 md:grid-cols-[1.1fr_0.8fr_2.4fr_0.8fr]">
           <div>
             <p className="font-display text-3xl">da Nanni</p>
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-cream/70">
@@ -103,7 +105,7 @@ export function Footer() {
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cream/60">
               {t("locales")}
             </p>
-            <ul className="mt-4 grid gap-x-8 gap-y-4 text-sm text-cream/80 sm:grid-cols-2">
+            <ul className="mt-4 grid gap-x-8 gap-y-5 text-sm text-cream/80 sm:grid-cols-2 lg:grid-cols-3">
               {locations.map((l) => (
                 <li key={l.slug}>
                   <Link
