@@ -189,7 +189,7 @@ export default function HomePage() {
       {/* 1 · Hero: claim + reel de elaboración. En móvil el video es el fondo
           a pantalla completa con el texto encima; en desktop va dentro de una
           silueta de iPhone sobre fondo claro con luz ambiental. */}
-      <section className="relative overflow-hidden">
+      <section className="relative -mt-16 overflow-hidden md:mt-0">
         {/* Fondo móvil: el reel con scrim de marca para legibilidad */}
         <div aria-hidden className="absolute inset-0 md:hidden">
           <AutoplayVideo
@@ -211,7 +211,7 @@ export default function HomePage() {
           <div className="absolute bottom-[-35%] left-[-12%] h-[28rem] w-[28rem] rounded-full bg-teal/[0.08] blur-3xl" />
         </div>
 
-        <div className="relative mx-auto grid min-h-[calc(100svh-4rem)] max-w-6xl content-center items-center gap-12 px-4 py-14 md:min-h-0 md:grid-cols-[1fr_auto] md:gap-16 md:pb-24 md:pt-16">
+        <div className="relative mx-auto grid min-h-[100svh] max-w-6xl content-center items-center gap-12 px-4 pb-20 pt-24 md:min-h-0 md:grid-cols-[1fr_auto] md:gap-16 md:pb-24 md:pt-16">
           <div>
             <p className="eyebrow animate-fade-up">{t("eyebrow")}</p>
             <h1 className="mt-4 max-w-2xl animate-fade-up font-display text-4xl leading-[1.05] tracking-tight text-cream [animation-delay:100ms] sm:text-5xl md:text-teal-dark lg:text-6xl xl:text-7xl">
@@ -238,7 +238,7 @@ export default function HomePage() {
                 {t("ctaParaLlevar")}
               </CtaPill>
             </div>
-            <div className="mt-8 flex items-center gap-2 animate-fade-up font-sans text-sm text-cream/80 [animation-delay:400ms] md:text-teal-dark/70">
+            <div className="mt-8 flex items-center justify-center gap-2 animate-fade-up font-sans text-sm text-cream/80 [animation-delay:400ms] md:justify-start md:text-teal-dark/70">
               <svg
                 width="16"
                 height="16"
@@ -272,10 +272,35 @@ export default function HomePage() {
             </PhoneFrame>
           </div>
         </div>
+
+        {/* Cue de scroll (solo móvil): avisa de que hay más contenido abajo */}
+        <a
+          href="#platos"
+          className="absolute inset-x-0 bottom-5 z-10 flex flex-col items-center gap-1.5 md:hidden"
+        >
+          <span className="font-sans text-[0.7rem] font-semibold uppercase tracking-[0.35em] text-cream/60">
+            {t("descubre")}
+          </span>
+          <svg
+            className="h-4 w-4 animate-bounce text-cream/60 [animation-duration:2s]"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden
+          >
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </a>
       </section>
 
       {/* 2 · Platos destacados: crear el antojo antes de pedir la decisión */}
-      <section className="relative overflow-hidden border-t border-teal-dark/10 bg-teal-dark/[0.03] py-20 sm:py-28">
+      <section
+        id="platos"
+        className="relative overflow-hidden border-t border-teal-dark/10 bg-teal-dark/[0.03] py-20 sm:py-28"
+      >
         <div
           aria-hidden
           className="pointer-events-none absolute -top-24 right-[-6%] h-96 w-96 rounded-full bg-mustard/[0.07] blur-3xl"
@@ -331,7 +356,7 @@ export default function HomePage() {
                 </Link>
               </div>
             </div>
-            <div className="mt-6 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 scroll-px-4 pb-3 [scrollbar-width:none] sm:gap-4 [&::-webkit-scrollbar]:hidden">
+            <div className="mt-6 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 scroll-px-4 pb-3 [scrollbar-width:none] sm:gap-4 [&::-webkit-scrollbar]:hidden lg:px-[max(1rem,calc((100vw-72rem)/2))] lg:scroll-px-[max(1rem,calc((100vw-72rem)/2))]">
               {dineInLocations.map((location) => (
                 <LocationTile
                   key={location.slug}
@@ -365,7 +390,7 @@ export default function HomePage() {
                 </Link>
               </div>
             </div>
-            <div className="mt-6 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 scroll-px-4 pb-3 [scrollbar-width:none] sm:gap-4 [&::-webkit-scrollbar]:hidden">
+            <div className="mt-6 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 scroll-px-4 pb-3 [scrollbar-width:none] sm:gap-4 [&::-webkit-scrollbar]:hidden lg:px-[max(1rem,calc((100vw-72rem)/2))] lg:scroll-px-[max(1rem,calc((100vw-72rem)/2))]">
               {takeAwayLocations.map((location) => (
                 <LocationTile
                   key={location.slug}

@@ -42,7 +42,9 @@ export function DeliveryButtons({ location }: { location: Location }) {
 
 /** CTA "Pedir a domicilio". Con una sola plataforma enlaza directo a su
  * tienda; con varias abre un modal para elegir. No renderiza nada si el
- * local no tiene delivery (p.ej. Raval). */
+ * local no tiene delivery (p.ej. Raval) ni en take-away: ahí "Pedir para
+ * llevar" y "Pedir a domicilio" suenan a lo mismo, así que el delivery vive
+ * dentro del modal de <ReservaCTA> (un único CTA de pedido). */
 export function DeliveryCTA({
   location,
   variant = "light",
@@ -55,7 +57,7 @@ export function DeliveryCTA({
   const tReserva = useTranslations("reserva");
   const delivery = location.delivery;
 
-  if (!delivery) return null;
+  if (!delivery || location.type === "take-away") return null;
 
   const className =
     variant === "onDark"

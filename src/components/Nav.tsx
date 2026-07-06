@@ -28,14 +28,18 @@ export function Nav() {
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   // Páginas cuyo hero (imagen oscura) pasa por debajo del nav transparente.
-  // La home ya no: su hero nuevo es claro (texto sobre crema + video).
   const hasDarkHero =
     pathname === "/nuestra-historia" ||
     pathname.startsWith("/restaurantes") ||
     pathname.startsWith("/para-llevar");
 
+  // La home tiene hero oscuro SOLO en móvil (video de fondo); en desktop es
+  // claro. Por eso su transparencia se resuelve con variantes md: en CSS.
+  const hasMobileDarkHero = pathname === "/";
+
   const solid = scrolled || open || !hasDarkHero;
   const onDark = !solid;
+  const mobileOnDark = hasMobileDarkHero && !scrolled && !open;
 
   const desktopLink = (href: string) =>
     `py-2 transition-colors duration-500 hover:text-mustard ${
@@ -53,14 +57,22 @@ export function Nav() {
 
       <header
         className={`sticky top-0 z-50 border-b transition-colors duration-500 ${
-          solid
-            ? "border-teal-dark/10 bg-cream/95 backdrop-blur"
-            : "border-transparent bg-transparent"
+          onDark || mobileOnDark
+            ? "border-transparent bg-transparent"
+            : "border-teal-dark/10 bg-cream/95 backdrop-blur"
+        } ${
+          mobileOnDark && !onDark
+            ? "md:border-teal-dark/10 md:bg-cream/95 md:backdrop-blur"
+            : ""
         }`}
       >
         <div
           className={`mx-auto flex h-16 max-w-6xl items-center justify-between px-4 transition-colors duration-500 ${
-            onDark ? "text-cream" : "text-teal-dark"
+            onDark
+              ? "text-cream"
+              : mobileOnDark
+                ? "text-cream md:text-teal-dark"
+                : "text-teal-dark"
           }`}
         >
           <Link
@@ -75,7 +87,11 @@ export function Nav() {
               height={74}
               preload
               className={`h-10 w-auto transition-[filter] duration-500 ${
-                onDark ? "brightness-0 invert" : ""
+                onDark
+                  ? "brightness-0 invert"
+                  : mobileOnDark
+                    ? "brightness-0 invert md:filter-none"
+                    : ""
               }`}
             />
           </Link>

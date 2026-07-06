@@ -63,7 +63,7 @@ export const locations: Location[] = [
   {
     slug: "gotic",
     urlSlug: "gotic",
-    name: "Da Nanni Gòtic",
+    name: "Da Nanni Gòtic Take Away",
     neighborhood: "Gòtic",
     type: "take-away",
     address: "Carrer de la Llibreteria, 10, 08002 Barcelona",

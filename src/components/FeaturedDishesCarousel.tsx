@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { AutoplayVideo } from "./AutoplayVideo";
 import { DishMediaViewer, type MediaEntry } from "./DishMediaViewer";
@@ -9,15 +9,40 @@ import { DishMediaViewer, type MediaEntry } from "./DishMediaViewer";
  * Carrusel horizontal de platos destacados de la home: tarjetas de video
  * vertical que se reproducen al entrar en viewport y abren el visor
  * fullscreen (DishMediaViewer) al tocarlas. La curación vive en
- * src/data/featured.ts.
+ * src/data/featured.ts. Debajo, una barra de progreso indica que hay más
+ * platos deslizando a la derecha.
  */
 export function FeaturedDishesCarousel({ entries }: { entries: MediaEntry[] }) {
   const t = useTranslations("home");
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [progress, setProgress] = useState(0); // 0..1 del scroll horizontal
+  const [visibleRatio, setVisibleRatio] = useState(1); // viewport/contenido
+
+  useEffect(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    const update = () => {
+      const max = el.scrollWidth - el.clientWidth;
+      setVisibleRatio(el.clientWidth / el.scrollWidth);
+      setProgress(max > 0 ? el.scrollLeft / max : 0);
+    };
+    update();
+    el.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      el.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, []);
+
   return (
     <>
-      <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 scroll-px-4 pb-3 [scrollbar-width:none] sm:gap-4 [&::-webkit-scrollbar]:hidden">
+      <div
+        ref={trackRef}
+        className="flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 scroll-px-4 pb-3 [scrollbar-width:none] sm:gap-4 [&::-webkit-scrollbar]:hidden"
+      >
         {entries.map((entry, i) => (
           <button
             key={entry.item.name}
@@ -43,6 +68,27 @@ export function FeaturedDishesCarousel({ entries }: { entries: MediaEntry[] }) {
           </button>
         ))}
       </div>
+
+      {/* Afordancia de scroll: barra de progreso + pista, solo si hay overflow */}
+      {visibleRatio < 1 && (
+        <div className="mt-5 flex items-center justify-center gap-3 px-4">
+          <div
+            className="relative h-1 w-28 overflow-hidden rounded-full bg-teal-dark/10"
+            aria-hidden
+          >
+            <div
+              className="absolute inset-y-0 left-0 rounded-full bg-mustard"
+              style={{
+                width: `${visibleRatio * 100}%`,
+                transform: `translateX(${progress * (1 / visibleRatio - 1) * 100}%)`,
+              }}
+            />
+          </div>
+          <p className="font-sans text-xs font-medium text-teal-dark/50">
+            {t("platosDesliza")}
+          </p>
+        </div>
+      )}
 
       {openIndex !== null && (
         <DishMediaViewer

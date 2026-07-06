@@ -4,12 +4,14 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import type { Location } from "@/data/locations";
 import { CtaModal } from "./CtaModal";
+import { DeliveryButtons } from "./DeliveryCTA";
 
 /**
- * CTA de reserva (dine-in) / pedido para recoger (take-away): abre un modal
- * con llamada directa al local. El día que se integre Cover Manager (u otra
- * plataforma de reservas), este componente pasa a renderizar su iframe/script
- * sin tocar el resto de la maqueta. El delivery vive en <DeliveryCTA>.
+ * CTA de reserva (dine-in) / pedido (take-away): abre un modal con llamada
+ * directa al local. En take-away el modal también ofrece el delivery
+ * (Glovo/Just Eat) — un único CTA de pedido, no dos que suenan igual.
+ * El día que se integre Cover Manager (u otra plataforma de reservas), este
+ * componente pasa a renderizar su iframe/script sin tocar el resto.
  */
 export function ReservaCTA({
   location,
@@ -48,7 +50,12 @@ export function ReservaCTA({
           }
           body={
             isTakeAway
-              ? tReserva("modalBodyTakeAway", { name: location.name })
+              ? tReserva(
+                  location.delivery
+                    ? "modalBodyTakeAwayDomicilio"
+                    : "modalBodyTakeAway",
+                  { name: location.name }
+                )
               : tReserva("modalBodyDineIn", { name: location.name })
           }
           onClose={() => setOpen(false)}
@@ -59,6 +66,7 @@ export function ReservaCTA({
           >
             {t("llamar")} · {location.phone}
           </a>
+          {isTakeAway && <DeliveryButtons location={location} />}
         </CtaModal>
       )}
     </>
