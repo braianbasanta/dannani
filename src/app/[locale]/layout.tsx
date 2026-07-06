@@ -61,6 +61,9 @@ export default async function LocaleLayout({
   return (
     <html
       lang={locale}
+      // Next 16 ya no fuerza scroll instantáneo al navegar cuando el CSS tiene
+      // scroll-behavior: smooth; este atributo restaura ese comportamiento.
+      data-scroll-behavior="smooth"
       className={`${fraunces.variable} ${publicSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">

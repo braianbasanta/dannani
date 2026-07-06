@@ -117,7 +117,7 @@ function CtaPill({
   className = "",
   children,
 }: {
-  href: "/restaurantes" | "/para-llevar" | "/nuestra-historia";
+  href: "/restaurantes" | "/para-llevar" | "/nuestra-historia" | "/carta";
   variant: "gold" | "ghost";
   className?: string;
   children: React.ReactNode;
@@ -189,7 +189,10 @@ export default function HomePage() {
       {/* 1 · Hero: claim + reel de elaboración. En móvil el video es el fondo
           a pantalla completa con el texto encima; en desktop va dentro de una
           silueta de iPhone sobre fondo claro con luz ambiental. */}
-      <section className="relative -mt-16 overflow-hidden md:mt-0">
+      {/* Se sube bajo el nav (-mt-16) en TODOS los tamaños: si no, la franja
+          del nav muestra el cream plano del body y el fondo cálido del hero
+          empieza de golpe justo debajo, dejando una línea visible. */}
+      <section className="relative -mt-16 overflow-hidden">
         {/* Fondo móvil: el reel con scrim de marca para legibilidad */}
         <div aria-hidden className="absolute inset-0 md:hidden">
           <AutoplayVideo
@@ -207,11 +210,11 @@ export default function HomePage() {
           aria-hidden
           className="pointer-events-none absolute inset-0 -z-10 hidden md:block"
         >
-          <div className="absolute -top-32 right-[-8%] h-[32rem] w-[32rem] rounded-full bg-mustard/10 blur-3xl" />
+          <div className="absolute -top-16 right-[-8%] h-[32rem] w-[32rem] rounded-full bg-mustard/10 blur-3xl" />
           <div className="absolute bottom-[-35%] left-[-12%] h-[28rem] w-[28rem] rounded-full bg-teal/[0.08] blur-3xl" />
         </div>
 
-        <div className="relative mx-auto grid min-h-[100svh] max-w-6xl content-center items-center gap-12 px-4 pb-20 pt-24 md:min-h-0 md:grid-cols-[1fr_auto] md:gap-16 md:pb-24 md:pt-16">
+        <div className="relative mx-auto grid min-h-[100svh] max-w-6xl content-center items-center gap-12 px-4 pb-20 pt-24 md:min-h-0 md:grid-cols-[1fr_auto] md:gap-16 md:pb-24 md:pt-32">
           <div>
             <p className="eyebrow animate-fade-up">{t("eyebrow")}</p>
             <h1 className="mt-4 max-w-2xl animate-fade-up font-display text-4xl leading-[1.05] tracking-tight text-cream [animation-delay:100ms] sm:text-5xl md:text-teal-dark lg:text-6xl xl:text-7xl">
@@ -318,6 +321,13 @@ export default function HomePage() {
         <div className="mt-10 sm:mt-12">
           <FeaturedDishesCarousel entries={featuredDishEntries} />
         </div>
+        <Reveal>
+          <div className="mt-10 flex justify-center px-4 sm:mt-12">
+            <CtaPill href="/carta" variant="ghost" className="text-teal-dark">
+              {t("platosCta")}
+            </CtaPill>
+          </div>
+        </Reveal>
       </section>
 
       {/* 3 · Decisión: comer aquí o para llevar */}

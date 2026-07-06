@@ -33,8 +33,9 @@ export function Nav() {
     pathname.startsWith("/restaurantes") ||
     pathname.startsWith("/para-llevar");
 
-  // La home tiene hero oscuro SOLO en móvil (video de fondo); en desktop es
-  // claro. Por eso su transparencia se resuelve con variantes md: en CSS.
+  // La home arranca transparente en todos los tamaños, pero su hero solo es
+  // oscuro en móvil (video de fondo); en desktop es claro, así que el color
+  // del texto se resuelve con variantes md: en CSS.
   const hasMobileDarkHero = pathname === "/";
 
   const solid = scrolled || open || !hasDarkHero;
@@ -55,19 +56,18 @@ export function Nav() {
         className="pointer-events-none absolute inset-x-0 top-0 h-6"
       />
 
+      {/* -mb-px: el border-b (aun transparente) añade 1px a la altura del nav;
+          sin compensarlo, los heros que se suben con -mt-16 dejan ver una
+          línea de 1px del fondo cream del body arriba del todo. */}
       <header
-        className={`sticky top-0 z-50 border-b transition-colors duration-500 ${
+        className={`sticky top-0 z-50 -mb-px border-b transition-colors duration-300 ${
           onDark || mobileOnDark
             ? "border-transparent bg-transparent"
             : "border-teal-dark/10 bg-cream/95 backdrop-blur"
-        } ${
-          mobileOnDark && !onDark
-            ? "md:border-teal-dark/10 md:bg-cream/95 md:backdrop-blur"
-            : ""
         }`}
       >
         <div
-          className={`mx-auto flex h-16 max-w-6xl items-center justify-between px-4 transition-colors duration-500 ${
+          className={`mx-auto flex h-16 max-w-6xl items-center justify-between px-4 transition-colors duration-300 ${
             onDark
               ? "text-cream"
               : mobileOnDark
