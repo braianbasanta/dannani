@@ -444,14 +444,11 @@ export default function HomePage() {
 
       {/* 4 · Experiencia: el ambiente de los locales, en video */}
       <section className="relative overflow-hidden bg-night-soft py-20 sm:py-28">
-        {/* Profundidad del bloque: luz cenital eléctrica + palabra editorial */}
+        {/* Profundidad del bloque: luz cenital eléctrica */}
         <div aria-hidden className="pointer-events-none absolute inset-0">
           <div className="absolute -top-40 left-1/2 h-[30rem] w-[46rem] -translate-x-1/2 rounded-full bg-electric/[0.08] blur-3xl" />
-          <p className="absolute -bottom-6 right-0 select-none font-display text-[7rem] italic leading-none tracking-tight text-cream/[0.05] sm:-bottom-10 sm:text-[12rem]">
-            Napoli
-          </p>
         </div>
-        {/* Bordes difuminados hacia night (última capa para tapar el glow) */}
+        {/* Bordes difuminados hacia night (tapan el fondo y el glow) */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-night to-transparent"
@@ -460,6 +457,13 @@ export default function HomePage() {
           aria-hidden
           className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-night to-transparent"
         />
+        {/* Palabra editorial por encima del fundido para que siga leyéndose */}
+        <p
+          aria-hidden
+          className="pointer-events-none absolute -bottom-6 right-0 select-none font-display text-[7rem] italic leading-none tracking-tight text-cream/[0.05] sm:-bottom-10 sm:text-[12rem]"
+        >
+          Napoli
+        </p>
         <div className="relative mx-auto max-w-6xl px-4">
           <Reveal>
             {/* Frase del neón real que cuelga en los locales */}

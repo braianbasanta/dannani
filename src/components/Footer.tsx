@@ -19,7 +19,7 @@ export function Footer() {
               alt="Da Nanni – Pizzeria Napoletana"
               width={1200}
               height={785}
-              className="h-16 w-auto"
+              className="h-24 w-auto"
             />
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-cream/70">
               {t("tagline")}

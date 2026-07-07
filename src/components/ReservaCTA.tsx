@@ -36,8 +36,8 @@ export function ReservaCTA({
         onClick={() => setOpen(true)}
         className={`${
           variant === "primary"
-            ? "inline-flex items-center justify-center rounded-full bg-electric px-6 py-3 font-sans text-sm font-semibold text-night transition hover:bg-electric-dark hover:shadow-neon"
-            : "inline-flex items-center justify-center rounded-full border border-cream/70 px-6 py-3 font-sans text-sm font-semibold text-cream transition hover:bg-cream/10"
+            ? "inline-flex items-center justify-center rounded-full bg-[linear-gradient(160deg,#8adcf5_0%,#59c8ec_52%,#35aed6_100%)] px-6 py-3 font-sans text-sm font-bold uppercase tracking-[0.18em] text-night ring-1 ring-black/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.45),0_14px_34px_-8px_rgba(0,0,0,0.6),0_0_24px_rgba(89,200,236,0.25)] transition-all duration-300 ease-fluid hover:-translate-y-0.5 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.5),0_22px_46px_-10px_rgba(0,0,0,0.65),0_0_40px_rgba(89,200,236,0.4)] active:scale-[0.98]"
+            : "inline-flex items-center justify-center rounded-full bg-cream/10 px-6 py-3 font-sans text-sm font-bold uppercase tracking-[0.14em] text-cream ring-1 ring-cream/25 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_10px_30px_-12px_rgba(0,0,0,0.5)] transition-all duration-300 ease-fluid hover:-translate-y-0.5 hover:bg-[linear-gradient(160deg,#8adcf5_0%,#59c8ec_52%,#35aed6_100%)] hover:text-night hover:ring-black/20 active:scale-[0.98]"
         }${className ? ` ${className}` : ""}`}
       >
         {label}

@@ -6,7 +6,10 @@ import type { Location } from "@/data/locations";
 import { CtaModal } from "./CtaModal";
 
 const PLATFORM_BTN =
-  "inline-flex items-center justify-center rounded-full bg-mustard px-5 py-3 text-sm font-semibold text-cream hover:bg-mustard-dark";
+  "inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-semibold transition-colors";
+// Colores de marca de cada plataforma: con ver el botón ya sabes a dónde vas.
+const GLOVO_BTN = `${PLATFORM_BTN} bg-[#ffc244] text-[#1d1d1d] hover:bg-[#f2b52e]`;
+const JUST_EAT_BTN = `${PLATFORM_BTN} bg-[#ff8000] text-white hover:bg-[#e67300]`;
 
 /** Botones directos a las tiendas de delivery del local (Glovo/Just Eat).
  * Se usan dentro del modal y en la landing /a-domicilio. */
@@ -21,7 +24,7 @@ export function DeliveryButtons({ location }: { location: Location }) {
           href={location.delivery.glovo}
           target="_blank"
           rel="noopener noreferrer"
-          className={PLATFORM_BTN}
+          className={GLOVO_BTN}
         >
           {t("pedirGlovo")}
         </a>
@@ -31,7 +34,7 @@ export function DeliveryButtons({ location }: { location: Location }) {
           href={location.delivery.justEat}
           target="_blank"
           rel="noopener noreferrer"
-          className={PLATFORM_BTN}
+          className={JUST_EAT_BTN}
         >
           {t("pedirJustEat")}
         </a>
@@ -47,11 +50,9 @@ export function DeliveryButtons({ location }: { location: Location }) {
  * dentro del modal de <ReservaCTA> (un único CTA de pedido). */
 export function DeliveryCTA({
   location,
-  variant = "light",
   className,
 }: {
   location: Location;
-  variant?: "light" | "onDark";
   className?: string;
 }) {
   const [open, setOpen] = useState(false);
@@ -61,11 +62,11 @@ export function DeliveryCTA({
 
   if (!delivery || location.type === "take-away") return null;
 
-  const btnClassName = `${
-    variant === "onDark"
-      ? "inline-flex items-center justify-center rounded-full border border-cream/70 px-4 py-3 font-sans text-sm font-semibold text-cream transition hover:bg-cream/10"
-      : "inline-flex items-center justify-center rounded-full border border-cream/25 px-4 py-3 font-sans text-sm font-semibold text-cream transition hover:bg-cream/5"
-  }${className ? ` ${className}` : ""}`;
+  // Glass pill (mismo look que los CTAs del hero de la home) en ambas
+  // variantes; se enciende en eléctrico al hover.
+  const btnClassName = `inline-flex items-center justify-center rounded-full bg-cream/10 px-4 py-3 font-sans text-xs font-bold uppercase tracking-[0.14em] text-cream ring-1 ring-cream/25 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_10px_30px_-12px_rgba(0,0,0,0.5)] transition-all duration-300 ease-fluid hover:-translate-y-0.5 hover:bg-[linear-gradient(160deg,#8adcf5_0%,#59c8ec_52%,#35aed6_100%)] hover:text-night hover:ring-black/20 active:scale-[0.98]${
+    className ? ` ${className}` : ""
+  }`;
 
   const single = !delivery.glovo || !delivery.justEat;
   if (single) {

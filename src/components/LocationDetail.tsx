@@ -76,17 +76,7 @@ export function LocationDetail({
         <div className="absolute inset-0 bg-gradient-to-t from-night/95 via-night/40 to-night/10" />
         <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-night/60 to-transparent" />
         <div className="relative mx-auto w-full max-w-4xl animate-fade-up px-4 pb-14 pt-28 text-cream drop-shadow-[0_1px_6px_rgba(0,0,0,0.55)]">
-          <div className="flex flex-wrap gap-2">
-            <span className="rounded-full bg-night/70 px-3 py-1 text-xs font-semibold text-cream ring-1 ring-cream/20 backdrop-blur-sm">
-              {location.type === "take-away" ? tBadges("takeAway") : tBadges("dineIn")}
-            </span>
-            {location.nearBeach && (
-              <span className="rounded-full bg-mustard px-3 py-1 text-xs font-semibold text-cream">
-                {tBadges("cercaPlaya")}
-              </span>
-            )}
-          </div>
-          <p className="mt-5 text-sm font-semibold uppercase tracking-[0.2em] text-electric">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-electric">
             {location.name} · {t("desde")} {location.openedYear}
           </p>
           <h1 className="mt-3 max-w-2xl font-display text-4xl leading-[1.05] tracking-tight sm:text-5xl">
@@ -103,22 +93,14 @@ export function LocationDetail({
                 location={location}
                 className="col-span-2 h-14 w-full"
               />
-              <DeliveryCTA
-                location={location}
-                variant="onDark"
-                className="w-full"
-              />
-              <ComoLlegar
-                location={location}
-                variant="onDark"
-                className="w-full"
-              />
+              <DeliveryCTA location={location} className="w-full" />
+              <ComoLlegar location={location} className="w-full" />
             </div>
           ) : (
             /* 2 CTAs: en línea con su tamaño natural */
             <div className="mt-7 flex flex-wrap gap-3">
               <ReservaCTA location={location} />
-              <ComoLlegar location={location} variant="onDark" />
+              <ComoLlegar location={location} />
             </div>
           )}
         </div>

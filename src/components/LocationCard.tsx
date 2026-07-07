@@ -6,7 +6,6 @@ import { hrefFor, heroImageSrc, hoursParts } from "@/data/locations";
 import { ComoLlegar } from "@/components/ComoLlegar";
 
 export function LocationCard({ location }: { location: Location }) {
-  const t = useTranslations("badges");
   const tCta = useTranslations("cta");
   const href = hrefFor(location);
 
@@ -26,14 +25,6 @@ export function LocationCard({ location }: { location: Location }) {
           sizes="(min-width: 768px) 50vw, 100vw"
           className="object-cover transition-transform duration-700 ease-fluid group-hover:scale-[1.04]"
         />
-        <span className="absolute left-3 top-3 rounded-full bg-night/70 px-3 py-1 text-xs font-semibold text-cream ring-1 ring-cream/20 backdrop-blur-sm">
-          {location.type === "take-away" ? t("takeAway") : t("dineIn")}
-        </span>
-        {location.nearBeach && (
-          <span className="absolute right-3 top-3 rounded-full bg-mustard px-3 py-1 text-xs font-semibold text-cream">
-            {t("cercaPlaya")}
-          </span>
-        )}
       </Link>
 
       <div className="flex flex-1 flex-col gap-4 p-5 sm:p-6">
