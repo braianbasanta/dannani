@@ -9,9 +9,9 @@ import type { Milestone } from "@/components/HistoriaTimeline";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Nuestra Historia",
+  title: "Nuestra Historia – Un Viaje de Nápoles a Barcelona",
   description:
-    "Da Nanni nace en 2017 de una familia napolitana en Barcelona. Descubre la historia detrás de nuestra sirena Partenope, nuestra mascota Nanni y cada local que hemos abierto.",
+    "Da Nanni nace en 2018 de una familia napolitana en Barcelona. Descubre la historia detrás de nuestra sirena Partenope, nuestra mascota Nanni y cada local que hemos abierto.",
   path: "/nuestra-historia",
 });
 
@@ -88,15 +88,18 @@ export default function NuestraHistoriaPage() {
         header={
           <div className="grid items-center gap-12 md:grid-cols-2 lg:gap-16">
             <div>
-              <p className="eyebrow">Bienvenidos a nuestra historia</p>
-              <h1 className="mt-3 font-display text-4xl leading-[1.05] tracking-tight sm:text-6xl">
-                De Nápoles a Barcelona
+              <p className="eyebrow">Ristorante e Pizzeria Napoletana</p>
+              <h1 className="mt-3 font-script text-5xl leading-[1.1] sm:text-7xl">
+                Un viaje de Nápoles a Barcelona, bocado a bocado
               </h1>
               <p className="mt-6 max-w-md leading-relaxed text-cream/75">
-                En 2017 tuvimos una idea sencilla: traer la auténtica cocina
-                napolitana a las calles de Barcelona, sin atajos. Masa de
-                larga fermentación, horno de leña encendido los siete días
-                de la semana y una familia napolitana detrás de cada mesa.
+                En 2018, en el corazón vibrante de Barcelona, nace Da Nanni.
+                No un simple restaurante, sino una promesa de amor nacida del
+                encuentro entre dos culturas extraordinarias. La capital
+                catalana nos acogió con los brazos abiertos, convirtiéndose
+                en nuestro segundo hogar: una tierra generosa que hemos
+                decidido corresponder trayendo con nosotros el tesoro más
+                preciado que poseemos, la tradición gastronómica de Nápoles.
               </p>
               <p className="mt-4 max-w-md leading-relaxed text-cream/75">
                 El logo lleva a Partenope, la sirena fundadora de Nápoles.
@@ -110,38 +113,103 @@ export default function NuestraHistoriaPage() {
             <figure>
               <div className="relative aspect-[4/5] overflow-hidden rounded-[1.75rem] shadow-card">
                 <Image
-                  src="/images/historia/fontana-sirena-partenope.jpg"
-                  alt="Fontana della Sirena Partenope, en Nápoles"
+                  src="/images/historia/nanni-nino-pizza.jpg"
+                  alt="Nanni, el pequeño de la casa, comiendo una porción de pizza"
                   fill
                   sizes="(min-width: 768px) 40vw, 100vw"
                   className="object-cover"
                 />
               </div>
               <figcaption className="mt-3 text-xs text-cream/55 sm:text-sm">
-                Fontana della Sirena Partenope · Piazza Sannazaro, Nápoles
+                Nanni, el pequeño de la casa
               </figcaption>
             </figure>
           </div>
         }
       />
 
-      <article className="mx-auto max-w-3xl px-4 py-16 font-sans text-teal-dark sm:py-20">
-        <h2 className="font-display text-2xl text-teal-dark sm:text-3xl">
-          Nápoles en el corazón
+      <article className="mx-auto max-w-3xl px-4 py-16 font-sans text-cream sm:py-20">
+        <h2 className="font-script text-4xl text-cream sm:text-5xl">
+          La filosofía: respeto y autenticidad
         </h2>
         <p className="mt-3 leading-relaxed">
-          Cada plato de nuestra cocina es una celebración de la riqueza
-          culinaria de Nápoles, preparado con pasión e ingredientes
-          genuinos. En la base de nuestra filosofía culinaria está la pizza
-          napolitana: masa de larga fermentación e ingredientes frescos,
-          una declaración de amor por la tradición y la excelencia
-          culinaria.
+          ¿Nuestro secreto? No hacer concesiones. Para nosotros, la cocina
+          napolitana es sagrada. Por este motivo, cada ingrediente clave
+          —desde los tomates San Marzano bañados por el sol hasta la
+          mozzarella de búfala campana DOP, pasando por la harina de
+          nuestras masas— viaja directamente desde la Campania a Barcelona.
+          Respetamos las materias primas para no desvirtuar jamás los
+          sabores genuinos de nuestra infancia, garantizando la
+          autenticidad de recetas transmitidas de generación en generación.
         </p>
 
-        <p className="mt-6 rounded-xl bg-teal-dark/5 px-5 py-4 text-sm italic text-teal-dark/80">
-          &ldquo;Usamos solo los mejores ingredientes para lograr sabores
-          excepcionales.&rdquo;
+        <h2 className="mt-14 font-script text-4xl text-cream sm:text-5xl">
+          Nuestro manifiesto: pizza, pasta y hospitalidad
+        </h2>
+        <p className="mt-3 leading-relaxed">
+          En Da Nanni, la experiencia no se detiene en el plato. Lo que nos
+          distingue desde 2018 es una tríada indisoluble:
         </p>
+        <ul className="mt-6 grid gap-4 sm:grid-cols-3">
+          <li className="rounded-[1.25rem] bg-cream/5 p-5 ring-1 ring-cream/10">
+            <p className="font-script text-2xl text-electric">La pizza</p>
+            <p className="mt-2 text-sm leading-relaxed text-cream/80">
+              Estirada a mano, de borde alveolado y ligero, horneada como
+              manda la tradición.
+            </p>
+          </li>
+          <li className="rounded-[1.25rem] bg-cream/5 p-5 ring-1 ring-cream/10">
+            <p className="font-script text-2xl text-electric">La pasta</p>
+            <p className="mt-2 text-sm leading-relaxed text-cream/80">
+              Trefilada al bronce, unida a salsas lentas y sabrosas que
+              huelen a hogar.
+            </p>
+          </li>
+          <li className="rounded-[1.25rem] bg-cream/5 p-5 ring-1 ring-cream/10">
+            <p className="font-script text-2xl text-electric">
+              La hospitalidad
+            </p>
+            <p className="mt-2 text-sm leading-relaxed text-cream/80">
+              Ese calor espontáneo y generoso que hace que cualquiera se
+              sienta un invitado de honor, no un simple cliente.
+            </p>
+          </li>
+        </ul>
+
+        <div className="mt-14 grid items-center gap-8 sm:grid-cols-[1.35fr_1fr]">
+          <div>
+            <h2 className="font-script text-4xl text-cream sm:text-5xl">
+              Un viaje papilar único
+            </h2>
+            <p className="mt-3 leading-relaxed">
+              Cruzar el umbral de Da Nanni significa cerrar los ojos en
+              Barcelona y abrirlos frente al Golfo de Nápoles. Queremos que
+              el vuestro sea un verdadero viaje papilar: una experiencia
+              sensorial donde el aroma de la albahaca fresca, la calidez de
+              la bienvenida y la autenticidad de los sabores os
+              transportarán directamente a los callejones napolitanos.
+            </p>
+            <p className="neon-blue mt-8 font-script text-3xl sm:text-4xl">
+              Bienvenidos a nuestra tierra. Bienvenidos a Da Nanni.
+            </p>
+          </div>
+
+          <figure className="sm:-rotate-1">
+            <div className="relative aspect-[3/4] overflow-hidden rounded-[1.75rem] shadow-card ring-1 ring-cream/10">
+              <Image
+                src="/images/historia/fontana-sirena-partenope.jpg"
+                alt="Fontana della Sirena Partenope, en Nápoles"
+                fill
+                sizes="(min-width: 640px) 33vw, 100vw"
+                loading="lazy"
+                className="object-cover"
+              />
+            </div>
+            <figcaption className="mt-3 text-xs text-cream/55 sm:text-sm">
+              Fontana della Sirena Partenope · Piazza Sannazaro, Nápoles
+            </figcaption>
+          </figure>
+        </div>
 
         <div className="mt-14 grid gap-4 sm:grid-cols-2">
           <Link
@@ -156,7 +224,7 @@ export default function NuestraHistoriaPage() {
               sizes="(min-width: 640px) 50vw, 100vw"
               className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-teal-dark/90 via-teal-dark/30 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-night/90 via-night/30 to-transparent" />
             <div className="relative p-6 text-cream">
               <p className="font-display text-xl">Restaurantes</p>
               <p className="mt-1 text-sm text-cream/80">
@@ -176,7 +244,7 @@ export default function NuestraHistoriaPage() {
               sizes="(min-width: 640px) 50vw, 100vw"
               className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-teal-dark/90 via-teal-dark/30 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-night/90 via-night/30 to-transparent" />
             <div className="relative p-6 text-cream">
               <p className="font-display text-xl">Para llevar</p>
               <p className="mt-1 text-sm text-cream/80">Gòtic · Raval</p>

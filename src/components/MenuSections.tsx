@@ -49,8 +49,8 @@ export function MenuSections({ menu }: { menu: MenuSection[] }) {
       className={
         "rounded-full px-4 py-2 text-sm font-medium transition " +
         (category === value
-          ? "bg-teal-dark text-cream"
-          : "bg-white text-teal-dark hover:bg-teal-dark/10")
+          ? "bg-electric text-night"
+          : "bg-cream/10 text-cream hover:bg-cream/20")
       }
     >
       {label}
@@ -71,8 +71,8 @@ export function MenuSections({ menu }: { menu: MenuSection[] }) {
             className={
               "ml-auto rounded-full px-4 py-2 text-sm font-medium transition " +
               (vegetarianOnly
-                ? "bg-mustard text-teal-dark"
-                : "bg-white text-teal-dark ring-1 ring-teal-dark/20 hover:bg-teal-dark/10")
+                ? "bg-mustard text-night"
+                : "bg-cream/10 text-cream ring-1 ring-cream/20 hover:bg-cream/20")
             }
           >
             {t("soloVegetariano")}
@@ -81,7 +81,7 @@ export function MenuSections({ menu }: { menu: MenuSection[] }) {
       </div>
 
       {visibleSections.length === 0 ? (
-        <p className="mt-8 text-sm text-teal-dark/60">{t("sinResultados")}</p>
+        <p className="mt-8 text-sm text-cream/60">{t("sinResultados")}</p>
       ) : (
         <div className="mt-8 grid gap-x-10 gap-y-8 sm:grid-cols-2">
           {visibleSections.map((section) => {
@@ -92,7 +92,7 @@ export function MenuSections({ menu }: { menu: MenuSection[] }) {
                   {section.title}
                 </h3>
                 {section.note && (
-                  <p className="mt-1 text-xs italic text-teal-dark/60">
+                  <p className="mt-1 text-xs italic text-cream/60">
                     {section.note}
                   </p>
                 )}
@@ -101,7 +101,7 @@ export function MenuSections({ menu }: { menu: MenuSection[] }) {
                     "mt-2" +
                     (isLong
                       ? " sm:columns-2 sm:gap-x-10"
-                      : " divide-y divide-teal-dark/10")
+                      : " divide-y divide-cream/10")
                   }
                 >
                   {section.items.map((item) => (
@@ -110,7 +110,7 @@ export function MenuSections({ menu }: { menu: MenuSection[] }) {
                       className={
                         "flex justify-between gap-4 py-2" +
                         (isLong
-                          ? " break-inside-avoid border-b border-teal-dark/10 last:border-b-0"
+                          ? " break-inside-avoid border-b border-cream/10 last:border-b-0"
                           : "")
                       }
                     >
@@ -123,7 +123,7 @@ export function MenuSections({ menu }: { menu: MenuSection[] }) {
                                 mediaEntries.findIndex((v) => v.item === item)
                               )
                             }
-                            className="text-left font-medium text-mustard underline decoration-mustard/40 underline-offset-2 transition hover:text-mustard-dark hover:decoration-mustard-dark"
+                            className="text-left font-medium text-electric underline decoration-electric/40 underline-offset-2 transition hover:text-electric-dark hover:decoration-electric-dark"
                           >
                             {item.name}
                           </button>
@@ -131,7 +131,7 @@ export function MenuSections({ menu }: { menu: MenuSection[] }) {
                           item.name
                         )}
                         {item.description && (
-                          <span className="block text-xs text-teal-dark/60">
+                          <span className="block text-xs text-cream/60">
                             {item.description}
                           </span>
                         )}

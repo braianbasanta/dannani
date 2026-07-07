@@ -48,9 +48,11 @@ export function DeliveryButtons({ location }: { location: Location }) {
 export function DeliveryCTA({
   location,
   variant = "light",
+  className,
 }: {
   location: Location;
   variant?: "light" | "onDark";
+  className?: string;
 }) {
   const [open, setOpen] = useState(false);
   const t = useTranslations("cta");
@@ -59,10 +61,11 @@ export function DeliveryCTA({
 
   if (!delivery || location.type === "take-away") return null;
 
-  const className =
+  const btnClassName = `${
     variant === "onDark"
-      ? "inline-flex items-center justify-center rounded-full border border-cream/70 px-6 py-3 font-sans text-sm font-semibold text-cream transition hover:bg-cream/10"
-      : "inline-flex items-center justify-center rounded-full border border-teal-dark/20 px-6 py-3 font-sans text-sm font-semibold text-teal-dark transition hover:bg-teal-dark/5";
+      ? "inline-flex items-center justify-center rounded-full border border-cream/70 px-4 py-3 font-sans text-sm font-semibold text-cream transition hover:bg-cream/10"
+      : "inline-flex items-center justify-center rounded-full border border-cream/25 px-4 py-3 font-sans text-sm font-semibold text-cream transition hover:bg-cream/5"
+  }${className ? ` ${className}` : ""}`;
 
   const single = !delivery.glovo || !delivery.justEat;
   if (single) {
@@ -71,7 +74,7 @@ export function DeliveryCTA({
         href={delivery.glovo ?? delivery.justEat}
         target="_blank"
         rel="noopener noreferrer"
-        className={className}
+        className={btnClassName}
       >
         {t("pedirDomicilio")}
       </a>
@@ -80,7 +83,7 @@ export function DeliveryCTA({
 
   return (
     <>
-      <button type="button" onClick={() => setOpen(true)} className={className}>
+      <button type="button" onClick={() => setOpen(true)} className={btnClassName}>
         {t("pedirDomicilio")}
       </button>
 

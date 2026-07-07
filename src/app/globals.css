@@ -1,28 +1,45 @@
 @import "tailwindcss";
 
 :root {
-  --color-teal: #3e7e8c;
+  /* Rebrand 2026: fondo negro (tintado teal, nunca #000 puro), azul
+     eléctrico del logo/neón como acento dominante y dorado de la sirena. */
+  --color-night: #0a0f11;
+  --color-night-soft: #121a1d;
+  --color-teal: #4693aa; /* azul exacto del logo nuevo */
   --color-teal-dark: #1f3b40;
   --color-cream: #fdfbf6;
+  --color-electric: #59c8ec; /* azul neón (rótulos de los locales) */
+  --color-electric-dark: #35aed6;
+  --color-sand: #b4a179; /* dorado de la sirena del logo */
   --color-mustard: #d98e2b;
   --color-mustard-dark: #b8791f;
 }
 
 @theme inline {
+  --color-night: var(--color-night);
+  --color-night-soft: var(--color-night-soft);
   --color-teal: var(--color-teal);
   --color-teal-dark: var(--color-teal-dark);
   --color-cream: var(--color-cream);
+  --color-electric: var(--color-electric);
+  --color-electric-dark: var(--color-electric-dark);
+  --color-sand: var(--color-sand);
   --color-mustard: var(--color-mustard);
   --color-mustard-dark: var(--color-mustard-dark);
 
   --font-display: var(--font-fraunces);
   --font-sans: var(--font-public-sans);
+  /* Caligráfica de marca (sustituta libre de Monotype Corsiva) */
+  --font-script: var(--font-dancing-script);
 
-  /* Sombras tintadas con el teal-dark de marca, nunca negro puro */
-  --shadow-card: 0 1px 2px rgb(31 59 64 / 0.05),
-    0 12px 32px -12px rgb(31 59 64 / 0.15);
-  --shadow-card-hover: 0 2px 4px rgb(31 59 64 / 0.06),
-    0 24px 48px -16px rgb(31 59 64 / 0.25);
+  /* Sombras profundas para superficies sobre fondo oscuro, más un halo
+     neón para los CTAs eléctricos */
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.5),
+    0 12px 32px -12px rgb(0 0 0 / 0.6);
+  --shadow-card-hover: 0 2px 4px rgb(0 0 0 / 0.5),
+    0 24px 48px -16px rgb(0 0 0 / 0.7);
+  --shadow-neon: 0 0 12px rgb(89 200 236 / 0.35),
+    0 0 32px rgb(89 200 236 / 0.18);
 
   --ease-fluid: cubic-bezier(0.32, 0.72, 0, 1);
 
@@ -56,8 +73,8 @@
 }
 
 body {
-  background: var(--color-cream);
-  color: var(--color-teal-dark);
+  background: var(--color-night);
+  color: var(--color-cream);
 }
 
 /* Grano de película sutil sobre toda la página: rompe la planitud digital.
@@ -90,13 +107,25 @@ p {
 }
 
 ::selection {
-  background: var(--color-mustard);
-  color: var(--color-cream);
+  background: var(--color-electric);
+  color: var(--color-night);
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-mustard);
+  outline: 2px solid var(--color-electric);
   outline-offset: 2px;
+}
+
+/* Texto neón, como los rótulos de los locales: color + halo doble.
+   Uso puntual (una frase por página como mucho), no para bloques largos. */
+.neon-blue {
+  color: var(--color-electric);
+  text-shadow: 0 0 6px rgb(89 200 236 / 0.55), 0 0 28px rgb(89 200 236 / 0.3);
+}
+
+.neon-yellow {
+  color: #ffd964;
+  text-shadow: 0 0 6px rgb(255 217 100 / 0.5), 0 0 28px rgb(255 217 100 / 0.26);
 }
 
 /* Carrusel continuo de reseñas (marquee): dos filas en direcciones
@@ -123,6 +152,36 @@ p {
   animation-play-state: paused;
 }
 
+/* Vaivén del iPhone del hero (desktop): traza un arco muy suave de
+   izquierda a derecha, como un péndulo lento. */
+@keyframes phone-sway {
+  0%,
+  100% {
+    translate: -16px -6px;
+    rotate: -1.2deg;
+  }
+  25%,
+  75% {
+    translate: 0 0;
+    rotate: 0deg;
+  }
+  50% {
+    translate: 16px -6px;
+    rotate: 1.2deg;
+  }
+}
+
+.phone-sway {
+  animation: phone-sway 18s ease-in-out infinite;
+  will-change: translate, rotate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .phone-sway {
+    animation: none;
+  }
+}
+
 /* Etiqueta pequeña sobre títulos (kicker/eyebrow). Uso restringido:
    máximo una por cada tres secciones de página. */
 .eyebrow {
@@ -131,7 +190,7 @@ p {
   font-weight: 600;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--color-mustard);
+  color: var(--color-electric);
 }
 
 @media (min-width: 640px) {

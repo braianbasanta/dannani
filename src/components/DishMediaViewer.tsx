@@ -191,7 +191,7 @@ export function DishMediaViewer({
         type="button"
         aria-label={t("cerrarFondo")}
         onClick={onClose}
-        className="absolute inset-0 cursor-default bg-teal-dark/95 backdrop-blur-md"
+        className="absolute inset-0 cursor-default bg-night/95 backdrop-blur-md"
       />
 
       {/* Escenario — a pantalla completa en móvil, tarjeta 9:16 en desktop */}
@@ -241,7 +241,7 @@ export function DishMediaViewer({
                 />
               ) : null}
 
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-teal-dark via-teal-dark/55 to-transparent px-6 pb-9 pt-20 sm:pb-7">
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-night via-night/55 to-transparent px-6 pb-9 pt-20 sm:pb-7">
                 <h2 className="font-display text-2xl leading-tight text-cream md:text-3xl">
                   {entry.item.name}
                 </h2>
@@ -260,7 +260,7 @@ export function DishMediaViewer({
       </div>
 
       {/* Contador */}
-      <span className="absolute left-5 top-5 font-display text-sm tracking-[0.3em] text-mustard">
+      <span className="absolute left-5 top-5 font-display text-sm tracking-[0.3em] text-electric">
         {String(index + 1).padStart(2, "0")} / {n}
       </span>
 
@@ -270,7 +270,7 @@ export function DishMediaViewer({
         type="button"
         onClick={onClose}
         aria-label={t("cerrar")}
-        className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full border border-cream/30 text-cream transition-colors duration-300 hover:border-mustard hover:text-mustard"
+        className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full border border-cream/30 text-cream transition-colors duration-300 hover:border-electric hover:text-electric"
       >
         <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden>
           <path
@@ -289,7 +289,7 @@ export function DishMediaViewer({
             type="button"
             onClick={() => navigate(-1)}
             aria-label={t("anterior")}
-            className="absolute left-2 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center text-cream/70 transition-colors duration-300 hover:text-mustard sm:left-5 md:h-14 md:w-14"
+            className="absolute left-2 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center text-cream/70 transition-colors duration-300 hover:text-electric sm:left-5 md:h-14 md:w-14"
           >
             <svg viewBox="0 0 24 24" className="h-7 w-7" aria-hidden>
               <path
@@ -308,7 +308,7 @@ export function DishMediaViewer({
             type="button"
             onClick={() => navigate(1)}
             aria-label={t("siguiente")}
-            className="absolute right-2 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center text-cream/70 transition-colors duration-300 hover:text-mustard sm:right-5 md:h-14 md:w-14"
+            className="absolute right-2 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center text-cream/70 transition-colors duration-300 hover:text-electric sm:right-5 md:h-14 md:w-14"
           >
             <svg viewBox="0 0 24 24" className="h-7 w-7" aria-hidden>
               <path

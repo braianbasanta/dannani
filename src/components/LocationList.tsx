@@ -24,8 +24,8 @@ export function LocationList() {
       className={
         "rounded-full px-4 py-2 text-sm font-medium transition " +
         (filter === value
-          ? "bg-teal-dark text-cream"
-          : "bg-white text-teal-dark hover:bg-teal-dark/10")
+          ? "bg-electric text-night"
+          : "bg-cream/10 text-cream hover:bg-cream/20")
       }
     >
       {label}

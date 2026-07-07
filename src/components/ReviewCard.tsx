@@ -13,8 +13,8 @@ function CardStars({ rating }: { rating: number }) {
           key={i}
           className="h-4 w-4"
           viewBox="0 0 24 24"
-          fill={i < rating ? "var(--color-mustard)" : "var(--color-teal-dark)"}
-          style={i < rating ? undefined : { opacity: 0.15 }}
+          fill={i < rating ? "var(--color-mustard)" : "var(--color-cream)"}
+          style={i < rating ? undefined : { opacity: 0.18 }}
           aria-hidden
         >
           <path d={STAR_PATH} />
@@ -49,11 +49,11 @@ function GoogleMark() {
 }
 
 const AVATAR_COLORS = [
-  "#3e7e8c",
+  "#4693aa",
   "#b8791f",
   "#5c8a5f",
   "#8a5a3e",
-  "#1f3b40",
+  "#35aed6",
   "#a06a35",
 ];
 
@@ -83,19 +83,19 @@ export function ReviewCard({
   rating: number;
 }) {
   return (
-    <article className="flex h-[260px] w-[300px] shrink-0 flex-col rounded-[1.75rem] bg-white p-6 shadow-card ring-1 ring-teal-dark/10 sm:w-[340px]">
+    <article className="flex h-[260px] w-[300px] shrink-0 flex-col rounded-[1.75rem] bg-night-soft p-6 shadow-card ring-1 ring-cream/10 sm:w-[340px]">
       <CardStars rating={rating} />
-      <p className="mt-3.5 line-clamp-4 text-[0.95rem] leading-relaxed text-teal-dark/80">
+      <p className="mt-3.5 line-clamp-4 text-[0.95rem] leading-relaxed text-cream/80">
         {text}
       </p>
-      <div className="mt-auto flex items-center justify-between gap-3 border-t border-teal-dark/10 pt-4">
+      <div className="mt-auto flex items-center justify-between gap-3 border-t border-cream/10 pt-4">
         <div className="flex min-w-0 items-center gap-3">
           <Avatar name={author} />
           <span className="min-w-0 truncate text-sm">
-            <span className="block truncate font-medium text-teal-dark">
+            <span className="block truncate font-medium text-cream">
               {author}
             </span>
-            <span className="block truncate text-xs text-teal-dark/55">
+            <span className="block truncate text-xs text-cream/55">
               Da Nanni {neighborhood}
             </span>
           </span>

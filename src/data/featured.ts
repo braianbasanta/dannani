@@ -24,22 +24,122 @@ const FEATURED_DISH_NAMES = [
 
 const FEATURED_MENU_SLUG = "born";
 
-function resolveFeatured(name: string): MediaEntry {
-  for (const section of menuByLocationSlug[FEATURED_MENU_SLUG]) {
-    const item = section.items.find((i) => i.name === name);
-    if (item) {
-      if (!item.video) {
-        throw new Error(
-          `Plato destacado sin video en la carta "${FEATURED_MENU_SLUG}": ${name}`
-        );
-      }
-      return { item, sectionTitle: section.title };
-    }
+/**
+ * Platos destacados de cada página de local (5-10 por local), curados a
+ * mano como los de la home. Se referencian por nombre exacto contra la
+ * carta del propio local, así el precio y la descripción mostrados son
+ * los de ese local. Cada local muestra una selección distinta aunque
+ * comparta carta con otro, para que las páginas no se repitan.
+ */
+const FEATURED_BY_LOCATION: Record<string, string[]> = {
+  born: FEATURED_DISH_NAMES,
+  raval: [
+    "Margherita",
+    "Diavola",
+    "Carrettiera",
+    "Spaghetti alla carbonara",
+    "Mezzanelli alla Genovese",
+    "Polpette al ragù",
+    "Arancino di riso (1 ud)",
+    "Formaggiosa",
+    "Babà",
+  ],
+  // Poblenou es el local de playa: selección con más mar.
+  poblenou: [
+    "Margherita",
+    "Tropea",
+    "Sorrento",
+    "Ziti Mare e Sole",
+    "Spaghetti al lo scoglio",
+    "Frittura mista di pescado",
+    "Gnocchetti Mediterranei",
+    "Baccalà in Cassuola",
+    "Cheesecake",
+  ],
+  gotic: [
+    "Margherita",
+    "Diavola",
+    "Bufalina",
+    "Mortadella",
+    "Carbonara",
+    "4 Quesos",
+    "Salsiccia e Friarielli",
+    "Tartufata",
+    "Nutella",
+  ],
+  "raval-take-away": [
+    "Margherita",
+    "Marinara",
+    "Cosacca Partenopea",
+    "Jamón Dulce",
+    "Verace Estiva",
+    "Provola y Cabra",
+    "Primavera",
+    "Calzone Classico",
+    "Sofia Loren",
+  ],
+  gracia: [
+    "Margherita",
+    "La carbonara",
+    "La mortadella",
+    "Diavola",
+    "Napoletana",
+    "Prosciutto e funghi",
+    "Parmigiana di melanzane",
+    "Burrata e Parma",
+    "Marinara",
+  ],
+};
+
+/**
+ * La carta de Gràcia no tiene videos propios: el video se toma prestado
+ * del plato equivalente de la carta dine-in (mismo plato grabado en
+ * cocina), manteniendo precio y descripción de la carta de Gràcia.
+ * `alias` mapea nombres que difieren entre ambas cartas.
+ */
+const VIDEO_FALLBACK: Record<
+  string,
+  { menuSlug: string; alias?: Record<string, string> }
+> = {
+  gracia: {
+    menuSlug: "born",
+    alias: { "Burrata e Parma": "Burrata" },
+  },
+};
+
+function findInMenu(menuSlug: string, name: string) {
+  for (const section of menuByLocationSlug[menuSlug]) {
+    const item = section.items.find(
+      (i) => i.name.toLowerCase() === name.toLowerCase()
+    );
+    if (item) return { item, sectionTitle: section.title };
   }
-  throw new Error(
-    `Plato destacado no encontrado en la carta "${FEATURED_MENU_SLUG}": ${name}`
-  );
+  return null;
+}
+
+export function featuredDishesForLocation(slug: string): MediaEntry[] {
+  const names = FEATURED_BY_LOCATION[slug];
+  if (!names) return [];
+  return names.map((name) => {
+    const found = findInMenu(slug, name);
+    if (!found) {
+      throw new Error(
+        `Plato destacado no encontrado en la carta "${slug}": ${name}`
+      );
+    }
+    let item = found.item;
+    if (!item.video) {
+      const fallback = VIDEO_FALLBACK[slug];
+      const sourceName = fallback?.alias?.[name] ?? name;
+      const source = fallback ? findInMenu(fallback.menuSlug, sourceName) : null;
+      if (!source?.item.video) {
+        throw new Error(`Plato destacado sin video en "${slug}": ${name}`);
+      }
+      item = { ...item, video: source.item.video, poster: source.item.poster };
+    }
+    return { item, sectionTitle: found.sectionTitle };
+  });
 }
 
 export const featuredDishEntries: MediaEntry[] =
-  FEATURED_DISH_NAMES.map(resolveFeatured);
+  featuredDishesForLocation(FEATURED_MENU_SLUG);

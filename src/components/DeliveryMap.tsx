@@ -6,15 +6,18 @@ import type { Map as LeafletMap } from "leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
 import type { Location, Coords } from "@/data/locations";
-import { hrefFor, mapsUrl } from "@/data/locations";
+import { DeliveryButtons } from "./DeliveryCTA";
 import { pinIcon, userIcon } from "./mapIcons";
 import { haversineKm, kmFormat } from "@/lib/geo";
 
-export function LocationsMap({ locations }: { locations: Location[] }) {
+/**
+ * Mapa de los locales con delivery: localiza al usuario, señala cuál le
+ * queda más cerca de casa y le da los botones de Glovo/Just Eat de ese
+ * local para pedir directamente.
+ */
+export function DeliveryMap({ locations }: { locations: Location[] }) {
   const t = useTranslations("mapa");
-  const tCta = useTranslations("cta");
   const mapRef = useRef<LeafletMap | null>(null);
   const [userPos, setUserPos] = useState<Coords | null>(null);
   const [status, setStatus] = useState<"idle" | "locating" | "error">("idle");
@@ -72,8 +75,8 @@ export function LocationsMap({ locations }: { locations: Location[] }) {
   };
 
   return (
-    <div className="overflow-hidden rounded-[calc(1.75rem-0.5rem)] bg-night-soft">
-      <div className="relative z-0 h-[380px] sm:h-[460px]">
+    <div className="overflow-hidden rounded-[1.75rem] bg-night-soft ring-1 ring-cream/10">
+      <div className="relative z-0 h-[340px] sm:h-[420px]">
         <MapContainer
           ref={mapRef}
           bounds={bounds}
@@ -93,13 +96,6 @@ export function LocationsMap({ locations }: { locations: Location[] }) {
               <Popup>
                 <span className="block font-semibold">{location.name}</span>
                 <span className="mt-0.5 block">{location.address}</span>
-                <Link
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  href={hrefFor(location) as any}
-                  className="mt-1.5 inline-block font-semibold underline"
-                >
-                  {tCta("verLocal")}
-                </Link>
               </Popup>
             </Marker>
           ))}
@@ -131,19 +127,16 @@ export function LocationsMap({ locations }: { locations: Location[] }) {
         )}
 
         {nearest && (
-          <p className="text-sm text-cream">
-            {t("masCercano")}{" "}
-            <span className="font-semibold">{nearest.location.name}</span> ·{" "}
-            {t("aDistancia", { km: kmFormat.format(nearest.km) })} ·{" "}
-            <a
-              href={mapsUrl(nearest.location)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-semibold underline hover:text-electric"
-            >
-              {tCta("comoLlegar")}
-            </a>
-          </p>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
+            <p className="text-sm text-cream">
+              {t("masCercano")}{" "}
+              <span className="font-semibold">{nearest.location.name}</span> ·{" "}
+              {t("aDistancia", { km: kmFormat.format(nearest.km) })}
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <DeliveryButtons location={nearest.location} />
+            </div>
+          </div>
         )}
       </div>
     </div>

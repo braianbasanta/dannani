@@ -7,10 +7,10 @@ export const metadata: Metadata = {
 
 export default function PrivacidadPage() {
   return (
-    <section className="mx-auto max-w-3xl px-4 py-16 font-sans text-teal-dark">
+    <section className="mx-auto max-w-3xl px-4 py-16 font-sans text-cream">
       <h1 className="font-display text-4xl">Política de Privacidad</h1>
 
-      <p className="mt-6 rounded-xl bg-mustard/10 px-5 py-4 text-sm text-mustard-dark">
+      <p className="mt-6 rounded-xl bg-mustard/15 px-5 py-4 text-sm text-mustard">
         Pendiente de completar con los datos fiscales reales del titular y el
         email de contacto oficial antes de publicar el sitio.
       </p>

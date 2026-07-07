@@ -2,8 +2,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import type { Location } from "@/data/locations";
-import { hrefFor, heroImageSrc } from "@/data/locations";
-import { GoogleRating } from "@/components/GoogleRating";
+import { hrefFor, heroImageSrc, hoursParts } from "@/data/locations";
 
 /**
  * Hero split a pantalla completa para los hubs: un panel por local,
@@ -26,6 +25,7 @@ export function HubHero({
   const four = locations.length > 2;
 
   return (
+    <>
     <section className="relative -mt-16 flex h-[100dvh] min-h-[600px] flex-col md:min-h-[680px]">
       <div
         className={`grid flex-1 ${
@@ -54,36 +54,46 @@ export function HubHero({
               }
               className="object-cover transition-transform duration-700 ease-fluid group-hover:scale-[1.04]"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-teal-dark/90 via-teal-dark/25 to-transparent transition-opacity duration-500 group-hover:opacity-85" />
-            <div className="relative w-full p-5 pb-7 text-cream drop-shadow-[0_1px_6px_rgba(31,59,64,0.45)] lg:p-7 lg:pb-10">
-              {location.nearBeach && (
-                <span className="mb-2.5 inline-block rounded-full bg-mustard px-3 py-1 text-xs font-semibold text-cream">
-                  {tBadges("cercaPlaya")}
-                </span>
-              )}
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cream/75">
-                {t("desde")} {location.openedYear}
-              </p>
-              <h2
-                className={`mt-1.5 font-display tracking-tight ${
-                  four
-                    ? "text-3xl sm:text-4xl lg:text-5xl"
-                    : "text-4xl sm:text-5xl lg:text-6xl"
-                }`}
-              >
-                {location.neighborhood}
-              </h2>
-              <div className="mt-2">
-                <GoogleRating location={location} link={false} />
+            <div className="absolute inset-0 bg-gradient-to-t from-night/90 via-night/25 to-transparent transition-opacity duration-500 group-hover:opacity-85" />
+            {/* Con 2 locales (para llevar) el CTA va a la derecha del texto;
+                con 4 paneles no hay ancho y se mantiene debajo */}
+            <div
+              className={`relative w-full p-5 pb-7 text-cream drop-shadow-[0_1px_6px_rgba(0,0,0,0.55)] lg:p-7 lg:pb-10 ${
+                four ? "" : "flex items-end justify-between gap-4"
+              }`}
+            >
+              <div>
+                {location.nearBeach && (
+                  <span className="mb-2.5 inline-block rounded-full bg-mustard px-3 py-1 text-xs font-semibold text-cream">
+                    {tBadges("cercaPlaya")}
+                  </span>
+                )}
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cream/75">
+                  {t("desde")} {location.openedYear}
+                </p>
+                <h2
+                  className={`mt-1.5 font-display tracking-tight ${
+                    four
+                      ? "text-3xl sm:text-4xl lg:text-5xl"
+                      : "text-4xl sm:text-5xl lg:text-6xl"
+                  }`}
+                >
+                  {location.neighborhood}
+                </h2>
+                <p className="mt-3 hidden text-sm leading-relaxed text-cream/85 md:block">
+                  {location.address}
+                  <br />
+                  {hoursParts(location).days}
+                  <br />
+                  {hoursParts(location).times}
+                </p>
               </div>
-              <p className="mt-3 hidden text-sm leading-relaxed text-cream/85 md:block">
-                {location.address}
-                <br />
-                {location.hoursLabel}
-              </p>
-              <span className="mt-5 inline-flex items-center gap-3 rounded-full bg-mustard py-1.5 pl-6 pr-1.5 font-sans text-sm font-semibold text-cream transition-colors duration-500 ease-fluid group-hover:bg-mustard-dark group-active:scale-[0.98]">
+              <span
+                className={`inline-flex items-center gap-3 rounded-full bg-electric py-1.5 pl-6 pr-1.5 font-sans text-sm font-semibold text-night transition-colors duration-500 ease-fluid group-hover:bg-electric-dark group-active:scale-[0.98] ${
+                  four ? "mt-5" : "shrink-0"
+                }`}>
                 {tCta("verLocal")}
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-cream/15 transition-transform duration-500 ease-fluid group-hover:translate-x-0.5">
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-night/15 transition-transform duration-500 ease-fluid group-hover:translate-x-0.5">
                   <svg
                     width="15"
                     height="15"
@@ -106,18 +116,18 @@ export function HubHero({
         ))}
       </div>
 
-      {/* Scrim superior: legibilidad del H1 y del nav transparente */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-teal-dark/80 via-teal-dark/40 to-transparent" />
+      {/* Scrim superior: legibilidad del nav transparente */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-night/70 to-transparent" />
+    </section>
 
-      <header className="pointer-events-none absolute inset-x-0 top-0 mx-auto w-full max-w-5xl px-4 pt-24 text-center text-cream drop-shadow-[0_1px_6px_rgba(31,59,64,0.45)] sm:pt-28">
-        <p className="eyebrow hidden animate-fade-up sm:block">{eyebrow}</p>
-        <h1 className="mx-auto max-w-4xl animate-fade-up font-display text-3xl leading-[1.05] tracking-tight [animation-delay:100ms] sm:mt-3 sm:text-5xl lg:text-6xl">
+      {/* H1 fuera del hero: cuenta para SEO sin tapar las fotos */}
+      <header className="mx-auto w-full max-w-5xl px-4 pt-12 text-center text-cream sm:pt-16">
+        <p className="eyebrow">{eyebrow}</p>
+        <h1 className="mx-auto mt-3 max-w-4xl font-display text-3xl leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
           {h1}
         </h1>
-        <p className="mx-auto mt-4 hidden max-w-xl animate-fade-up text-cream/85 [animation-delay:200ms] sm:block">
-          {sub}
-        </p>
+        <p className="mx-auto mt-4 max-w-xl text-cream/85">{sub}</p>
       </header>
-    </section>
+    </>
   );
 }

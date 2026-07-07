@@ -2,7 +2,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import type { Location } from "@/data/locations";
-import { hrefFor, heroImageSrc } from "@/data/locations";
+import { hrefFor, heroImageSrc, hoursParts } from "@/data/locations";
 import { ComoLlegar } from "@/components/ComoLlegar";
 
 export function LocationCard({ location }: { location: Location }) {
@@ -11,7 +11,7 @@ export function LocationCard({ location }: { location: Location }) {
   const href = hrefFor(location);
 
   return (
-    <article className="group flex flex-col rounded-[1.75rem] bg-teal-dark/5 p-2 ring-1 ring-teal-dark/10 transition-all duration-500 ease-fluid hover:-translate-y-1 hover:shadow-card-hover">
+    <article className="group flex flex-col rounded-[1.75rem] bg-cream/5 p-2 ring-1 ring-cream/10 transition-all duration-500 ease-fluid hover:-translate-y-1 hover:shadow-card-hover">
       <Link
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         href={href as any}
@@ -26,7 +26,7 @@ export function LocationCard({ location }: { location: Location }) {
           sizes="(min-width: 768px) 50vw, 100vw"
           className="object-cover transition-transform duration-700 ease-fluid group-hover:scale-[1.04]"
         />
-        <span className="absolute left-3 top-3 rounded-full bg-cream/95 px-3 py-1 text-xs font-semibold text-teal-dark">
+        <span className="absolute left-3 top-3 rounded-full bg-night/70 px-3 py-1 text-xs font-semibold text-cream ring-1 ring-cream/20 backdrop-blur-sm">
           {location.type === "take-away" ? t("takeAway") : t("dineIn")}
         </span>
         {location.nearBeach && (
@@ -38,12 +38,14 @@ export function LocationCard({ location }: { location: Location }) {
 
       <div className="flex flex-1 flex-col gap-4 p-5 sm:p-6">
         <div>
-          <h3 className="font-display text-2xl tracking-tight text-teal-dark">
+          <h3 className="font-display text-2xl tracking-tight text-cream">
             {location.name}
           </h3>
-          <p className="mt-1.5 text-sm text-teal-dark/70">{location.address}</p>
-          <p className="mt-0.5 text-sm text-teal-dark/70">
-            {location.hoursLabel}
+          <p className="mt-1.5 text-sm text-cream/70">{location.address}</p>
+          <p className="mt-0.5 text-sm text-cream/70">
+            {hoursParts(location).days}
+            <br />
+            {hoursParts(location).times}
           </p>
         </div>
 
@@ -52,7 +54,7 @@ export function LocationCard({ location }: { location: Location }) {
           <Link
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             href={href as any}
-            className="inline-flex items-center justify-center rounded-full bg-teal px-6 py-3 font-sans text-sm font-semibold text-cream transition-colors duration-500 ease-fluid hover:bg-teal-dark active:scale-[0.98]"
+            className="inline-flex items-center justify-center rounded-full bg-electric px-6 py-3 font-sans text-sm font-semibold text-night transition-colors duration-500 ease-fluid hover:bg-electric-dark active:scale-[0.98]"
           >
             {tCta("verLocal")}
           </Link>

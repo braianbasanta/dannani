@@ -22,22 +22,22 @@ export function CtaModal({
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-[100] flex items-end justify-center bg-teal-dark/60 p-4 sm:items-center"
+      className="fixed inset-0 z-[100] flex items-end justify-center bg-black/70 p-4 backdrop-blur-sm sm:items-center"
       onClick={onClose}
     >
       <div
-        className="w-full max-w-md rounded-[1.75rem] bg-cream p-7 shadow-card-hover ring-1 ring-teal-dark/10"
+        className="w-full max-w-md rounded-[1.75rem] bg-night-soft p-7 shadow-card-hover ring-1 ring-cream/15"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="font-display text-xl text-teal-dark">{title}</h2>
-        <p className="mt-2 text-sm text-teal-dark/80">{body}</p>
+        <h2 className="font-display text-xl text-cream">{title}</h2>
+        <p className="mt-2 text-sm text-cream/80">{body}</p>
 
         <div className="mt-5 flex flex-col gap-2">
           {children}
           <button
             type="button"
             onClick={onClose}
-            className="inline-flex items-center justify-center rounded-full border border-teal-dark/20 px-5 py-3 text-sm font-semibold text-teal-dark hover:bg-teal-dark/5"
+            className="inline-flex items-center justify-center rounded-full border border-cream/20 px-5 py-3 text-sm font-semibold text-cream hover:bg-cream/5"
           >
             {t("cerrar")}
           </button>

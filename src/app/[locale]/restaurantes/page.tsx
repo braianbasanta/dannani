@@ -1,7 +1,7 @@
 import { useTranslations } from "next-intl";
 import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
-import { dineInLocations, heroImageSrc } from "@/data/locations";
+import { dineInLocations, heroImageSrc, hoursParts } from "@/data/locations";
 import { HubHero } from "@/components/HubHero";
 import { ComoLlegar } from "@/components/ComoLlegar";
 import { LocationsMapLazy } from "@/components/LocationsMapLazy";
@@ -37,21 +37,21 @@ export default function RestaurantesPage() {
       />
 
       <section className="mx-auto max-w-6xl px-4 py-16 sm:py-24">
-        <h2 className="font-display text-3xl tracking-tight text-teal-dark sm:text-4xl">
+        <h2 className="font-display text-3xl tracking-tight text-cream sm:text-4xl">
           {t("infoTitle")}
         </h2>
-        <p className="mt-3 max-w-[55ch] text-teal-dark/70">
+        <p className="mt-3 max-w-[55ch] text-cream/70">
           {t("intro")} {t("domicilioHint")}{" "}
           <Link
             href="/a-domicilio"
-            className="font-medium underline underline-offset-2 hover:text-mustard"
+            className="font-medium underline underline-offset-2 hover:text-electric"
           >
             {t("domicilioLink")}
           </Link>
           .
         </p>
 
-        <div className="mt-8 rounded-[1.75rem] bg-teal-dark/5 p-2 ring-1 ring-teal-dark/10">
+        <div className="mt-8 rounded-[1.75rem] bg-cream/5 p-2 ring-1 ring-cream/10">
           <LocationsMapLazy locations={dineInLocations} />
         </div>
 
@@ -59,21 +59,23 @@ export default function RestaurantesPage() {
           {dineInLocations.map((location) => (
             <li
               key={location.slug}
-              className="flex flex-col justify-between gap-4 rounded-[1.75rem] bg-white p-6 shadow-card ring-1 ring-teal-dark/10 sm:p-7"
+              className="flex flex-col justify-between gap-4 rounded-[1.75rem] bg-night-soft p-6 shadow-card ring-1 ring-cream/10 sm:p-7"
             >
               <div>
-                <p className="font-display text-xl tracking-tight text-teal-dark">
+                <p className="font-display text-xl tracking-tight text-cream">
                   {location.name}
                 </p>
-                <p className="mt-1.5 text-sm text-teal-dark/70">
+                <p className="mt-1.5 text-sm text-cream/70">
                   {location.address}
                 </p>
-                <p className="text-sm text-teal-dark/70">
-                  {location.hoursLabel}
+                <p className="text-sm text-cream/70">
+                  {hoursParts(location).days}
+                  <br />
+                  {hoursParts(location).times}
                 </p>
                 <a
                   href={location.phoneHref}
-                  className="mt-1 inline-block text-sm font-medium text-teal-dark transition-colors duration-200 hover:text-mustard"
+                  className="mt-1 inline-block text-sm font-medium text-cream transition-colors duration-200 hover:text-electric"
                 >
                   {location.phone}
                 </a>

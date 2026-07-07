@@ -39,7 +39,7 @@ function MilestoneCard({ milestone }: { milestone: Milestone }) {
   const Icon = milestone.icon === "flame" ? FlameIcon : PinIcon;
 
   const content = milestone.image ? (
-    <div className="group relative aspect-[3/4] overflow-hidden rounded-[1.75rem] shadow-card ring-1 ring-teal-dark/5 transition-all duration-500 ease-fluid hover:-translate-y-1 hover:shadow-card-hover">
+    <div className="group relative aspect-[3/4] overflow-hidden rounded-[1.75rem] shadow-card ring-1 ring-cream/10 transition-all duration-500 ease-fluid hover:-translate-y-1 hover:shadow-card-hover">
       <Image
         src={milestone.image}
         alt={milestone.title}
@@ -47,10 +47,10 @@ function MilestoneCard({ milestone }: { milestone: Milestone }) {
         sizes="(min-width: 768px) 24rem, 100vw"
         className="object-cover transition-transform duration-700 ease-fluid group-hover:scale-[1.06]"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-teal-dark/95 via-teal-dark/35 to-teal-dark/5" />
+      <div className="absolute inset-0 bg-gradient-to-t from-night/95 via-night/35 to-night/5" />
 
       <div className="absolute inset-x-0 top-0 p-6 sm:p-8">
-        <span className="rounded-full bg-cream/95 px-3 py-1 font-display text-xs font-semibold uppercase tracking-[0.15em] text-mustard-dark backdrop-blur">
+        <span className="rounded-full bg-night/70 px-3 py-1 font-display text-xs font-semibold uppercase tracking-[0.15em] text-electric ring-1 ring-cream/20 backdrop-blur">
           {milestone.date}
         </span>
       </div>
@@ -63,19 +63,19 @@ function MilestoneCard({ milestone }: { milestone: Milestone }) {
       </div>
     </div>
   ) : (
-    <div className="group rounded-[1.75rem] bg-cream p-6 shadow-card ring-1 ring-teal-dark/5 transition-all duration-500 ease-fluid hover:-translate-y-1 hover:shadow-card-hover sm:p-8">
+    <div className="group rounded-[1.75rem] bg-cream/5 p-6 shadow-card ring-1 ring-cream/10 transition-all duration-500 ease-fluid hover:-translate-y-1 hover:shadow-card-hover sm:p-8">
       <div className="flex items-start justify-between gap-4">
-        <span className="font-display text-sm font-semibold uppercase tracking-[0.15em] text-mustard">
+        <span className="font-display text-sm font-semibold uppercase tracking-[0.15em] text-electric">
           {milestone.date}
         </span>
-        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-mustard/10 text-mustard transition-transform duration-500 ease-fluid group-hover:rotate-[10deg] group-hover:scale-110 sm:h-14 sm:w-14">
+        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-electric/10 text-electric transition-transform duration-500 ease-fluid group-hover:rotate-[10deg] group-hover:scale-110 sm:h-14 sm:w-14">
           <Icon />
         </span>
       </div>
-      <h3 className="mt-4 font-display text-2xl tracking-tight text-teal-dark sm:text-[1.75rem]">
+      <h3 className="mt-4 font-display text-2xl tracking-tight text-cream sm:text-[1.75rem]">
         {milestone.title}
       </h3>
-      <p className="mt-2 leading-relaxed text-teal-dark/70">{milestone.copy}</p>
+      <p className="mt-2 leading-relaxed text-cream/70">{milestone.copy}</p>
     </div>
   );
 
@@ -189,7 +189,7 @@ export function HistoriaTimeline({
   }, [viewBoxWidth, viewBoxHeight]);
 
   return (
-    <section className="relative -mt-16 overflow-hidden bg-teal-dark pb-16 pt-32 text-cream sm:pt-36 md:pb-24">
+    <section className="relative -mt-16 overflow-hidden bg-night-soft pb-16 pt-32 text-cream sm:pt-36 md:pb-24">
       <div className="mx-auto max-w-6xl px-4">
         {header}
 
@@ -205,8 +205,8 @@ export function HistoriaTimeline({
             >
               <defs>
                 <linearGradient id="historia-line" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#d98e2b" />
-                  <stop offset="100%" stopColor="#b8791f" />
+                  <stop offset="0%" stopColor="#59c8ec" />
+                  <stop offset="100%" stopColor="#35aed6" />
                 </linearGradient>
               </defs>
 
@@ -230,7 +230,7 @@ export function HistoriaTimeline({
             <div
               ref={markerRef}
               aria-hidden
-              className="pointer-events-none absolute z-10 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-mustard opacity-0 shadow-[0_0_16px_4px_rgba(217,142,43,0.55)] transition-opacity duration-300"
+              className="pointer-events-none absolute z-10 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-electric opacity-0 shadow-[0_0_16px_4px_rgba(89,200,236,0.55)] transition-opacity duration-300"
             />
 
             <div className="relative z-10 space-y-14">
@@ -252,7 +252,7 @@ export function HistoriaTimeline({
             <div
               ref={mobileFillRef}
               aria-hidden
-              className="absolute bottom-2 left-3 top-2 w-px origin-top bg-mustard"
+              className="absolute bottom-2 left-3 top-2 w-px origin-top bg-electric"
               style={{ transform: "scaleY(0)" }}
             />
             <ol className="space-y-8">

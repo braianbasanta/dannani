@@ -16,10 +16,10 @@ export function PhoneFrame({
 }) {
   return (
     <div className={`relative mx-auto w-full ${className}`}>
-      {/* Glow cálido de marca detrás del teléfono */}
+      {/* Glow eléctrico de marca detrás del teléfono, como un neón */}
       <div
         aria-hidden
-        className="absolute -inset-8 -z-10 rounded-[3.5rem] bg-mustard/15 blur-3xl"
+        className="absolute -inset-8 -z-10 rounded-[3.5rem] bg-electric/15 blur-3xl"
       />
 
       {/* Cuerpo del teléfono */}

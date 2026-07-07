@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { locations, hrefFor } from "@/data/locations";
@@ -7,13 +8,19 @@ export function Footer() {
   const tNav = useTranslations("nav");
 
   return (
-    <footer className="border-t border-teal-dark/10 bg-teal-dark text-cream">
+    <footer className="border-t border-cream/10 bg-night-soft text-cream">
       <div className="mx-auto max-w-6xl px-4 py-14">
         {/* La columna ancha es la de locales: 6 direcciones necesitan sitio
             para no partirse en columnas estrechas e interminables */}
         <div className="grid gap-10 md:grid-cols-[1.1fr_0.8fr_2.4fr_0.8fr]">
           <div>
-            <p className="font-display text-3xl">da Nanni</p>
+            <Image
+              src="/images/logo/logo-nero.png"
+              alt="Da Nanni – Pizzeria Napoletana"
+              width={1200}
+              height={785}
+              className="h-16 w-auto"
+            />
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-cream/70">
               {t("tagline")}
             </p>
@@ -22,7 +29,7 @@ export function Footer() {
                 href="https://www.instagram.com/danannibcn/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="transition-colors duration-200 hover:text-mustard"
+                className="transition-colors duration-200 hover:text-electric"
               >
                 Instagram
               </a>
@@ -30,7 +37,7 @@ export function Footer() {
                 href="https://www.facebook.com/profile.php?id=61557151444831"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="transition-colors duration-200 hover:text-mustard"
+                className="transition-colors duration-200 hover:text-electric"
               >
                 Facebook
               </a>
@@ -45,7 +52,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/"
-                  className="transition-colors duration-200 hover:text-mustard"
+                  className="transition-colors duration-200 hover:text-electric"
                 >
                   {tNav("home")}
                 </Link>
@@ -53,7 +60,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/restaurantes"
-                  className="transition-colors duration-200 hover:text-mustard"
+                  className="transition-colors duration-200 hover:text-electric"
                 >
                   {tNav("restaurantes")}
                 </Link>
@@ -61,7 +68,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/para-llevar"
-                  className="transition-colors duration-200 hover:text-mustard"
+                  className="transition-colors duration-200 hover:text-electric"
                 >
                   {tNav("paraLlevar")}
                 </Link>
@@ -69,15 +76,15 @@ export function Footer() {
               <li>
                 <Link
                   href="/a-domicilio"
-                  className="transition-colors duration-200 hover:text-mustard"
+                  className="transition-colors duration-200 hover:text-electric"
                 >
                   {tNav("aDomicilio")}
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/carta"
-                  className="transition-colors duration-200 hover:text-mustard"
+                  href="/restaurantes/cartas"
+                  className="transition-colors duration-200 hover:text-electric"
                 >
                   {tNav("carta")}
                 </Link>
@@ -85,7 +92,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/nuestra-historia"
-                  className="transition-colors duration-200 hover:text-mustard"
+                  className="transition-colors duration-200 hover:text-electric"
                 >
                   {tNav("nuestraHistoria")}
                 </Link>
@@ -93,7 +100,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/contacto"
-                  className="transition-colors duration-200 hover:text-mustard"
+                  className="transition-colors duration-200 hover:text-electric"
                 >
                   {tNav("contacto")}
                 </Link>
@@ -111,7 +118,7 @@ export function Footer() {
                   <Link
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     href={hrefFor(l) as any}
-                    className="font-medium text-cream transition-colors duration-200 hover:text-mustard"
+                    className="font-medium text-cream transition-colors duration-200 hover:text-electric"
                   >
                     {l.name}
                   </Link>
@@ -120,7 +127,7 @@ export function Footer() {
                   <br />
                   <a
                     href={l.phoneHref}
-                    className="transition-colors duration-200 hover:text-mustard"
+                    className="transition-colors duration-200 hover:text-electric"
                   >
                     {l.phone}
                   </a>
@@ -137,7 +144,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/privacidad"
-                  className="transition-colors duration-200 hover:text-mustard"
+                  className="transition-colors duration-200 hover:text-electric"
                 >
                   {t("privacidad")}
                 </Link>
@@ -145,7 +152,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/aviso-legal"
-                  className="transition-colors duration-200 hover:text-mustard"
+                  className="transition-colors duration-200 hover:text-electric"
                 >
                   {t("avisoLegal")}
                 </Link>
@@ -153,7 +160,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/cookies"
-                  className="transition-colors duration-200 hover:text-mustard"
+                  className="transition-colors duration-200 hover:text-electric"
                 >
                   {t("cookies")}
                 </Link>
@@ -163,7 +170,7 @@ export function Footer() {
         </div>
 
         <p className="mt-12 border-t border-cream/10 pt-6 text-xs text-cream/50">
-          © 2017–{new Date().getFullYear()} {t("rights")}
+          © 2018–{new Date().getFullYear()} {t("rights")}
         </p>
       </div>
     </footer>

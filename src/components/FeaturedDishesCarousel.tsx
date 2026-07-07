@@ -49,14 +49,14 @@ export function FeaturedDishesCarousel({ entries }: { entries: MediaEntry[] }) {
             type="button"
             onClick={() => setOpenIndex(i)}
             aria-label={t("platosVerVideo", { plato: entry.item.name })}
-            className="group relative aspect-[9/16] w-[200px] shrink-0 snap-start overflow-hidden rounded-2xl bg-teal-dark text-left shadow-card transition-shadow duration-500 ease-fluid hover:shadow-card-hover sm:w-[240px]"
+            className="group relative aspect-[9/16] w-[200px] shrink-0 snap-start overflow-hidden rounded-2xl bg-night-soft text-left shadow-card transition-shadow duration-500 ease-fluid hover:shadow-card-hover sm:w-[240px]"
           >
             <AutoplayVideo
               src={entry.item.video!}
               poster={entry.item.poster!}
               className="h-full w-full object-cover transition-transform duration-700 ease-fluid group-hover:scale-[1.04]"
             />
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-teal-dark/85 via-teal-dark/10 to-transparent" />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-night/85 via-night/10 to-transparent" />
             <div className="pointer-events-none absolute inset-x-0 bottom-0 p-4 text-cream sm:p-5">
               <p className="font-display text-lg leading-tight tracking-tight sm:text-xl">
                 {entry.item.name}
@@ -73,18 +73,18 @@ export function FeaturedDishesCarousel({ entries }: { entries: MediaEntry[] }) {
       {visibleRatio < 1 && (
         <div className="mt-5 flex items-center justify-center gap-3 px-4">
           <div
-            className="relative h-1 w-28 overflow-hidden rounded-full bg-teal-dark/10"
+            className="relative h-1 w-28 overflow-hidden rounded-full bg-cream/15"
             aria-hidden
           >
             <div
-              className="absolute inset-y-0 left-0 rounded-full bg-mustard"
+              className="absolute inset-y-0 left-0 rounded-full bg-electric"
               style={{
                 width: `${visibleRatio * 100}%`,
                 transform: `translateX(${progress * (1 / visibleRatio - 1) * 100}%)`,
               }}
             />
           </div>
-          <p className="font-sans text-xs font-medium text-teal-dark/50">
+          <p className="font-sans text-xs font-medium text-cream/50">
             {t("platosDesliza")}
           </p>
         </div>

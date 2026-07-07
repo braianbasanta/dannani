@@ -16,9 +16,11 @@ import { DeliveryButtons } from "./DeliveryCTA";
 export function ReservaCTA({
   location,
   variant = "primary",
+  className,
 }: {
   location: Location;
   variant?: "primary" | "secondary";
+  className?: string;
 }) {
   const [open, setOpen] = useState(false);
   const t = useTranslations("cta");
@@ -32,11 +34,11 @@ export function ReservaCTA({
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className={
+        className={`${
           variant === "primary"
-            ? "inline-flex items-center justify-center rounded-full bg-mustard px-6 py-3 font-sans text-sm font-semibold text-cream transition hover:bg-mustard-dark"
+            ? "inline-flex items-center justify-center rounded-full bg-electric px-6 py-3 font-sans text-sm font-semibold text-night transition hover:bg-electric-dark hover:shadow-neon"
             : "inline-flex items-center justify-center rounded-full border border-cream/70 px-6 py-3 font-sans text-sm font-semibold text-cream transition hover:bg-cream/10"
-        }
+        }${className ? ` ${className}` : ""}`}
       >
         {label}
       </button>
@@ -62,7 +64,7 @@ export function ReservaCTA({
         >
           <a
             href={location.phoneHref}
-            className="inline-flex items-center justify-center rounded-full bg-mustard px-5 py-3 text-sm font-semibold text-cream hover:bg-mustard-dark"
+            className="inline-flex items-center justify-center rounded-full bg-electric px-5 py-3 text-sm font-semibold text-night hover:bg-electric-dark"
           >
             {t("llamar")} · {location.phone}
           </a>

@@ -2,18 +2,28 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import type { Location } from "@/data/locations";
-import { locations, hrefFor, heroImageSrc } from "@/data/locations";
+import {
+  locations,
+  hrefFor,
+  cartaHrefFor,
+  heroImageSrc,
+  hoursParts,
+} from "@/data/locations";
 import { menuByLocationSlug } from "@/data/menu";
 import { reviewsByLocationSlug } from "@/data/reviews";
 import { mapsUrl } from "@/data/locations";
+import { featuredDishesForLocation } from "@/data/featured";
 import { ReservaCTA } from "@/components/ReservaCTA";
+import { FloatingReservaCTA } from "@/components/FloatingReservaCTA";
 import { DeliveryCTA } from "@/components/DeliveryCTA";
 import { ComoLlegar } from "@/components/ComoLlegar";
 import { GoogleRating } from "@/components/GoogleRating";
 import { ReviewsMarquee } from "@/components/ReviewsMarquee";
 import { SchemaOrg } from "@/components/SchemaOrg";
-import { MenuSections } from "@/components/MenuSections";
+import { FeaturedDishesCarousel } from "@/components/FeaturedDishesCarousel";
+import { LocationMapLazy } from "@/components/LocationMapLazy";
 import { restaurantSchema, breadcrumbSchema } from "@/lib/schema";
+import { RichText } from "@/components/RichText";
 
 export function LocationDetail({
   location,
@@ -30,11 +40,13 @@ export function LocationDetail({
   const tBadges = useTranslations("badges");
   const tCta = useTranslations("cta");
   const menu = menuByLocationSlug[location.slug];
+  const dishes = featuredDishesForLocation(location.slug);
   const reviews = reviewsByLocationSlug[location.slug];
   const gallery = Array.from({ length: location.imageCount }, (_, i) =>
     String(i + 1).padStart(2, "0")
   );
   const otros = locations.filter((l) => l.slug !== location.slug).slice(0, 3);
+  const hasDeliveryCta = !!location.delivery && location.type !== "take-away";
 
   return (
     <>
@@ -49,7 +61,10 @@ export function LocationDetail({
         ]}
       />
 
-      <section className="relative -mt-16 flex min-h-[70vh] items-end overflow-hidden">
+      <section
+        id="local-hero"
+        className="relative -mt-16 flex min-h-[100svh] items-end overflow-hidden sm:min-h-[70vh]"
+      >
         <Image
           src={heroImageSrc(location)}
           alt={location.name}
@@ -58,11 +73,11 @@ export function LocationDetail({
           sizes="100vw"
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-teal-dark/95 via-teal-dark/40 to-teal-dark/10" />
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-teal-dark/60 to-transparent" />
-        <div className="relative mx-auto w-full max-w-4xl animate-fade-up px-4 pb-14 pt-28 text-cream drop-shadow-[0_1px_6px_rgba(31,59,64,0.45)]">
+        <div className="absolute inset-0 bg-gradient-to-t from-night/95 via-night/40 to-night/10" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-night/60 to-transparent" />
+        <div className="relative mx-auto w-full max-w-4xl animate-fade-up px-4 pb-14 pt-28 text-cream drop-shadow-[0_1px_6px_rgba(0,0,0,0.55)]">
           <div className="flex flex-wrap gap-2">
-            <span className="rounded-full bg-cream/95 px-3 py-1 text-xs font-semibold text-teal-dark">
+            <span className="rounded-full bg-night/70 px-3 py-1 text-xs font-semibold text-cream ring-1 ring-cream/20 backdrop-blur-sm">
               {location.type === "take-away" ? tBadges("takeAway") : tBadges("dineIn")}
             </span>
             {location.nearBeach && (
@@ -71,74 +86,108 @@ export function LocationDetail({
               </span>
             )}
           </div>
-          <p className="mt-5 text-sm font-semibold uppercase tracking-[0.2em] text-mustard">
+          <p className="mt-5 text-sm font-semibold uppercase tracking-[0.2em] text-electric">
             {location.name} · {t("desde")} {location.openedYear}
           </p>
           <h1 className="mt-3 max-w-2xl font-display text-4xl leading-[1.05] tracking-tight sm:text-5xl">
             {location.h1}
           </h1>
-          <p className="mt-3 text-cream/90">{location.hoursLabel}</p>
-          <div className="mt-2">
+          <div className="mt-4">
             <GoogleRating location={location} />
           </div>
-          <div className="mt-7 flex flex-wrap gap-3">
-            <ReservaCTA location={location} />
-            <DeliveryCTA location={location} variant="onDark" />
-            <ComoLlegar location={location} variant="onDark" />
-          </div>
+          {hasDeliveryCta ? (
+            /* 3 CTAs: Reservar a ancho completo arriba; los dos secundarios
+               a mitad cada uno debajo */
+            <div className="mt-7 grid w-full max-w-md grid-cols-2 gap-3">
+              <ReservaCTA
+                location={location}
+                className="col-span-2 h-14 w-full"
+              />
+              <DeliveryCTA
+                location={location}
+                variant="onDark"
+                className="w-full"
+              />
+              <ComoLlegar
+                location={location}
+                variant="onDark"
+                className="w-full"
+              />
+            </div>
+          ) : (
+            /* 2 CTAs: en línea con su tamaño natural */
+            <div className="mt-7 flex flex-wrap gap-3">
+              <ReservaCTA location={location} />
+              <ComoLlegar location={location} variant="onDark" />
+            </div>
+          )}
         </div>
       </section>
 
-      <section className="mx-auto max-w-4xl px-4 py-14 font-sans text-teal-dark sm:py-16">
-        <p className="max-w-[65ch] text-lg leading-relaxed">
-          {location.description}
-        </p>
-
-        <div className="mt-10 grid gap-6 rounded-[1.75rem] bg-teal-dark/5 p-6 ring-1 ring-teal-dark/10 sm:grid-cols-3 sm:p-8">
+      <section className="mx-auto max-w-4xl px-4 py-14 font-sans text-cream sm:py-16">
+        <div className="grid gap-6 rounded-[1.75rem] bg-cream/5 p-6 ring-1 ring-cream/10 sm:grid-cols-3 sm:p-8">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-teal-dark/60">
+            <p className="text-xs font-semibold uppercase tracking-wide text-cream/60">
               {t("direccion")}
             </p>
             <p className="mt-1">{location.address}</p>
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-teal-dark/60">
+            <p className="text-xs font-semibold uppercase tracking-wide text-cream/60">
               {t("horario")}
             </p>
-            <p className="mt-1">{location.hoursLabel}</p>
+            <p className="mt-1">
+              {hoursParts(location).days}
+              <br />
+              {hoursParts(location).times}
+            </p>
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-teal-dark/60">
+            <p className="text-xs font-semibold uppercase tracking-wide text-cream/60">
               {t("telefono")}
             </p>
-            <a href={location.phoneHref} className="mt-1 block hover:text-mustard">
+            <a
+              href={location.phoneHref}
+              className="mt-1 inline-flex items-center gap-2 underline decoration-cream/40 underline-offset-4 transition-colors hover:text-electric"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
               {location.phone}
             </a>
           </div>
         </div>
 
-        <div className="mt-20 flex flex-wrap items-baseline justify-between gap-3">
-          <h2 className="font-display text-3xl tracking-tight sm:text-4xl">
-            {t("cartaTitle")}
-          </h2>
-          {menu && (
+        <p className="mt-10 max-w-[65ch] text-lg leading-relaxed text-cream/85">
+          <RichText text={location.description} />
+        </p>
+
+        <h2 className="mt-20 font-display text-3xl tracking-tight sm:text-4xl">
+          {t("platosTitle")}
+        </h2>
+        {dishes.length > 0 && (
+          <div className="-mx-4 mt-6">
+            <FeaturedDishesCarousel entries={dishes} />
+          </div>
+        )}
+        {menu ? (
+          <div className="mt-8 flex justify-center">
             <Link
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              href={`/carta/${location.slug}` as any}
-              className="text-sm font-medium underline hover:text-mustard"
+              href={cartaHrefFor(location) as any}
+              className="inline-flex items-center gap-2 rounded-full border border-cream/25 px-7 py-3 font-sans text-sm font-semibold text-cream transition hover:bg-cream/5 hover:text-electric"
             >
               {tCta("verCartaCompleta")}
             </Link>
-          )}
-        </div>
-        {menu ? (
-          <div className="mt-6">
-            <MenuSections menu={menu} />
           </div>
         ) : (
-          <p className="mt-4 text-teal-dark/70">
+          <p className="mt-4 text-cream/70">
             {t("cartaNoDisponible")}{" "}
-            <Link href="/carta" className="underline hover:text-mustard">
+            <Link
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              href={"/restaurantes/cartas" as any}
+              className="underline hover:text-electric"
+            >
               {tCta("verCarta")}
             </Link>
           </p>
@@ -163,7 +212,7 @@ export function LocationDetail({
               href={mapsUrl(location)}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-5 inline-block text-sm font-medium underline underline-offset-2 transition-colors duration-200 hover:text-mustard"
+              className="mt-5 inline-block text-sm font-medium underline underline-offset-2 transition-colors duration-200 hover:text-electric"
             >
               {t("verTodasResenas")}
             </a>
@@ -191,15 +240,11 @@ export function LocationDetail({
           ))}
         </div>
 
-        <div className="mt-20 flex flex-col items-start gap-4 rounded-[1.75rem] bg-teal-dark px-6 py-8 text-cream sm:flex-row sm:items-center sm:justify-between sm:px-10 sm:py-12">
-          <div>
-            <p className="font-display text-2xl">{location.name}</p>
-            <p className="mt-1 text-cream/80">{location.hoursLabel}</p>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <ReservaCTA location={location} />
-            <DeliveryCTA location={location} variant="onDark" />
-          </div>
+        <h2 className="mt-20 font-display text-3xl tracking-tight sm:text-4xl">
+          {t("dondeEstamos")}
+        </h2>
+        <div className="mt-6">
+          <LocationMapLazy location={location} />
         </div>
 
         <h2 className="mt-20 font-display text-3xl tracking-tight sm:text-4xl">
@@ -221,7 +266,7 @@ export function LocationDetail({
                   loading="lazy"
                   className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-teal-dark/85 via-teal-dark/25 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-night/85 via-night/25 to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 p-4 text-cream">
                   <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-cream/75">
                     {l.type === "take-away" ? tBadges("takeAway") : tBadges("dineIn")}
@@ -233,6 +278,8 @@ export function LocationDetail({
           ))}
         </ul>
       </section>
+
+      <FloatingReservaCTA location={location} heroId="local-hero" />
     </>
   );
 }

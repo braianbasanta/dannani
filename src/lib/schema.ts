@@ -20,10 +20,10 @@ export function organizationSchema() {
     "@id": `${SITE_URL}/#organization`,
     name: "Da Nanni",
     url: SITE_URL,
-    logo: `${SITE_URL}/images/logo/logo.png`,
-    foundingDate: "2017",
+    logo: `${SITE_URL}/images/logo/logo-nero.png`,
+    foundingDate: "2018",
     description:
-      "Pizzeria Trattoria Napoletana en Barcelona. Proyecto familiar napolitano desde 2017.",
+      "Pizzeria Trattoria Napoletana en Barcelona. Proyecto familiar napolitano desde 2018.",
     sameAs: [
       "https://www.instagram.com/danannibcn/",
       "https://www.facebook.com/profile.php?id=61557151444831",
@@ -101,7 +101,7 @@ export function restaurantSchema(location: Location, path: string) {
     // Las trattorias reservan por teléfono; los take away no aceptan reserva.
     acceptsReservations: location.type === "dine-in",
     hasMenu: menuByLocationSlug[location.slug]
-      ? `${SITE_URL}/carta/${location.slug}`
+      ? `${SITE_URL}/restaurantes/${location.urlSlug}/carta`
       : undefined,
     potentialAction: orderUrls.length
       ? orderUrls.map(orderAction)

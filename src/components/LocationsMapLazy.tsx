@@ -12,7 +12,7 @@ const LocationsMap = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="h-[440px] animate-pulse rounded-[calc(1.75rem-0.5rem)] bg-teal-dark/10 sm:h-[520px]" />
+      <div className="h-[440px] animate-pulse rounded-[calc(1.75rem-0.5rem)] bg-cream/10 sm:h-[520px]" />
     ),
   }
 );

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, Public_Sans } from "next/font/google";
+import { Dancing_Script, Fraunces, Public_Sans } from "next/font/google";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
@@ -19,6 +19,15 @@ const publicSans = Public_Sans({
   subsets: ["latin"],
 });
 
+/* Caligráfica de marca: la clienta usa Monotype Corsiva en menús y
+   cartelería (licencia comercial, no embebible); Dancing Script es la
+   sustituta libre más cercana. Alimenta font-script: historia, frases
+   neón y detalles. latin-ext por el catalán futuro. */
+const dancingScript = Dancing_Script({
+  variable: "--font-dancing-script",
+  subsets: ["latin", "latin-ext"],
+});
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.dananni.es"),
   title: {
@@ -26,14 +35,14 @@ export const metadata: Metadata = {
     template: "%s | Da Nanni",
   },
   description:
-    "Pizza napolitana de masa de larga fermentación y trattoria italiana en 6 locales de Barcelona. Proyecto familiar napolitano desde 2017.",
+    "Pizza napolitana de masa de larga fermentación y trattoria italiana en 6 locales de Barcelona. Proyecto familiar napolitano desde 2018.",
   openGraph: {
     type: "website",
     siteName: "Da Nanni",
     locale: "es_ES",
     title: "Da Nanni – Pizzería Napolitana y Restaurante Italiano en Barcelona",
     description:
-      "Pizza napolitana de masa de larga fermentación y trattoria italiana en 6 locales de Barcelona. Proyecto familiar napolitano desde 2017.",
+      "Pizza napolitana de masa de larga fermentación y trattoria italiana en 6 locales de Barcelona. Proyecto familiar napolitano desde 2018.",
     images: [{ url: "/images/og/home.jpg", width: 1200, height: 630 }],
   },
   twitter: {
@@ -64,7 +73,7 @@ export default async function LocaleLayout({
       // Next 16 ya no fuerza scroll instantáneo al navegar cuando el CSS tiene
       // scroll-behavior: smooth; este atributo restaura ese comportamiento.
       data-scroll-behavior="smooth"
-      className={`${fraunces.variable} ${publicSans.variable} h-full antialiased`}
+      className={`${fraunces.variable} ${publicSans.variable} ${dancingScript.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
         <NextIntlClientProvider>

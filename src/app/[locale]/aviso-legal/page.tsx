@@ -8,10 +8,10 @@ export const metadata: Metadata = {
 
 export default function AvisoLegalPage() {
   return (
-    <section className="mx-auto max-w-3xl px-4 py-16 font-sans text-teal-dark">
+    <section className="mx-auto max-w-3xl px-4 py-16 font-sans text-cream">
       <h1 className="font-display text-4xl">Aviso Legal</h1>
 
-      <p className="mt-6 rounded-xl bg-mustard/10 px-5 py-4 text-sm text-mustard-dark">
+      <p className="mt-6 rounded-xl bg-mustard/15 px-5 py-4 text-sm text-mustard">
         Pendiente de completar con los datos fiscales reales del titular
         (razón social, CIF, domicilio social) antes de publicar el sitio.
       </p>
@@ -30,7 +30,7 @@ export default function AvisoLegalPage() {
           Para cualquier consulta relacionada con este aviso legal puede
           contactar a través del teléfono de cualquiera de nuestros locales,
           disponibles en la página de{" "}
-          <Link href="/contacto" className="underline hover:text-mustard">
+          <Link href="/contacto" className="underline hover:text-electric">
             contacto
           </Link>
           .

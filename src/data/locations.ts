@@ -83,7 +83,7 @@ export const locations: Location[] = [
     hoursLabel: "Todos los días, 12:00–22:30h",
     openingHours: [{ opens: "12:00", closes: "22:30" }],
     description:
-      "En pleno Barrio Gótico, a un paso de la Catedral de Barcelona y de la Plaça Sant Jaume, este fue el primer Da Nanni: abrió en 2018 con una idea sencilla, la pizza napolitana \"de bolsillo\", lista para llevarte por las callejuelas históricas de la Llibreteria. Pizza al corte en formato 24 y 33 cm, para comer paseando entre piedra medieval y el bullicio del centro de Barcelona.",
+      "En pleno Barrio Gótico, a un paso de la **Catedral de Barcelona** y de la Plaça Sant Jaume, este fue **el primer Da Nanni**: abrió en 2018 con una idea sencilla, la **pizza napolitana \"de bolsillo\"**, lista para llevarte por las callejuelas históricas de la Llibreteria. **Pizza al corte en formato 24 y 33 cm**, para comer paseando entre piedra medieval y el bullicio del centro de Barcelona.",
     imageCount: 9,
     imageFolder: "llibreteria",
     heroImage: "01",
@@ -110,7 +110,7 @@ export const locations: Location[] = [
     hoursLabel: "Todos los días, 12:00–22:30h",
     openingHours: [{ opens: "12:00", closes: "22:30" }],
     description:
-      "A pasos del MACBA, en el corazón multicultural del Raval, este segundo local nació en 2021 con el mismo espíritu take away que el de la Llibreteria: pizza napolitana de bolsillo en formato 24 y 33 cm, con la posibilidad de tomarla en la barra o en la pequeña terraza (sin servicio de mesa). Ideal para una parada rápida entre museos y galerías de arte del barrio.",
+      "A pasos del **MACBA**, en el corazón multicultural del Raval, este segundo local nació en 2021 con el mismo espíritu take away que el de la Llibreteria: **pizza napolitana de bolsillo en formato 24 y 33 cm**, con la posibilidad de tomarla en la **barra o en la pequeña terraza** (sin servicio de mesa). Ideal para una **parada rápida** entre museos y galerías de arte del barrio.",
     imageCount: 9,
     imageFolder: "tallers72",
     heroImage: "05",
@@ -143,7 +143,7 @@ export const locations: Location[] = [
       { opens: "20:00", closes: "00:00" },
     ],
     description:
-      "A pocos pasos de la Basílica de Santa Maria del Mar, en una de las calles con más carácter del Born, esta trattoria y pizzería napolitana abrió sus puertas en 2022. Techos altos, mesas cercanas y el aroma del horno de leña se mezclan con el ambiente histórico del barrio, uno de los rincones más visitados de Barcelona.",
+      "A pocos pasos de la **Basílica de Santa Maria del Mar**, en una de las calles con más carácter del Born, esta **trattoria y pizzería napolitana** abrió sus puertas en 2022. **Techos altos, mesas cercanas y el aroma del horno de leña** se mezclan con el ambiente histórico del barrio, uno de los rincones más visitados de Barcelona.",
     imageCount: 8,
     imageFolder: "rec",
     heroImage: "02",
@@ -156,9 +156,9 @@ export const locations: Location[] = [
   },
   {
     slug: "raval",
-    urlSlug: "raval",
-    name: "Da Nanni Raval",
-    neighborhood: "Raval",
+    urlSlug: "tallers",
+    name: "Da Nanni Tallers",
+    neighborhood: "Tallers",
     type: "dine-in",
     address: "Carrer dels Tallers, 69, 08001 Barcelona",
     coords: { lat: 41.384865, lng: 2.167054 },
@@ -173,7 +173,7 @@ export const locations: Location[] = [
       { opens: "20:00", closes: "00:00" },
     ],
     description:
-      "Justo enfrente de nuestro local take away de Tallers 72, esta trattoria napolitana con mesa y servicio completo abrió en 2023 para quienes prefieren sentarse a disfrutar con calma. Mismo barrio, mismo carácter napolitano, dos formas distintas de vivir Da Nanni en el Raval.",
+      "Justo enfrente de nuestro local take away de Tallers 72, esta **trattoria napolitana con mesa y servicio completo** abrió en 2023 para quienes prefieren **sentarse a disfrutar con calma**. Mismo barrio, mismo carácter napolitano, **dos formas distintas de vivir Da Nanni** en el Raval.",
     imageCount: 9,
     imageFolder: "tallers69",
     heroImage: "05",
@@ -203,7 +203,7 @@ export const locations: Location[] = [
     hoursLabel: "Todos los días, 13:00–00:00h (horario corrido)",
     openingHours: [{ opens: "13:00", closes: "00:00" }],
     description:
-      "En la Rambla del Poblenou, a un corto paseo de las playas de Bogatell y Nova Icària, este es el Da Nanni más cercano al mar. Horario corrido de mediodía a medianoche, terraza con el ambiente relajado y marinero típico del Poblenou, perfecto para una pizza napolitana después de un día de playa.",
+      "En la Rambla del Poblenou, a un corto paseo de las **playas de Bogatell y Nova Icària**, este es el **Da Nanni más cercano al mar**. **Horario corrido de mediodía a medianoche**, terraza con el ambiente relajado y marinero típico del Poblenou, perfecto para una **pizza napolitana después de un día de playa**.",
     imageCount: 9,
     imageFolder: "poblenou",
     heroImage: "08",
@@ -238,7 +238,7 @@ export const locations: Location[] = [
       { opens: "20:00", closes: "00:00" },
     ],
     description:
-      "En la emblemática Carrer de Verdi, epicentro cultural de Gràcia y a un paso de la Plaça del Sol, esta trattoria napolitana abrió en 2023. Ambiente de barrio, vecinos de toda la vida y visitantes se mezclan en las mesas de nuestro local con la carta más completa del grupo: pizza, antipasti y una selecta carta de vinos italianos.",
+      "En la emblemática **Carrer de Verdi**, epicentro cultural de Gràcia y a un paso de la Plaça del Sol, esta trattoria napolitana abrió en 2023. Ambiente de barrio, vecinos de toda la vida y visitantes se mezclan en las mesas de nuestro local con **la carta más completa del grupo**: **pizza, antipasti y una selecta carta de vinos italianos**.",
     imageCount: 9,
     imageFolder: "verdi",
     heroImage: "01",
@@ -254,8 +254,11 @@ export const locations: Location[] = [
 export const getLocationBySlug = (slug: string) =>
   locations.find((location) => location.slug === slug);
 
-export const getLocationByUrlSlug = (type: LocationType, urlSlug: string) =>
-  locations.find((l) => l.type === type && l.urlSlug === urlSlug);
+// Los urlSlug son únicos entre los 6 locales (el dine-in de Tallers usa
+// "tallers" para no chocar con el take away de Raval), así que la búsqueda
+// ya no necesita el type. `slug` sigue siendo la clave interna (menús, etc.).
+export const getLocationByUrlSlug = (urlSlug: string) =>
+  locations.find((l) => l.urlSlug === urlSlug);
 
 export const dineInLocations = locations.filter((l) => l.type === "dine-in");
 export const deliveryLocations = locations.filter((l) => l.delivery);
@@ -263,13 +266,25 @@ export const takeAwayLocations = locations.filter(
   (l) => l.type === "take-away"
 );
 
+/** Divide hoursLabel en dos líneas — días ("Todos los días") y franjas
+ * horarias — porque juntos forman una línea demasiado larga que corta mal
+ * en móvil. Usar siempre este helper al mostrar horarios en la UI. */
+export const hoursParts = (location: Location) => {
+  const [days, ...rest] = location.hoursLabel.split(", ");
+  return { days, times: rest.join(", ") };
+};
+
 export const heroImageSrc = (location: Location) =>
   `/images/${location.imageFolder}/${location.heroImage ?? "01"}.jpg`;
 
+/** Todos los locales viven bajo /restaurantes/<urlSlug> (los take away
+ * incluidos: para Google son restaurantes; "Para Llevar" es solo el nombre
+ * del botón). La carta de cada local cuelga en /restaurantes/<urlSlug>/carta. */
 export const hrefFor = (location: Location) =>
-  location.type === "take-away"
-    ? `/para-llevar/${location.urlSlug}`
-    : `/restaurantes/${location.urlSlug}`;
+  `/restaurantes/${location.urlSlug}`;
+
+export const cartaHrefFor = (location: Location) =>
+  `/restaurantes/${location.urlSlug}/carta`;
 
 /** Abre la ficha del negocio en Google Maps (no la ruta directa): ahí el
  * cliente ve fotos, reseñas y horario, y decide si pulsa "Cómo llegar".
