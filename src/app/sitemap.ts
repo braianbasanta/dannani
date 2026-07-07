@@ -9,7 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "",
     "/nuestra-historia",
     "/restaurantes",
-    "/para-llevar",
+    "/pizza-para-llevar",
     "/a-domicilio",
     "/restaurantes/cartas",
     "/contacto",

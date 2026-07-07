@@ -13,7 +13,7 @@ export const metadata: Metadata = pageMetadata({
   title: "Pizza para Llevar en Barcelona – Napolitana al Corte",
   description:
     'Pizza napolitana "de bolsillo" en formato 24 y 33 cm, lista para llevar. Da Nanni en el Barrio Gótico y el Raval, todos los días de 12:00 a 22:30h.',
-  path: "/para-llevar",
+  path: "/pizza-para-llevar",
   image: heroImageSrc(takeAwayLocations[0]),
 });
 
@@ -25,7 +25,7 @@ export default function ParaLlevarPage() {
       <SchemaOrg
         data={breadcrumbSchema([
           { name: "Inicio", path: "/" },
-          { name: "Para Llevar", path: "/para-llevar" },
+          { name: "Pizza Para Llevar", path: "/pizza-para-llevar" },
         ])}
       />
 

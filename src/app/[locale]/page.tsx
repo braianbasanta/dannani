@@ -121,7 +121,7 @@ function CtaPill({
 }: {
   href:
     | "/restaurantes"
-    | "/para-llevar"
+    | "/pizza-para-llevar"
     | "/nuestra-historia"
     | "/restaurantes/cartas";
   variant: "electric" | "ghost" | "hoverElectric";
@@ -250,7 +250,7 @@ export default function HomePage() {
               <CtaPill href="/restaurantes" variant="hoverElectric">
                 {t("ctaComerAqui")}
               </CtaPill>
-              <CtaPill href="/para-llevar" variant="hoverElectric">
+              <CtaPill href="/pizza-para-llevar" variant="hoverElectric">
                 {t("ctaParaLlevar")}
               </CtaPill>
             </div>
@@ -421,7 +421,7 @@ export default function HomePage() {
                   </p>
                 </div>
                 <Link
-                  href="/para-llevar"
+                  href="/pizza-para-llevar"
                   className="inline-flex items-center gap-2 font-sans text-sm font-semibold text-electric transition-colors duration-300 hover:text-cream"
                 >
                   {t("dondeLlevarCta")}

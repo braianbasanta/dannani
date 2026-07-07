@@ -67,7 +67,7 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/para-llevar"
+                  href="/pizza-para-llevar"
                   className="transition-colors duration-200 hover:text-electric"
                 >
                   {tNav("paraLlevar")}

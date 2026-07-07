@@ -48,7 +48,7 @@ export function Nav() {
     pathname === "/nuestra-historia" ||
     pathname === "/a-domicilio" ||
     pathname.startsWith("/restaurantes") ||
-    pathname.startsWith("/para-llevar");
+    pathname.startsWith("/pizza-para-llevar");
 
   const solid = scrolled || open || !hasDarkHero;
 
@@ -119,7 +119,7 @@ export function Nav() {
             </div>
 
             <div className="group relative">
-              <Link href="/para-llevar" className={desktopLink("/para-llevar")}>
+              <Link href="/pizza-para-llevar" className={desktopLink("/pizza-para-llevar")}>
                 {t("paraLlevar")}
               </Link>
               <div className="invisible absolute left-0 top-full w-64 translate-y-2 pt-3 opacity-0 transition-all duration-300 ease-fluid group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
@@ -211,8 +211,8 @@ export function Nav() {
 
           <div className="mt-6">
             <Link
-              href="/para-llevar"
-              className={`font-display text-3xl tracking-tight ${isActive("/para-llevar") ? "text-electric" : ""}`}
+              href="/pizza-para-llevar"
+              className={`font-display text-3xl tracking-tight ${isActive("/pizza-para-llevar") ? "text-electric" : ""}`}
               onClick={() => setOpen(false)}
             >
               {t("paraLlevar")}

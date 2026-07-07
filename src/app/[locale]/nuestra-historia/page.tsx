@@ -234,7 +234,7 @@ export default function NuestraHistoriaPage() {
           </Link>
           <Link
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            href={"/para-llevar" as any}
+            href={"/pizza-para-llevar" as any}
             className="group relative flex aspect-[4/3] items-end overflow-hidden rounded-2xl"
           >
             <Image

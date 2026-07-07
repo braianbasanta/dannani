@@ -124,7 +124,7 @@ export default function ADomicilioPage() {
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
             <Link
-              href="/para-llevar"
+              href="/pizza-para-llevar"
               className="inline-flex items-center justify-center rounded-full bg-electric px-6 py-3 text-sm font-semibold text-night transition hover:bg-electric-dark"
             >
               {t("verParaLlevar")}

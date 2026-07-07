@@ -22,6 +22,12 @@ const nextConfig: NextConfig = {
         destination: "/restaurantes/raval",
         permanent: true,
       },
+      // La landing de servicio ganó la keyword en la URL
+      {
+        source: "/para-llevar",
+        destination: "/pizza-para-llevar",
+        permanent: true,
+      },
       {
         source: "/carta",
         destination: "/restaurantes/cartas",
