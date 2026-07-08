@@ -64,7 +64,7 @@ export function DeliveryCTA({
 
   // Glass pill (mismo look que los CTAs del hero de la home) en ambas
   // variantes; se enciende en eléctrico al hover.
-  const btnClassName = `inline-flex items-center justify-center rounded-full bg-cream/10 px-4 py-3 font-sans text-xs font-bold uppercase tracking-[0.14em] text-cream ring-1 ring-cream/25 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_10px_30px_-12px_rgba(0,0,0,0.5)] transition-all duration-300 ease-fluid hover:-translate-y-0.5 hover:bg-[linear-gradient(160deg,#8adcf5_0%,#59c8ec_52%,#35aed6_100%)] hover:text-night hover:ring-black/20 active:scale-[0.98]${
+  const btnClassName = `inline-flex items-center justify-center rounded-full bg-cream/10 px-4 py-3 font-sans text-xs font-bold uppercase tracking-[0.14em] text-cream ring-1 ring-cream/25 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_10px_30px_-12px_rgba(0,0,0,0.5)] transition-all duration-300 ease-fluid hover:-translate-y-0.5 hover:bg-[linear-gradient(160deg,#7bafbc_0%,#5599aa_52%,#3d7e8f_100%)] hover:text-night hover:ring-black/20 active:scale-[0.98]${
     className ? ` ${className}` : ""
   }`;
 

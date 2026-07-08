@@ -132,9 +132,9 @@ function CtaPill({
     "inline-flex items-center justify-center rounded-full px-8 text-center font-sans text-sm font-bold uppercase tracking-[0.18em] transition-all duration-300 ease-fluid hover:-translate-y-0.5 active:scale-[0.98]";
   const styles =
     variant === "electric"
-      ? "bg-[linear-gradient(160deg,#8adcf5_0%,#59c8ec_52%,#35aed6_100%)] py-4 text-night ring-1 ring-black/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.45),0_14px_34px_-8px_rgba(0,0,0,0.6),0_0_24px_rgba(89,200,236,0.25)] hover:tracking-[0.22em] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.5),0_22px_46px_-10px_rgba(0,0,0,0.65),0_0_40px_rgba(89,200,236,0.4)]"
+      ? "bg-[linear-gradient(160deg,#7bafbc_0%,#5599aa_52%,#3d7e8f_100%)] py-4 text-night ring-1 ring-black/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.45),0_14px_34px_-8px_rgba(0,0,0,0.6),0_0_24px_rgba(85,153,170,0.25)] hover:tracking-[0.22em] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.5),0_22px_46px_-10px_rgba(0,0,0,0.65),0_0_40px_rgba(85,153,170,0.4)]"
       : variant === "hoverElectric"
-        ? "bg-cream/10 py-4 text-cream ring-1 ring-cream/25 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_10px_30px_-12px_rgba(0,0,0,0.5)] hover:bg-[linear-gradient(160deg,#8adcf5_0%,#59c8ec_52%,#35aed6_100%)] hover:text-night hover:tracking-[0.22em] hover:ring-black/20 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.45),0_14px_34px_-8px_rgba(0,0,0,0.6),0_0_24px_rgba(89,200,236,0.25)]"
+        ? "bg-cream/10 py-4 text-cream ring-1 ring-cream/25 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_10px_30px_-12px_rgba(0,0,0,0.5)] hover:bg-[linear-gradient(160deg,#7bafbc_0%,#5599aa_52%,#3d7e8f_100%)] hover:text-night hover:tracking-[0.22em] hover:ring-black/20 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.45),0_14px_34px_-8px_rgba(0,0,0,0.6),0_0_24px_rgba(85,153,170,0.25)]"
         : "border-2 border-current py-[0.85rem] backdrop-blur-sm";
   return (
     <Link href={href} className={`${base} ${styles} ${className}`}>

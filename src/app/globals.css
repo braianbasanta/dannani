@@ -8,8 +8,8 @@
   --color-teal: #4693aa; /* azul exacto del logo nuevo */
   --color-teal-dark: #1f3b40;
   --color-cream: #fdfbf6;
-  --color-electric: #59c8ec; /* azul neón (rótulos de los locales) */
-  --color-electric-dark: #35aed6;
+  --color-electric: #5599aa; /* azul de marca de la clienta (menús/logo, jul-2026) */
+  --color-electric-dark: #3d7e8f;
   --color-sand: #b4a179; /* dorado de la sirena del logo */
   --color-mustard: #d98e2b;
   --color-mustard-dark: #b8791f;
@@ -38,8 +38,8 @@
     0 12px 32px -12px rgb(0 0 0 / 0.6);
   --shadow-card-hover: 0 2px 4px rgb(0 0 0 / 0.5),
     0 24px 48px -16px rgb(0 0 0 / 0.7);
-  --shadow-neon: 0 0 12px rgb(89 200 236 / 0.35),
-    0 0 32px rgb(89 200 236 / 0.18);
+  --shadow-neon: 0 0 12px rgb(85 153 170 / 0.35),
+    0 0 32px rgb(85 153 170 / 0.18);
 
   --ease-fluid: cubic-bezier(0.32, 0.72, 0, 1);
 
@@ -120,7 +120,7 @@ p {
    Uso puntual (una frase por página como mucho), no para bloques largos. */
 .neon-blue {
   color: var(--color-electric);
-  text-shadow: 0 0 6px rgb(89 200 236 / 0.55), 0 0 28px rgb(89 200 236 / 0.3);
+  text-shadow: 0 0 6px rgb(85 153 170 / 0.55), 0 0 28px rgb(85 153 170 / 0.3);
 }
 
 .neon-yellow {

@@ -205,8 +205,8 @@ export function HistoriaTimeline({
             >
               <defs>
                 <linearGradient id="historia-line" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#59c8ec" />
-                  <stop offset="100%" stopColor="#35aed6" />
+                  <stop offset="0%" stopColor="#5599aa" />
+                  <stop offset="100%" stopColor="#3d7e8f" />
                 </linearGradient>
               </defs>
 
@@ -230,7 +230,7 @@ export function HistoriaTimeline({
             <div
               ref={markerRef}
               aria-hidden
-              className="pointer-events-none absolute z-10 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-electric opacity-0 shadow-[0_0_16px_4px_rgba(89,200,236,0.55)] transition-opacity duration-300"
+              className="pointer-events-none absolute z-10 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-electric opacity-0 shadow-[0_0_16px_4px_rgba(85,153,170,0.55)] transition-opacity duration-300"
             />
 
             <div className="relative z-10 space-y-14">

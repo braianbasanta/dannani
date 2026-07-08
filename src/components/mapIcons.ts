@@ -12,7 +12,7 @@ export const pinIcon = L.divIcon({
 
 export const userIcon = L.divIcon({
   className: "",
-  html: `<span style="display:block;width:16px;height:16px;border-radius:9999px;background:#59c8ec;border:3px solid #fdfbf6;box-shadow:0 0 0 6px rgba(89,200,236,.25)"></span>`,
+  html: `<span style="display:block;width:16px;height:16px;border-radius:9999px;background:#5599aa;border:3px solid #fdfbf6;box-shadow:0 0 0 6px rgba(85,153,170,.25)"></span>`,
   iconSize: [16, 16],
   iconAnchor: [8, 8],
 });

@@ -98,7 +98,7 @@ export function Nav() {
                 {t("restaurantes")}
               </Link>
               <div className="invisible absolute left-0 top-full w-64 translate-y-2 pt-3 opacity-0 transition-all duration-300 ease-fluid group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
-                <div className="rounded-2xl bg-night-soft p-2 text-cream ring-1 ring-cream/10 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.7),0_0_30px_rgba(89,200,236,0.08)]">
+                <div className="rounded-2xl bg-night-soft p-2 text-cream ring-1 ring-cream/10 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.7),0_0_30px_rgba(85,153,170,0.08)]">
                   {dineInByYear.map((l) => (
                     <Link
                       key={l.slug}
@@ -123,7 +123,7 @@ export function Nav() {
                 {t("paraLlevar")}
               </Link>
               <div className="invisible absolute left-0 top-full w-64 translate-y-2 pt-3 opacity-0 transition-all duration-300 ease-fluid group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
-                <div className="rounded-2xl bg-night-soft p-2 text-cream ring-1 ring-cream/10 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.7),0_0_30px_rgba(89,200,236,0.08)]">
+                <div className="rounded-2xl bg-night-soft p-2 text-cream ring-1 ring-cream/10 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.7),0_0_30px_rgba(85,153,170,0.08)]">
                   {takeAwayByYear.map((l) => (
                     <Link
                       key={l.slug}
