@@ -98,7 +98,7 @@ export const locations: Location[] = [
     slug: "raval-take-away",
     urlSlug: "raval",
     name: "Da Nanni Raval Take Away",
-    neighborhood: "Raval",
+    neighborhood: "Tallers 72",
     type: "take-away",
     address: "Carrer dels Tallers, 72, 08001 Barcelona",
     coords: { lat: 41.38505, lng: 2.166076 },
