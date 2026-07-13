@@ -9,6 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "",
     "/nuestra-historia",
     "/restaurantes",
+    "/pizzeria-napolitana-barcelona",
     "/pizza-para-llevar",
     "/a-domicilio",
     "/restaurantes/cartas",

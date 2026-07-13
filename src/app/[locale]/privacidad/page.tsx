@@ -10,16 +10,12 @@ export default function PrivacidadPage() {
     <section className="mx-auto max-w-3xl px-4 py-16 font-sans text-cream">
       <h1 className="font-display text-4xl">Política de Privacidad</h1>
 
-      <p className="mt-6 rounded-xl bg-mustard/15 px-5 py-4 text-sm text-mustard">
-        Pendiente de completar con los datos fiscales reales del titular y el
-        email de contacto oficial antes de publicar el sitio.
-      </p>
-
       <div className="mt-8 space-y-6 leading-relaxed">
         <p>
           <strong>Responsable del tratamiento:</strong>{" "}
-          <strong>[Razón social pendiente]</strong>, con CIF{" "}
-          <strong>[CIF pendiente]</strong>.
+          <strong>Nanni 2015, S.L.</strong>, con CIF{" "}
+          <strong>B01732486</strong> y domicilio social en Calle Tuset 8,
+          08006 Barcelona.
         </p>
         <p>
           Los datos personales que nos facilites a través del formulario de
@@ -30,8 +26,9 @@ export default function PrivacidadPage() {
         <p>
           Puedes ejercer tus derechos de acceso, rectificación, supresión y
           oposición escribiendo a{" "}
-          <strong>[email de contacto pendiente]</strong> o llamando a
-          cualquiera de nuestros locales.
+          <strong>danannipoblenou@gmail.com</strong>, por correo postal a la
+          dirección del domicilio social, o llamando a cualquiera de nuestros
+          locales.
         </p>
       </div>
     </section>
