@@ -201,7 +201,7 @@
     "titulo": "Frequently Asked Questions"
   },
   "local": {
-    "desde": "from",
+    "desde": "since",
     "estrellas": "{rating} out of 5 stars",
     "resenasGoogle": "{count} Google reviews",
     "horario": "Opening hours",
