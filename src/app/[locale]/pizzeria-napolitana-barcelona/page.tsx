@@ -3,6 +3,7 @@ import { Link } from "@/i18n/navigation";
 import { locations } from "@/data/locations";
 import { LocationCard } from "@/components/LocationCard";
 import { SchemaOrg } from "@/components/SchemaOrg";
+import { FaqSection } from "@/components/FaqSection";
 import { breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
 
@@ -191,9 +192,37 @@ export default function PizzeriaNapolitanaPage() {
           </Link>
           : la de una familia napolitana que en 2018 empezó vendiendo pizza al
           corte junto a la Catedral y hoy lleva su trattoria por toda
-          Barcelona.
+          Barcelona. ¿Aún dudas? Mira{" "}
+          <Link
+            href="/mejor-pizzeria-barcelona"
+            className="font-medium underline underline-offset-2 hover:text-electric"
+          >
+            lo que dicen miles de reseñas de Google
+          </Link>{" "}
+          sobre nuestros locales.
         </p>
       </section>
+
+      <FaqSection
+        items={[
+          {
+            q: "¿Qué hace napolitana a una pizza?",
+            a: "La masa de larga fermentación estirada a mano, el borde alveolado y ligero, y los ingredientes de la Campania: tomate San Marzano, mozzarella de búfala DOP y aceite de oliva. En nuestras trattorias se hornea en horno de leña, como manda la tradición.",
+          },
+          {
+            q: "¿Dónde está Da Nanni en Barcelona?",
+            a: "Tenemos seis locales: dos take away en el Barrio Gótico (Llibreteria 10) y el Raval (Tallers 72), y cuatro trattorias con servicio de mesa en el Born (Rec 30), Tallers 69, la Rambla del Poblenou 20 y Gràcia (Verdi 35).",
+          },
+          {
+            q: "¿Se puede reservar mesa?",
+            a: "Sí, en las cuatro trattorias se reserva por teléfono. Los locales take away no necesitan reserva: pides y en unos minutos tienes tu pizza recién horneada.",
+          },
+          {
+            q: "¿Hacéis pizza napolitana a domicilio?",
+            a: "Sí. Los locales del Gòtic, Born, Poblenou y Gràcia reparten a domicilio a través de Glovo y Just Eat.",
+          },
+        ]}
+      />
     </>
   );
 }

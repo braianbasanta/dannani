@@ -75,6 +75,14 @@ export function Footer() {
               </li>
               <li>
                 <Link
+                  href="/mejor-pizzeria-barcelona"
+                  className="transition-colors duration-200 hover:text-electric"
+                >
+                  {tNav("mejorPizzeria")}
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/pizza-para-llevar"
                   className="transition-colors duration-200 hover:text-electric"
                 >

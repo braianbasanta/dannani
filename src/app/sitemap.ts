@@ -10,6 +10,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/nuestra-historia",
     "/restaurantes",
     "/pizzeria-napolitana-barcelona",
+    "/mejor-pizzeria-barcelona",
     "/pizza-para-llevar",
     "/a-domicilio",
     "/restaurantes/cartas",
@@ -22,11 +23,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     .filter((location) => menuByLocationSlug[location.slug])
     .map((location) => cartaHrefFor(location));
 
-  const lastModified = new Date();
-
+  // Sin lastModified: generarlo en cada build le miente a Google (parecería
+  // que todo cambia en cada deploy) y devalúa la señal.
   return [...staticRoutes, ...locationRoutes, ...cartaRoutes].map((path) => ({
     url: `${SITE_URL}${path}`,
-    lastModified,
     changeFrequency: path === "" ? "weekly" : "monthly",
     priority: path === "" ? 1 : path === "/restaurantes" ? 0.9 : 0.7,
   }));

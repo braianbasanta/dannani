@@ -13,13 +13,14 @@ import { HubHero } from "@/components/HubHero";
 import { ComoLlegar } from "@/components/ComoLlegar";
 import { LocationsMapLazy } from "@/components/LocationsMapLazy";
 import { SchemaOrg } from "@/components/SchemaOrg";
+import { FaqSection } from "@/components/FaqSection";
 import { breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Pizza para Llevar en Barcelona – Napolitana al Corte",
+  title: "Pizza para Llevar en Barcelona – Napolitana desde 3 €",
   description:
-    'Pizza napolitana "de bolsillo" en formato 24 y 33 cm, lista para llevar. Da Nanni en el Barrio Gótico y el Raval, todos los días de 12:00 a 22:30h.',
+    'Pizza napolitana "de bolsillo" desde 3 € en formato 24 cm y desde 6 € en 33 cm, lista en minutos. Da Nanni en el Barrio Gótico y el Raval, todos los días de 12:00 a 22:30h.',
   path: "/pizza-para-llevar",
   image: heroImageSrc(takeAwayLocations[0]),
 });
@@ -184,6 +185,27 @@ export default function ParaLlevarPage() {
           </p>
         </div>
       </article>
+
+      <FaqSection
+        items={[
+          {
+            q: "¿Cuánto cuesta una pizza para llevar en Da Nanni?",
+            a: "El formato de bolsillo de 24 cm empieza en 3 € (la marinara; la margherita está en 3,50 €) y está disponible hasta las 16:00h. El formato grande de 33 cm va de 6 a 13 € y se sirve todo el día.",
+          },
+          {
+            q: "¿Hasta qué hora se puede pedir pizza para llevar?",
+            a: "Todos los días de 12:00 a 22:30h, con horario corrido, tanto en el local del Barrio Gótico (Llibreteria 10) como en el del Raval (Tallers 72).",
+          },
+          {
+            q: "¿Se puede comer en el local?",
+            a: "Son locales pensados para llevar: el del Raval tiene barra y una pequeña terraza, sin servicio de mesa. Si prefieres sentarte con servicio completo, tenemos cuatro trattorias en el Born, Tallers, Poblenou y Gràcia.",
+          },
+          {
+            q: "¿Hacéis también entrega a domicilio?",
+            a: "El local del Gòtic reparte a través de las apps de delivery; el del Raval, de momento, solo recogida. También llevan a casa las trattorias del Born, Poblenou y Gràcia — todas las opciones están en la página A Domicilio.",
+          },
+        ]}
+      />
     </>
   );
 }
