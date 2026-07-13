@@ -9,6 +9,10 @@ export const routing = defineRouting({
   locales: ["es", "en", "it", "ca"],
   defaultLocale: "es",
   localePrefix: "as-needed",
+  // Sin redirecciones según Accept-Language/cookie: el idioma lo decide solo
+  // la URL (SEO: Googlebot y usuarios siempre ven la versión canónica).
+  localeDetection: false,
+  localeCookie: false,
 });
 
 export type Locale = (typeof routing.locales)[number];
