@@ -1,6 +1,8 @@
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
+import type { Locale } from "@/i18n/routing";
 import { Link } from "@/i18n/navigation";
 import {
   deliveryLocations,
@@ -13,31 +15,44 @@ import { SchemaOrg } from "@/components/SchemaOrg";
 import { breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = pageMetadata({
-  title: "Pizza a Domicilio en Barcelona – Pide en Glovo o Just Eat",
-  description:
-    "Pizza napolitana de horno de leña a domicilio en Barcelona. Pide en Glovo o Just Eat desde nuestros locales del Gòtic, Born, Poblenou y Gràcia.",
-  path: "/a-domicilio",
-});
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "domicilio" });
+  return pageMetadata({
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+    path: "/a-domicilio",
+    locale: locale as Locale,
+  });
+}
 
 export default function ADomicilioPage() {
   const t = useTranslations("domicilio");
   const tBadges = useTranslations("badges");
   const tCta = useTranslations("cta");
+  const tNav = useTranslations("nav");
+  const locale = useLocale() as Locale;
 
   return (
     <>
       <SchemaOrg
-        data={breadcrumbSchema([
-          { name: "Inicio", path: "/" },
-          { name: "A Domicilio", path: "/a-domicilio" },
-        ])}
+        data={breadcrumbSchema(
+          [
+            { name: tNav("home"), path: "/" },
+            { name: tNav("aDomicilio"), path: "/a-domicilio" },
+          ],
+          locale
+        )}
       />
 
       <section className="relative -mt-16 flex min-h-[70svh] items-end overflow-hidden sm:min-h-[60vh]">
         <Image
           src="/images/llibreteria/05.jpg"
-          alt="Pizza napolitana en su caja para llevar de Da Nanni"
+          alt={t("heroAlt")}
           fill
           preload
           sizes="100vw"

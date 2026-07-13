@@ -1,15 +1,17 @@
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import type { Locale } from "@/i18n/routing";
 import type { Location } from "@/data/locations";
 import { hrefFor, heroImageSrc, hoursParts } from "@/data/locations";
+import { localizeLocation } from "@/data/translations";
 
 /**
  * Hero split a pantalla completa para los hubs: un panel por local,
  * con el H1 de la página superpuesto. Misma estética que la home.
  */
 export function HubHero({
-  locations,
+  locations: locationsProp,
   eyebrow,
   h1,
   sub,
@@ -22,6 +24,8 @@ export function HubHero({
   const t = useTranslations("local");
   const tBadges = useTranslations("badges");
   const tCta = useTranslations("cta");
+  const locale = useLocale() as Locale;
+  const locations = locationsProp.map((l) => localizeLocation(l, locale));
   const four = locations.length > 2;
 
   return (

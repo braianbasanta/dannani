@@ -1,6 +1,9 @@
 import Image from "next/image";
 import type { Metadata } from "next";
+import { useTranslations, useLocale } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import type { Locale } from "@/i18n/routing";
 import { getLocationBySlug, hrefFor, heroImageSrc } from "@/data/locations";
 import { SchemaOrg } from "@/components/SchemaOrg";
 import { breadcrumbSchema } from "@/lib/schema";
@@ -8,12 +11,20 @@ import { HistoriaTimeline } from "@/components/HistoriaTimeline";
 import type { Milestone } from "@/components/HistoriaTimeline";
 import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = pageMetadata({
-  title: "Nuestra Historia – Un Viaje de Nápoles a Barcelona",
-  description:
-    "Da Nanni nace en 2018 de una familia napolitana en Barcelona. Descubre la historia detrás de nuestra sirena Partenope, nuestra mascota Nanni y cada local que hemos abierto.",
-  path: "/nuestra-historia",
-});
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "historia" });
+  return pageMetadata({
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+    path: "/nuestra-historia",
+    locale: locale as Locale,
+  });
+}
 
 const gotic = getLocationBySlug("gotic")!;
 const ravalTakeAway = getLocationBySlug("raval-take-away")!;
@@ -22,65 +33,72 @@ const born = getLocationBySlug("born")!;
 const raval = getLocationBySlug("raval")!;
 const gracia = getLocationBySlug("gracia")!;
 
-const milestones: Milestone[] = [
-  {
-    date: "Julio 2018",
-    title: gotic.name,
-    copy: "La primera pizza de bolsillo de Barcelona: pizza al corte para llevar en la Llibreteria, junto a la Catedral.",
-    href: hrefFor(gotic),
-    icon: "pin",
-    image: "/images/llibreteria/03.jpg",
-  },
-  {
-    date: "Febrero 2021",
-    title: ravalTakeAway.name,
-    copy: "Segundo local para llevar, con barra y terraza a pasos del MACBA, en pleno Raval.",
-    href: hrefFor(ravalTakeAway),
-    icon: "pin",
-    image: "/images/tallers72/06.jpg",
-  },
-  {
-    date: "Agosto 2021",
-    title: poblenou.name,
-    copy: "Trattoria con terraza en la Rambla del Poblenou, el Da Nanni más cerca del mar.",
-    href: hrefFor(poblenou),
-    icon: "pin",
-    image: "/images/poblenou/06.jpg",
-  },
-  {
-    date: "Junio 2022",
-    title: born.name,
-    copy: "Horno de leña y servicio de mesa junto a la Basílica de Santa Maria del Mar, en el Born.",
-    href: hrefFor(born),
-    icon: "pin",
-    image: "/images/rec/03.jpg",
-  },
-  {
-    date: "Febrero 2023",
-    title: raval.name,
-    copy: "Trattoria con servicio de mesa, justo enfrente de nuestro local para llevar del Raval.",
-    href: hrefFor(raval),
-    icon: "pin",
-    image: "/images/tallers69/05.jpg",
-  },
-  {
-    date: "Julio 2023",
-    title: gracia.name,
-    copy: "La carta más completa del grupo, en plena Carrer de Verdi de Gràcia.",
-    href: hrefFor(gracia),
-    icon: "pin",
-    image: "/images/verdi/02.jpg",
-  },
-];
-
 export default function NuestraHistoriaPage() {
+  const t = useTranslations("historia");
+  const tNav = useTranslations("nav");
+  const locale = useLocale();
+
+  const milestones: Milestone[] = [
+    {
+      date: t("milestones.m1.date"),
+      title: gotic.name,
+      copy: t("milestones.m1.copy"),
+      href: hrefFor(gotic),
+      icon: "pin",
+      image: "/images/llibreteria/03.jpg",
+    },
+    {
+      date: t("milestones.m2.date"),
+      title: ravalTakeAway.name,
+      copy: t("milestones.m2.copy"),
+      href: hrefFor(ravalTakeAway),
+      icon: "pin",
+      image: "/images/tallers72/06.jpg",
+    },
+    {
+      date: t("milestones.m3.date"),
+      title: poblenou.name,
+      copy: t("milestones.m3.copy"),
+      href: hrefFor(poblenou),
+      icon: "pin",
+      image: "/images/poblenou/06.jpg",
+    },
+    {
+      date: t("milestones.m4.date"),
+      title: born.name,
+      copy: t("milestones.m4.copy"),
+      href: hrefFor(born),
+      icon: "pin",
+      image: "/images/rec/03.jpg",
+    },
+    {
+      date: t("milestones.m5.date"),
+      title: raval.name,
+      copy: t("milestones.m5.copy"),
+      href: hrefFor(raval),
+      icon: "pin",
+      image: "/images/tallers69/05.jpg",
+    },
+    {
+      date: t("milestones.m6.date"),
+      title: gracia.name,
+      copy: t("milestones.m6.copy"),
+      href: hrefFor(gracia),
+      icon: "pin",
+      image: "/images/verdi/02.jpg",
+    },
+  ];
+
   return (
     <>
       <SchemaOrg
-        data={breadcrumbSchema([
-          { name: "Inicio", path: "/" },
-          { name: "Nuestra Historia", path: "/nuestra-historia" },
-        ])}
+        data={breadcrumbSchema(
+          [
+            { name: tNav("home"), path: "/" },
+            { name: tNav("nuestraHistoria"), path: "/nuestra-historia" },
+          ],
+          locale as Locale
+        )}
       />
 
       <HistoriaTimeline
@@ -88,25 +106,15 @@ export default function NuestraHistoriaPage() {
         header={
           <div className="grid items-center gap-12 md:grid-cols-2 lg:gap-16">
             <div>
-              <p className="eyebrow">Ristorante e Pizzeria Napoletana</p>
+              <p className="eyebrow">{t("eyebrow")}</p>
               <h1 className="mt-3 font-script text-5xl leading-[1.1] sm:text-7xl">
-                Un viaje de Nápoles a Barcelona, bocado a bocado
+                {t("title")}
               </h1>
               <p className="mt-6 max-w-md leading-relaxed text-cream/75">
-                En 2018, en el corazón vibrante de Barcelona, nace Da Nanni.
-                No un simple restaurante, sino una promesa de amor nacida del
-                encuentro entre dos culturas extraordinarias. La capital
-                catalana nos acogió con los brazos abiertos, convirtiéndose
-                en nuestro segundo hogar: una tierra generosa que hemos
-                decidido corresponder trayendo con nosotros el tesoro más
-                preciado que poseemos, la tradición gastronómica de Nápoles.
+                {t("intro1")}
               </p>
               <p className="mt-4 max-w-md leading-relaxed text-cream/75">
-                El logo lleva a Partenope, la sirena fundadora de Nápoles.
-                El nombre Nanni honra al pequeño de la casa —que también
-                verás aparecer por ahí, con una porción de pizza en la
-                boca— y ese espíritu se siente en cada local, en la música
-                y en las conversaciones de nuestros compañeros.
+                {t("intro2")}
               </p>
             </div>
 
@@ -114,14 +122,14 @@ export default function NuestraHistoriaPage() {
               <div className="relative aspect-[4/5] overflow-hidden rounded-[1.75rem] shadow-card">
                 <Image
                   src="/images/historia/nanni-nino-pizza.jpg"
-                  alt="Nanni, el pequeño de la casa, comiendo una porción de pizza"
+                  alt={t("heroAlt")}
                   fill
                   sizes="(min-width: 768px) 40vw, 100vw"
                   className="object-cover"
                 />
               </div>
               <figcaption className="mt-3 text-xs text-cream/55 sm:text-sm">
-                Nanni, el pequeño de la casa
+                {t("heroFigcaption")}
               </figcaption>
             </figure>
           </div>
@@ -130,48 +138,37 @@ export default function NuestraHistoriaPage() {
 
       <article className="mx-auto max-w-3xl px-4 py-16 font-sans text-cream sm:py-20">
         <h2 className="font-script text-4xl text-cream sm:text-5xl">
-          La filosofía: respeto y autenticidad
+          {t("filosofiaTitle")}
         </h2>
-        <p className="mt-3 leading-relaxed">
-          ¿Nuestro secreto? No hacer concesiones. Para nosotros, la cocina
-          napolitana es sagrada. Por este motivo, cada ingrediente clave
-          —desde los tomates San Marzano bañados por el sol hasta la
-          mozzarella de búfala campana DOP, pasando por la harina de
-          nuestras masas— viaja directamente desde la Campania a Barcelona.
-          Respetamos las materias primas para no desvirtuar jamás los
-          sabores genuinos de nuestra infancia, garantizando la
-          autenticidad de recetas transmitidas de generación en generación.
-        </p>
+        <p className="mt-3 leading-relaxed">{t("filosofiaText")}</p>
 
         <h2 className="mt-14 font-script text-4xl text-cream sm:text-5xl">
-          Nuestro manifiesto: pizza, pasta y hospitalidad
+          {t("manifiestoTitle")}
         </h2>
-        <p className="mt-3 leading-relaxed">
-          En Da Nanni, la experiencia no se detiene en el plato. Lo que nos
-          distingue desde 2018 es una tríada indisoluble:
-        </p>
+        <p className="mt-3 leading-relaxed">{t("manifiestoIntro")}</p>
         <ul className="mt-6 grid gap-4 sm:grid-cols-3">
           <li className="rounded-[1.25rem] bg-cream/5 p-5 ring-1 ring-cream/10">
-            <p className="font-script text-2xl text-electric">La pizza</p>
-            <p className="mt-2 text-sm leading-relaxed text-cream/80">
-              Estirada a mano, de borde alveolado y ligero, horneada como
-              manda la tradición.
+            <p className="font-script text-2xl text-electric">
+              {t("pilarPizzaTitle")}
             </p>
-          </li>
-          <li className="rounded-[1.25rem] bg-cream/5 p-5 ring-1 ring-cream/10">
-            <p className="font-script text-2xl text-electric">La pasta</p>
             <p className="mt-2 text-sm leading-relaxed text-cream/80">
-              Trefilada al bronce, unida a salsas lentas y sabrosas que
-              huelen a hogar.
+              {t("pilarPizzaText")}
             </p>
           </li>
           <li className="rounded-[1.25rem] bg-cream/5 p-5 ring-1 ring-cream/10">
             <p className="font-script text-2xl text-electric">
-              La hospitalidad
+              {t("pilarPastaTitle")}
             </p>
             <p className="mt-2 text-sm leading-relaxed text-cream/80">
-              Ese calor espontáneo y generoso que hace que cualquiera se
-              sienta un invitado de honor, no un simple cliente.
+              {t("pilarPastaText")}
+            </p>
+          </li>
+          <li className="rounded-[1.25rem] bg-cream/5 p-5 ring-1 ring-cream/10">
+            <p className="font-script text-2xl text-electric">
+              {t("pilarHospitalidadTitle")}
+            </p>
+            <p className="mt-2 text-sm leading-relaxed text-cream/80">
+              {t("pilarHospitalidadText")}
             </p>
           </li>
         </ul>
@@ -179,18 +176,11 @@ export default function NuestraHistoriaPage() {
         <div className="mt-14 grid items-center gap-8 sm:grid-cols-[1.35fr_1fr]">
           <div>
             <h2 className="font-script text-4xl text-cream sm:text-5xl">
-              Un viaje papilar único
+              {t("viajeTitle")}
             </h2>
-            <p className="mt-3 leading-relaxed">
-              Cruzar el umbral de Da Nanni significa cerrar los ojos en
-              Barcelona y abrirlos frente al Golfo de Nápoles. Queremos que
-              el vuestro sea un verdadero viaje papilar: una experiencia
-              sensorial donde el aroma de la albahaca fresca, la calidez de
-              la bienvenida y la autenticidad de los sabores os
-              transportarán directamente a los callejones napolitanos.
-            </p>
+            <p className="mt-3 leading-relaxed">{t("viajeText")}</p>
             <p className="neon-blue mt-8 font-script text-3xl sm:text-4xl">
-              Bienvenidos a nuestra tierra. Bienvenidos a Da Nanni.
+              {t("bienvenida")}
             </p>
           </div>
 
@@ -198,7 +188,7 @@ export default function NuestraHistoriaPage() {
             <div className="relative aspect-[3/4] overflow-hidden rounded-[1.75rem] shadow-card ring-1 ring-cream/10">
               <Image
                 src="/images/historia/fontana-sirena-partenope.jpg"
-                alt="Fontana della Sirena Partenope, en Nápoles"
+                alt={t("sirenaAlt")}
                 fill
                 sizes="(min-width: 640px) 33vw, 100vw"
                 loading="lazy"
@@ -206,7 +196,7 @@ export default function NuestraHistoriaPage() {
               />
             </div>
             <figcaption className="mt-3 text-xs text-cream/55 sm:text-sm">
-              Fontana della Sirena Partenope · Piazza Sannazaro, Nápoles
+              {t("sirenaFigcaption")}
             </figcaption>
           </figure>
         </div>
@@ -219,16 +209,18 @@ export default function NuestraHistoriaPage() {
           >
             <Image
               src={heroImageSrc(born)}
-              alt="Restaurantes Da Nanni"
+              alt={t("restaurantesCardAlt")}
               fill
               sizes="(min-width: 640px) 50vw, 100vw"
               className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-night/90 via-night/30 to-transparent" />
             <div className="relative p-6 text-cream">
-              <p className="font-display text-xl">Restaurantes</p>
+              <p className="font-display text-xl">
+                {t("restaurantesCardTitle")}
+              </p>
               <p className="mt-1 text-sm text-cream/80">
-                Born · Raval · Poblenou · Gràcia
+                {t("restaurantesCardSubtitle")}
               </p>
             </div>
           </Link>
@@ -239,15 +231,19 @@ export default function NuestraHistoriaPage() {
           >
             <Image
               src={heroImageSrc(gotic)}
-              alt="Pizza para llevar Da Nanni"
+              alt={t("paraLlevarCardAlt")}
               fill
               sizes="(min-width: 640px) 50vw, 100vw"
               className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-night/90 via-night/30 to-transparent" />
             <div className="relative p-6 text-cream">
-              <p className="font-display text-xl">Para llevar</p>
-              <p className="mt-1 text-sm text-cream/80">Gòtic · Raval</p>
+              <p className="font-display text-xl">
+                {t("paraLlevarCardTitle")}
+              </p>
+              <p className="mt-1 text-sm text-cream/80">
+                {t("paraLlevarCardSubtitle")}
+              </p>
             </div>
           </Link>
         </div>

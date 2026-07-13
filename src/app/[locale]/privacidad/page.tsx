@@ -1,34 +1,39 @@
 import type { Metadata } from "next";
+import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "Política de Privacidad",
-  robots: { index: false },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "legal.privacidad" });
+
+  return {
+    title: t("metaTitle"),
+    robots: { index: false },
+  };
+}
 
 export default function PrivacidadPage() {
+  const t = useTranslations("legal");
+
   return (
     <section className="mx-auto max-w-3xl px-4 py-16 font-sans text-cream">
-      <h1 className="font-display text-4xl">Política de Privacidad</h1>
+      <h1 className="font-display text-4xl">{t("privacidad.h1")}</h1>
 
       <div className="mt-8 space-y-6 leading-relaxed">
         <p>
-          <strong>Responsable del tratamiento:</strong>{" "}
-          <strong>Nanni 2015, S.L.</strong>, con CIF{" "}
-          <strong>B01732486</strong> y domicilio social en Calle Tuset 8,
-          08006 Barcelona.
+          {t.rich("privacidad.p1", {
+            strong: (chunks) => <strong>{chunks}</strong>,
+          })}
         </p>
+        <p>{t("privacidad.p2")}</p>
         <p>
-          Los datos personales que nos facilites a través del formulario de
-          contacto o de reserva se utilizarán exclusivamente para gestionar tu
-          solicitud (reserva de mesa, pedido para llevar o consulta general) y
-          no se cederán a terceros salvo obligación legal.
-        </p>
-        <p>
-          Puedes ejercer tus derechos de acceso, rectificación, supresión y
-          oposición escribiendo a{" "}
-          <strong>danannipoblenou@gmail.com</strong>, por correo postal a la
-          dirección del domicilio social, o llamando a cualquiera de nuestros
-          locales.
+          {t.rich("privacidad.p3", {
+            strong: (chunks) => <strong>{chunks}</strong>,
+          })}
         </p>
       </div>
     </section>

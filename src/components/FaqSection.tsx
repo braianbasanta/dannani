@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { SchemaOrg } from "@/components/SchemaOrg";
 import { faqSchema } from "@/lib/schema";
 
@@ -9,11 +10,12 @@ export interface FaqItem {
 /** Sección de preguntas frecuentes con su JSON-LD FAQPage. Las respuestas
  * son texto plano: deben poder leerse igual en la página y en el schema. */
 export function FaqSection({ items }: { items: FaqItem[] }) {
+  const t = useTranslations("faq");
   return (
     <section className="mx-auto max-w-6xl px-4 pb-16 sm:pb-20">
       <SchemaOrg data={faqSchema(items)} />
       <h2 className="font-display text-3xl tracking-tight text-cream sm:text-4xl">
-        Preguntas frecuentes
+        {t("titulo")}
       </h2>
       <dl className="mt-8 grid gap-4 sm:grid-cols-2">
         {items.map((item) => (

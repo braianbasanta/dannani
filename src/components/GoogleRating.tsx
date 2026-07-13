@@ -1,14 +1,8 @@
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import type { Location } from "@/data/locations";
 import { mapsUrl } from "@/data/locations";
-
-const ratingFormat = new Intl.NumberFormat("es-ES", {
-  minimumFractionDigits: 1,
-  maximumFractionDigits: 1,
-});
-const countFormat = new Intl.NumberFormat("es-ES", {
-  useGrouping: "always",
-});
+import { BCP47 } from "@/lib/seo";
+import type { Locale } from "@/i18n/routing";
 
 /** Valoración de Google del local, enlazada a su ficha de Maps.
  * Con `link=false` renderiza solo texto (para usar dentro de otros enlaces).
@@ -23,7 +17,16 @@ export function GoogleRating({
   link?: boolean;
 }) {
   const t = useTranslations("local");
+  const locale = useLocale() as Locale;
   if (!location.googleRating || !location.googleReviewCount) return null;
+
+  const ratingFormat = new Intl.NumberFormat(BCP47[locale], {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  });
+  const countFormat = new Intl.NumberFormat(BCP47[locale], {
+    useGrouping: "always",
+  });
 
   const content = (
     <>

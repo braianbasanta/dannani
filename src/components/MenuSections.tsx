@@ -1,23 +1,45 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import type { Locale } from "@/i18n/routing";
 import type { MenuSection } from "@/data/menu";
+import { translateData } from "@/data/translations";
 import { DishMediaViewer, type MediaEntry } from "./DishMediaViewer";
 
 type Category = "comida" | "bebidas";
 
 export function MenuSections({ menu }: { menu: MenuSection[] }) {
   const t = useTranslations("menu");
+  const locale = useLocale() as Locale;
   const [category, setCategory] = useState<Category>("comida");
   const [vegetarianOnly, setVegetarianOnly] = useState(false);
+
+  // Títulos de sección, notas y descripciones de plato pasan por el
+  // diccionario de datos; los nombres de plato (italiano de carta) no.
+  const localizedMenu = useMemo(
+    () =>
+      locale === "es"
+        ? menu
+        : menu.map((section) => ({
+            ...section,
+            title: translateData(section.title, locale),
+            note: section.note ? translateData(section.note, locale) : section.note,
+            items: section.items.map((item) =>
+              item.description
+                ? { ...item, description: translateData(item.description, locale) }
+                : item
+            ),
+          })),
+    [menu, locale]
+  );
 
   const hasComida = menu.some((section) => section.category === "comida");
   const hasBebidas = menu.some((section) => section.category === "bebidas");
 
   const visibleSections = useMemo(
     () =>
-      menu
+      localizedMenu
         .filter((section) => section.category === category)
         .map((section) => ({
           ...section,
@@ -27,7 +49,7 @@ export function MenuSections({ menu }: { menu: MenuSection[] }) {
               : section.items,
         }))
         .filter((section) => section.items.length > 0),
-    [menu, category, vegetarianOnly]
+    [localizedMenu, category, vegetarianOnly]
   );
 
   const mediaEntries = useMemo<MediaEntry[]>(

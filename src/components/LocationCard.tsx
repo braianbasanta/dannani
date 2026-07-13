@@ -1,12 +1,16 @@
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import type { Locale } from "@/i18n/routing";
 import type { Location } from "@/data/locations";
 import { hrefFor, heroImageSrc, hoursParts } from "@/data/locations";
+import { localizeLocation } from "@/data/translations";
 import { ComoLlegar } from "@/components/ComoLlegar";
 
-export function LocationCard({ location }: { location: Location }) {
+export function LocationCard({ location: locationProp }: { location: Location }) {
   const tCta = useTranslations("cta");
+  const locale = useLocale() as Locale;
+  const location = localizeLocation(locationProp, locale);
   const href = hrefFor(location);
 
   return (

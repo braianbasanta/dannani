@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Dancing_Script, Fraunces, Public_Sans } from "next/font/google";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
+import { OG_LOCALES } from "@/lib/seo";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import "../globals.css";
@@ -28,27 +30,37 @@ const dancingScript = Dancing_Script({
   subsets: ["latin", "latin-ext"],
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL("https://www.dananni.es"),
-  title: {
-    default: "Da Nanni – Pizzería Napolitana y Restaurante Italiano en Barcelona",
-    template: "%s | Da Nanni",
-  },
-  description:
-    "Pizza napolitana de masa de larga fermentación y trattoria italiana en 6 locales de Barcelona. Proyecto familiar napolitano desde 2018.",
-  openGraph: {
-    type: "website",
-    siteName: "Da Nanni",
-    locale: "es_ES",
-    title: "Da Nanni – Pizzería Napolitana y Restaurante Italiano en Barcelona",
-    description:
-      "Pizza napolitana de masa de larga fermentación y trattoria italiana en 6 locales de Barcelona. Proyecto familiar napolitano desde 2018.",
-    images: [{ url: "/images/og/home.jpg", width: 1200, height: 630 }],
-  },
-  twitter: {
-    card: "summary_large_image",
-  },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale: requested } = await params;
+  const locale = hasLocale(routing.locales, requested)
+    ? requested
+    : routing.defaultLocale;
+  const t = await getTranslations({ locale, namespace: "meta.layout" });
+
+  return {
+    metadataBase: new URL("https://www.dananni.es"),
+    title: {
+      default: t("title"),
+      template: "%s | Da Nanni",
+    },
+    description: t("description"),
+    openGraph: {
+      type: "website",
+      siteName: "Da Nanni",
+      locale: OG_LOCALES[locale],
+      title: t("title"),
+      description: t("description"),
+      images: [{ url: "/images/og/home.jpg", width: 1200, height: 630 }],
+    },
+    twitter: {
+      card: "summary_large_image",
+    },
+  };
+}
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));

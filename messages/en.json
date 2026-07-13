@@ -1,0 +1,383 @@
+{
+  "meta": {
+    "layout": {
+      "title": "Da Nanni – Neapolitan Pizzeria and Italian Restaurant in Barcelona",
+      "description": "Neapolitan pizza made with long-fermented dough and Italian trattoria cooking across six locations in Barcelona. A Neapolitan family business since 2018."
+    },
+    "home": {
+      "title": "Neapolitan Pizzeria and Italian Restaurant in Barcelona",
+      "description": "Neapolitan pizzeria and Italian restaurant in Barcelona. Pizza made with 48-hour fermented dough and baked in a wood-fired oven at six locations, from the Born to Gràcia, also available for takeaway."
+    }
+  },
+  "nav": {
+    "menuButton": "Menu",
+    "idioma": "Language",
+    "home": "Home",
+    "restaurantes": "Restaurants",
+    "pizzeriaNapolitana": "Neapolitan Pizzeria",
+    "mejorPizzeria": "Best Pizzeria in Barcelona",
+    "paraLlevar": "Takeaway",
+    "aDomicilio": "Delivery",
+    "carta": "Menu",
+    "nuestraHistoria": "Our Story",
+    "contacto": "Contact"
+  },
+  "cta": {
+    "reservarMesa": "Book a table",
+    "pedirParaLlevar": "Order takeaway",
+    "pedirDomicilio": "Delivery",
+    "pedirGlovo": "Order on Glovo",
+    "pedirJustEat": "Order on Just Eat",
+    "comoLlegar": "View on Maps",
+    "verLocal": "View venue",
+    "verCarta": "View menu",
+    "verCartaCompleta": "View the full menu",
+    "llamar": "Call",
+    "verTodos": "See all branches"
+  },
+  "badges": {
+    "dineIn": "Eat in",
+    "takeAway": "Takeaway",
+    "cercaPlaya": "Right by the beach"
+  },
+  "filtros": {
+    "todos": "All",
+    "conMesas": "With tables",
+    "paraLlevar": "Takeaway"
+  },
+  "reserva": {
+    "modalTitleDineIn": "Book your table",
+    "modalTitleTakeAway": "Order and collect",
+    "modalTitleDomicilio": "Order delivery",
+    "modalBodyDineIn": "Call {name} and we’ll save you a table.",
+    "modalBodyTakeAway": "Call {name} and we’ll have it freshly made, ready for you to collect.",
+    "modalBodyTakeAwayDomicilio": "Call {name} and collect your freshly made order, or have it delivered:",
+    "modalBodyDomicilio": "{name} delivers to your door via these platforms:",
+    "cerrar": "Close"
+  },
+  "menuVideo": {
+    "cerrar": "Close video",
+    "cerrarFondo": "Close",
+    "anterior": "Previous dish",
+    "siguiente": "Next dish"
+  },
+  "menu": {
+    "comida": "Food",
+    "bebidas": "Drinks",
+    "soloVegetariano": "Vegetarian only",
+    "sinResultados": "There are no vegetarian dishes in this section."
+  },
+  "home": {
+    "eyebrow": "Barcelona · since 2018",
+    "h1": "<nw>Ristorante e pizzeria</nw><br></br><i>napoletana</i>",
+    "claim": "A Neapolitan family. Six locations. The same high standard in every one.",
+    "heroResenas": "{count} Google reviews",
+    "descubre": "Discover",
+    "platosDesliza": "Swipe to see more",
+    "ctaComerAqui": "Eat here",
+    "ctaParaLlevar": "Takeaway pizza",
+    "platosTitle": "Our dishes",
+    "platosSubtitle": "Filmed just as they leave our kitchens. Tap one and take a closer look.",
+    "platosCta": "View the full menu",
+    "platosVerVideo": "Watch the video of {plato}",
+    "dondeTitle": "Where would you like to enjoy Da Nanni?",
+    "dondeRestaurantesTitle": "Restaurants",
+    "dondeRestaurantesText": "Four trattorias where you can sit down to eat: wood-fired oven, fresh pasta and Italian wines.",
+    "dondeRestaurantesBarrios": "Born · Raval · Poblenou · Gràcia",
+    "dondeRestaurantesCta": "See restaurants",
+    "dondeLlevarTitle": "Takeaway pizza",
+    "dondeLlevarText": "Pocket-sized Neapolitan pizza in 24 and 33 cm sizes, ready in minutes to enjoy as you stroll.",
+    "dondeLlevarBarrios": "Gòtic · Raval",
+    "dondeLlevarCta": "View locations",
+    "experienciaNeon": "Pizza is not trend, it's a way of life",
+    "experienciaTitle": "This is the Da Nanni experience",
+    "experienciaSubtitle": "The oven, the dining room and the kitchen in action: what happens every day in our restaurants.",
+    "mapaTitle": "Find your Da Nanni",
+    "mapaSubtitle": "Six branches from the Gòtic to Gràcia. Let the map show you which one is closest to you.",
+    "historiaTitle": "From Naples to Barcelona",
+    "historiaTeaser": "The story of the siren Partenope and little Nanni: a family venture that brought Neapolitan cuisine to Barcelona.",
+    "historiaTeaser2": "Long-fermented dough, a wood-fired oven and ingredients that travel across Italy to reach your table.",
+    "historiaCta": "Our story",
+    "resenasTitle": "What people are saying on Google",
+    "resenasSubtitle": "{rating} average rating across {count} reviews from our 6 branches.",
+    "resenasBadgeSufijo": "on Google",
+    "historiaImgAlt": "Nanni, the youngest of the family, eating a slice of pizza"
+  },
+  "footer": {
+    "tagline": "We use only the finest ingredients to create exceptional flavours.",
+    "navegacion": "Navigation",
+    "locales": "Our restaurants",
+    "legal": "Legal",
+    "privacidad": "Privacy policy",
+    "avisoLegal": "Legal notice",
+    "cookies": "Cookie policy",
+    "rights": "Da Nanni. All rights reserved."
+  },
+  "restaurantes": {
+    "title": "Italian restaurants in Barcelona",
+    "subtitle": "Wood-fired Neapolitan pizza, fresh pasta and Italian wines in four neighbourhoods.",
+    "intro": "Four trattorias, each with the character of its neighbourhood: choose yours and book a table.",
+    "infoTitle": "Addresses and opening hours",
+    "domicilioHint": "Staying in today?",
+    "domicilioLink": "Order delivery",
+    "metaTitle": "Italian Restaurants in Barcelona – Neapolitan Trattoria",
+    "metaDescription": "Four Da Nanni Italian restaurants in Barcelona: trattoria and wood-fired Neapolitan pizza in the Born, Raval, Gràcia and Poblenou. Book your table."
+  },
+  "contacto": {
+    "eyebrow": "Contact",
+    "title": "Book a table or order at your local Da Nanni",
+    "intro": "Call your preferred restaurant and we’ll save you a table or have your order ready to collect. And if you’d rather not leave the house, order delivery on Glovo or Just Eat.",
+    "metaTitle": "Contact and Bookings",
+    "metaDescription": "Book a table or order takeaway at any of the six Da Nanni branches in Barcelona. Addresses, phone numbers and opening hours."
+  },
+  "cartaPage": {
+    "eyebrow": "Our menu",
+    "title": "Menu",
+    "intro": "Neapolitan pizza with a long-fermented dough, antipasti and a select Italian wine list. Prices may vary slightly between branches: choose yours to view its menu.",
+    "verLocal": "View the restaurant",
+    "otrosLocales": "Menus from other branches",
+    "sufijoParaLlevar": "(takeaway)",
+    "metaTitle": "Menu – Pizzas, Antipasti and Wines",
+    "metaDescription": "Neapolitan pizza, antipasti and Italian wines. Check the menu and prices for each Da Nanni branch in Barcelona.",
+    "metaTitleDineIn": "Da Nanni {name} Menu – Prices and Dishes",
+    "metaTitleTakeAway": "Da Nanni {name} Menu – Prices and Dishes",
+    "metaDescriptionDineIn": "Menu and prices for Da Nanni {name}, at {address}. Neapolitan pizza, antipasti and an Italian wine list.",
+    "metaDescriptionTakeAway": "Menu and prices for Da Nanni {name}, at {address}. Neapolitan pizza by the slice in 24 and 33 cm sizes."
+  },
+  "paraLlevar": {
+    "title": "Takeaway pizza in Barcelona",
+    "subtitle": "‘Pocket-sized’ Neapolitan pizza in 24 and 33 cm sizes, fresh from the oven.",
+    "intro": "Two spots in the Gòtic and the Raval, designed so you can order and carry on strolling.",
+    "infoTitle": "Addresses and opening hours",
+    "domicilioHint": "Would you rather we brought it to you?",
+    "domicilioLink": "Order delivery",
+    "metaTitle": "Takeaway Pizza in Barcelona – Neapolitan from €3",
+    "metaDescription": "‘Pocket-sized’ Neapolitan pizza from €3 in the 24 cm size and from €6 in the 33 cm, ready in minutes. Da Nanni in the Gothic Quarter and the Raval, every day from 12:00 to 22:30.",
+    "promoBadge": "Only until 16:00",
+    "promoTitle": "24 cm pocket pizza — Margherita for €3.50",
+    "promoText": "In the evening we carry on with the large 33 cm size until 22:30.",
+    "promoCta": "View the menu",
+    "articleTitle": "Pizza by the slice, Naples style",
+    "articleP1": "In Naples, pizza is also eaten on the street, folded into quarters. That’s the idea behind our two takeaway spots: <strong>Neapolitan pizza by the slice</strong> in two sizes, <strong>24 cm</strong> (the ‘pocket pizza’, available until 16:00) and <strong>33 cm</strong>, fresh from the oven and ready in minutes, open <strong>all day from 12:00 to 22:30, every day</strong>.",
+    "articleP2": "The <goticLink>Gothic Quarter</goticLink> spot is at Carrer de la Llibreteria, 10, a stone’s throw from Barcelona Cathedral: it was the first Da Nanni and is still the perfect stop among the narrow streets. The <ravalLink>Raval</ravalLink> spot (Carrer dels Tallers, 72, just steps from the MACBA) adds a bar and a small terrace so you can eat it right there.",
+    "articleP3": "Both share the same menu: 24 Neapolitan pizzas, from the classic Margherita to the Tartufata, with vegetarian and vegan options. You can browse it, with photos and videos of every pizza, on the <goticCartaLink>Gòtic menu</goticCartaLink> or the <ravalCartaLink>Raval menu</ravalCartaLink>.",
+    "faq": {
+      "q1": "How much does a takeaway pizza cost at Da Nanni?",
+      "a1": "The 24 cm pocket size starts at €3 (the Marinara; the Margherita is €3.50) and is available until 16:00. The large 33 cm size goes from €6 to €13 and is served all day.",
+      "q2": "What time is the last order for takeaway pizza?",
+      "a2": "Every day from 12:00 to 22:30, all day without a break, at both the Gothic Quarter spot (Llibreteria 10) and the Raval spot (Tallers 72).",
+      "q3": "Can you eat in?",
+      "a3": "They’re designed for takeaway: the Raval spot has a bar and a small terrace, with no table service. If you’d rather sit down and enjoy full service, we have four trattorias in the Born, Tallers, Poblenou and Gràcia.",
+      "q4": "Do you also deliver?",
+      "a4": "The Gòtic spot delivers through the delivery apps; the Raval spot is collection only for now. The trattorias in the Born, Poblenou and Gràcia deliver too — you’ll find every option on the Delivery page."
+    }
+  },
+  "domicilio": {
+    "eyebrow": "Glovo · Just Eat",
+    "title": "Neapolitan pizza delivery in Barcelona",
+    "subtitle": "From the wood-fired oven to your door: order on Glovo or Just Eat from our branches in the Gòtic, Born, Poblenou and Gràcia.",
+    "infoTitle": "Choose your branch and order",
+    "intro": "Each branch delivers within its own area. Choose the one nearest you and order straight from its Glovo or Just Eat store.",
+    "mapaTitle": "Check the map to see which one is closest to you",
+    "mapaText": "Turn on your location and we’ll tell you which Da Nanni is closest to home, with buttons to order straight from that branch.",
+    "recogidaTitle": "Would you rather collect it yourself?",
+    "recogidaText": "At our Gòtic and Raval spots we’ll make your pizza fresh for you to take away, and at the trattorias there’s always a table waiting for you.",
+    "verParaLlevar": "See takeaway spots",
+    "verRestaurantes": "See restaurants",
+    "metaTitle": "Pizza Delivery in Barcelona – Order on Glovo or Just Eat",
+    "metaDescription": "Wood-fired Neapolitan pizza delivered in Barcelona. Order on Glovo or Just Eat from our branches in the Gòtic, Born, Poblenou and Gràcia.",
+    "heroAlt": "Neapolitan pizza in its Da Nanni takeaway box"
+  },
+  "mapa": {
+    "cercaDeMi": "Find the one nearest me",
+    "verMiUbicacion": "View my location",
+    "localizando": "Locating…",
+    "masCercano": "Your nearest Da Nanni:",
+    "aDistancia": "{km} km away",
+    "tuUbicacion": "Your location",
+    "error": "We couldn’t get your location. Please check your browser permissions."
+  },
+  "faq": {
+    "titulo": "Frequently Asked Questions"
+  },
+  "local": {
+    "desde": "from",
+    "estrellas": "{rating} out of 5 stars",
+    "resenasGoogle": "{count} Google reviews",
+    "horario": "Opening hours",
+    "direccion": "Address",
+    "telefono": "Phone",
+    "galeria": "Photos of the restaurant",
+    "cartaTitle": "Menu",
+    "platosTitle": "Our dishes",
+    "dondeEstamos": "Where to find us",
+    "cartaNoDisponible": "We’re updating the menu for this branch. In the meantime, take a look at the general menu.",
+    "resenasTitle": "What people are saying on Google",
+    "resenaGoogle": "Google review",
+    "verTodasResenas": "Read all the reviews on Google",
+    "otrosLocales": "Other branches"
+  },
+  "historia": {
+    "metaTitle": "Our Story – A Journey from Naples to Barcelona",
+    "metaDescription": "Da Nanni was founded in 2018 by a Neapolitan family in Barcelona. Discover the story behind our siren Partenope, our mascot Nanni and every restaurant we’ve opened.",
+    "eyebrow": "Ristorante e Pizzeria Napoletana",
+    "title": "A journey from Naples to Barcelona, one bite at a time",
+    "intro1": "In 2018, in the vibrant heart of Barcelona, Da Nanni was born. Not just a restaurant, but a promise of love born from the meeting of two extraordinary cultures. The Catalan capital welcomed us with open arms, becoming our second home: a generous land that we decided to repay by bringing with us our most precious treasure, the culinary tradition of Naples.",
+    "intro2": "The logo features Partenope, the siren who founded Naples. The name Nanni honours the youngest of the family — you’ll spot him here and there, slice of pizza in his mouth — and that spirit runs through every branch, in the music and in the chatter among our team.",
+    "heroAlt": "Nanni, the youngest of the family, eating a slice of pizza",
+    "heroFigcaption": "Nanni, the youngest of the family",
+    "milestones": {
+      "m1": {
+        "date": "July 2018",
+        "copy": "Barcelona’s first pocket-sized pizza: takeaway pizza by the slice at La Llibreteria, next to the Cathedral."
+      },
+      "m2": {
+        "date": "February 2021",
+        "copy": "A second takeaway spot, with a bar and terrace just steps from the MACBA, right in the heart of the Raval."
+      },
+      "m3": {
+        "date": "August 2021",
+        "copy": "A trattoria with a terrace on the Rambla del Poblenou – the Da Nanni closest to the sea."
+      },
+      "m4": {
+        "date": "June 2022",
+        "copy": "Wood-fired oven and table service next to the Basilica of Santa Maria del Mar, in the Born."
+      },
+      "m5": {
+        "date": "February 2023",
+        "copy": "A trattoria with table service, right opposite our takeaway spot in the Raval."
+      },
+      "m6": {
+        "date": "July 2023",
+        "copy": "The group’s most comprehensive menu, right on Carrer de Verdi in Gràcia."
+      }
+    },
+    "filosofiaTitle": "Our philosophy: respect and authenticity",
+    "filosofiaText": "Our secret? No compromises. To us, Neapolitan cuisine is sacred. For this reason, every single key ingredient —from sun-kissed San Marzano tomatoes to DOP Campania buffalo mozzarella, and the flour for our dough— travels directly from Campania to Barcelona. We respect our raw ingredients so as never to alter the genuine flavours of our childhood, guaranteeing the authenticity of recipes passed down through generations.",
+    "manifiestoTitle": "Our manifesto: pizza, pasta and hospitality",
+    "manifiestoIntro": "At Da Nanni, the experience doesn't stop at the plate. What has set us apart since 2018 is an unbreakable triad:",
+    "pilarPizzaTitle": "The pizza",
+    "pilarPizzaText": "Stretched by hand, with a light, airy crust, baked exactly as tradition dictates.",
+    "pilarPastaTitle": "The pasta",
+    "pilarPastaText": "Bronze-die extruded, tossed with slow-cooked, flavourful sauces that smell like home.",
+    "pilarHospitalidadTitle": "The hospitality",
+    "pilarHospitalidadText": "That spontaneous and generous warmth that makes everyone feel like a guest of honour, not just a customer.",
+    "viajeTitle": "A unique tastebud journey",
+    "viajeText": "Stepping through the doors of Da Nanni means closing your eyes in Barcelona and opening them in front of the Gulf of Naples. We want yours to be a true tastebud journey: a sensory experience where the aroma of fresh basil, the warmth of our welcome and the authenticity of the flavours transport you directly to the alleys of Naples.",
+    "bienvenida": "Welcome to our land. Welcome to Da Nanni.",
+    "sirenaAlt": "Fontana della Sirena Partenope, in Naples",
+    "sirenaFigcaption": "Fontana della Sirena Partenope · Piazza Sannazaro, Naples",
+    "restaurantesCardTitle": "Restaurants",
+    "restaurantesCardSubtitle": "Born · Raval · Poblenou · Gràcia",
+    "restaurantesCardAlt": "Da Nanni Restaurants",
+    "paraLlevarCardTitle": "Takeaway",
+    "paraLlevarCardSubtitle": "Gòtic · Raval",
+    "paraLlevarCardAlt": "Da Nanni takeaway pizza"
+  },
+  "legal": {
+    "avisoLegal": {
+      "metaTitle": "Legal Notice",
+      "h1": "Legal Notice",
+      "p1": "In compliance with the duty to provide information set out in Article 10 of Law 34/2002 of 11 July on Information Society Services and Electronic Commerce, users are hereby informed of the following details: the owner of this website is <strong>Nanni 2015, S.L.</strong>, with tax identification number (CIF) <strong>B01732486</strong> and registered office at <strong>Calle Tuset 8, 08006 Barcelona</strong>.",
+      "p2": "If you have any queries regarding this legal notice, please contact us by telephone at any of our branches; the numbers are available on the <contacto>contact</contacto> page."
+    },
+    "cookies": {
+      "metaTitle": "Cookie Policy",
+      "h1": "Cookie Policy",
+      "p1": "This site uses technical cookies that are necessary for it to function. When analytics or online booking tools (e.g. Cover Manager) are added, this page will be updated to detail which third-party cookies are installed and for what purpose.",
+      "p2": "You can configure your browser to block or delete cookies stored on your device at any time."
+    },
+    "privacidad": {
+      "metaTitle": "Privacy Policy",
+      "h1": "Privacy Policy",
+      "p1": "<strong>Data controller:</strong> <strong>Nanni 2015, S.L.</strong>, with CIF <strong>B01732486</strong> and registered office at Calle Tuset 8, 08006 Barcelona.",
+      "p2": "Any personal data you provide via the contact or booking form will be used exclusively to process your request (table booking, takeaway order or general enquiry) and will not be passed on to third parties unless required by law.",
+      "p3": "You may exercise your rights of access, rectification, erasure and objection by writing to <strong>danannipoblenou@gmail.com</strong>, by post to the registered office address, or by calling any of our branches."
+    }
+  },
+  "mejorPizzeria": {
+    "metaTitle": "Best Pizzeria in Barcelona – According to {count} Reviews",
+    "metaDescription": "Looking for the best pizzeria in Barcelona? The six Da Nanni Neapolitan pizzerias have {count} Google reviews between them, with an average of {rating}★. From the Gòtic to Gràcia: pizza by the slice from €3, or a trattoria with a wood-fired oven.",
+    "breadcrumbLabel": "Best Pizzeria in Barcelona",
+    "eyebrow": "Barcelona · 6 branches",
+    "h1": "The best pizzeria in Barcelona? The reviews say so",
+    "intro": "We’re not going to tell you we’re the best pizzeria in Barcelona: that’s for the people who eat here every day to decide. Six Neapolitan locations, from the Gòtic to Gràcia, and thousands of public Google reviews you can check before you come.",
+    "ratingLine": "<b>★ {rating}</b> average rating · {count} reviews on Google",
+    "ctaReservar": "Book a table",
+    "ctaVerCartas": "View the menus",
+    "numerosTitle": "The numbers, branch by branch",
+    "numerosText": "Public ratings from each branch’s Google listing (July 2026). No tricks: you’ll also see which one has the lowest score.",
+    "ratingStars": "★ {rating}",
+    "reviewsLabel": "{count} reviews",
+    "quotesTitle": "What they say, word for word",
+    "quotesText": "Direct quotes from Google reviews, verifiable on each branch’s listing.",
+    "quoteWrapper": "“{text}”",
+    "quoteAttribution": "· Google review at {location}",
+    "occasionsTitle": "The best one, depending on what you’re after",
+    "occasionsIntro": "“The best” depends on the plan: a quiet dinner isn’t the same as a slice of pizza between museums.",
+    "occasions": {
+      "t1": "Top-rated",
+      "x1": "Da Nanni Tallers, 4.7★: a full-service Neapolitan trattoria at Carrer dels Tallers 69, next to Plaça de Catalunya.",
+      "t2": "The original, since 2018",
+      "x2": "The first Da Nanni, next to the Cathedral: pizza by the slice in 24 and 33 cm sizes from €3, and the most-reviewed branch in the group.",
+      "t3": "For dinner in the Born",
+      "x3": "High ceilings, a wood-fired oven and the historic atmosphere of one of the neighbourhood’s most characterful streets, a stone’s throw from Santa Maria del Mar.",
+      "t4": "Near the beach",
+      "x4": "On the Rambla del Poblenou, the Da Nanni closest to the sea: open all day from midday to midnight, with a terrace.",
+      "t5": "The most comprehensive menu",
+      "x5": "On Carrer de Verdi, Gràcia: pizza, antipasti, fresh pasta and a select Italian wine list.",
+      "t6": "A quick stop in the Raval",
+      "x6": "Pocket pizza next to the MACBA, with a bar and a small terrace so you don’t miss a beat of the day."
+    },
+    "occasionsOutro": "Want to know what makes a real Neapolitan pizza different — the dough, the San Marzano tomatoes, the wood-fired oven? We tell all on <napolitana>our Neapolitan pizza page</napolitana>, or head straight to <cartas>the menus</cartas>, with photos and videos of every dish.",
+    "faq": {
+      "q1": "What is the best pizzeria in Barcelona?",
+      "a1": "According to Google ratings, the highest-scoring of our six branches is {name}, with {topRating} stars. Between them, the six Da Nanni pizzerias have more than {count} reviews, with an average rating of {avgRating}.",
+      "q2": "How much does it cost to eat at Da Nanni?",
+      "a2": "From €3 for a Marinara by the slice at the takeaway spots in the Gòtic and the Raval. In the large 33 cm size, pizzas go from €6 to €13, and at the trattorias you can add antipasti, fresh pasta and Italian wine.",
+      "q3": "Do I need to book a table?",
+      "a3": "At the four trattorias (Born, Tallers, Poblenou and Gràcia) you can book by phone. The two takeaway spots in the Gòtic and the Raval don’t take bookings: just order and your pizza is ready in minutes.",
+      "q4": "Do you deliver pizza?",
+      "a4": "Yes. The branches in the Gòtic, Born, Poblenou and Gràcia deliver via Glovo and Just Eat."
+    }
+  },
+  "pizzeriaNapolitana": {
+    "metaTitle": "Neapolitan Pizzeria in Barcelona – 6 Branches",
+    "metaDescription": "Authentic Neapolitan pizza in Barcelona: long-fermented dough, wood-fired oven and ingredients from Campania. Six Da Nanni pizzerias from the Gòtic to Gràcia, for dining in, takeaway or home delivery.",
+    "breadcrumbLabel": "Neapolitan Pizzeria in Barcelona",
+    "eyebrow": "Barcelona · since 2018",
+    "title": "Neapolitan pizzeria in Barcelona",
+    "intro": "We’re a family from Naples with six pizzerias in Barcelona. The same traditional Neapolitan pizza as always — long-fermented dough and ingredients brought directly from Campania — to enjoy at the table, take away as you stroll, or have delivered to your door.",
+    "ratingLine": "<star>★ {rating}</star> average rating · {count} reviews on Google",
+    "ctaReservar": "Book a table",
+    "ctaParaLlevar": "Takeaway pizza",
+    "section1Title": "The authentic pizza of Naples",
+    "section1Intro": "For us, Neapolitan cooking is sacred: we make no compromises. Every pizza is hand-stretched, with a light, airy crust, and baked the way tradition demands.",
+    "card1Title": "The dough",
+    "card1Text": "Long fermentation for a light, easily digestible dough, hand-stretched to order in every branch.",
+    "card2Title": "The ingredients",
+    "card2Text": "San Marzano tomatoes, Campania DOP buffalo mozzarella and flour that travel directly from Campania to Barcelona.",
+    "card3Title": "The oven",
+    "card3Text": "Wood-fired ovens in our trattorias and freshly made pizza by the slice at our takeaway spots.",
+    "section2Title": "Six pizzerias from the Gòtic to Gràcia",
+    "section2Intro": "Four trattorias with table service in the Born, the Raval, Poblenou and Gràcia, and two takeaway pizza spots in the Gothic Quarter and the Raval. Choose whichever is closest to you.",
+    "section3Title": "How would you like it today?",
+    "howMesaTitle": "At the table",
+    "howMesaText": "Four Italian restaurants with wood-fired ovens, fresh pasta and Italian wines. Book by phone.",
+    "howLlevarTitle": "Takeaway",
+    "howLlevarText": "‘Pocket-sized’ Neapolitan pizza by the slice, in 24 and 33 cm sizes, ready in minutes in the Gòtic and the Raval.",
+    "howDomicilioTitle": "Delivery",
+    "howDomicilioText": "Straight from the oven to your door via Glovo or Just Eat from the Gòtic, Born, Poblenou and Gràcia.",
+    "exploreText": "Fancy seeing what comes out of our kitchens before you decide? Take a look at <carta>the menu</carta>, with photos and videos of every dish, or discover <historia>our story</historia>: that of a Neapolitan family who started out in 2018 selling pizza by the slice next to the Cathedral and today have trattorias all over Barcelona. Still not sure? See <resenas>what thousands of Google reviews say</resenas> about our restaurants.",
+    "faq": {
+      "q1": "What makes a pizza Neapolitan?",
+      "a1": "The long-fermented, hand-stretched dough, the light, airy crust, and ingredients from Campania: San Marzano tomatoes, DOP buffalo mozzarella and olive oil. In our trattorias, the pizzas are baked in a wood-fired oven, the way tradition demands.",
+      "q2": "Where is Da Nanni in Barcelona?",
+      "a2": "We have six locations: two takeaway spots in the Gothic Quarter (Llibreteria 10) and the Raval (Tallers 72), and four trattorias with table service in the Born (Rec 30), Tallers 69, Rambla del Poblenou 20 and Gràcia (Verdi 35).",
+      "q3": "Can I book a table?",
+      "a3": "Yes — you can book by phone at all four trattorias. The takeaway spots don’t take bookings: just order, and in a few minutes your freshly baked pizza is ready.",
+      "q4": "Do you deliver Neapolitan pizza?",
+      "a4": "Yes. The branches in the Gòtic, Born, Poblenou and Gràcia deliver via Glovo and Just Eat."
+    }
+  }
+}

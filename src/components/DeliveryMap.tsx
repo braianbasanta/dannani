@@ -5,11 +5,13 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import type { Map as LeafletMap } from "leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import type { Location, Coords } from "@/data/locations";
 import { DeliveryButtons } from "./DeliveryCTA";
 import { pinIcon, userIcon } from "./mapIcons";
 import { haversineKm, kmFormat } from "@/lib/geo";
+import { BCP47 } from "@/lib/seo";
+import type { Locale } from "@/i18n/routing";
 
 /**
  * Mapa de los locales con delivery: localiza al usuario, señala cuál le
@@ -18,6 +20,7 @@ import { haversineKm, kmFormat } from "@/lib/geo";
  */
 export function DeliveryMap({ locations }: { locations: Location[] }) {
   const t = useTranslations("mapa");
+  const locale = useLocale() as Locale;
   const mapRef = useRef<LeafletMap | null>(null);
   const [userPos, setUserPos] = useState<Coords | null>(null);
   const [status, setStatus] = useState<"idle" | "locating" | "error">("idle");
@@ -131,7 +134,7 @@ export function DeliveryMap({ locations }: { locations: Location[] }) {
             <p className="text-sm text-cream">
               {t("masCercano")}{" "}
               <span className="font-semibold">{nearest.location.name}</span> ·{" "}
-              {t("aDistancia", { km: kmFormat.format(nearest.km) })}
+              {t("aDistancia", { km: kmFormat(BCP47[locale]).format(nearest.km) })}
             </p>
             <div className="flex flex-wrap gap-2">
               <DeliveryButtons location={nearest.location} />

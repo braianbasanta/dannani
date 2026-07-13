@@ -1,30 +1,46 @@
 import type { Metadata } from "next";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import type { Locale } from "@/i18n/routing";
 import { locations, cartaHrefFor } from "@/data/locations";
 import { menuByLocationSlug } from "@/data/menu";
 import { SchemaOrg } from "@/components/SchemaOrg";
 import { breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = pageMetadata({
-  title: "Carta – Pizzas, Antipasti y Vinos",
-  description:
-    "Pizza napolitana, antipasti y vinos italianos. Consulta la carta y precios de cada local Da Nanni en Barcelona.",
-  path: "/restaurantes/cartas",
-});
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "cartaPage" });
+
+  return pageMetadata({
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+    path: "/restaurantes/cartas",
+    locale: locale as Locale,
+  });
+}
 
 export default function CartasPage() {
   const t = useTranslations("cartaPage");
+  const tNav = useTranslations("nav");
+  const locale = useLocale() as Locale;
 
   return (
     <>
       <SchemaOrg
-        data={breadcrumbSchema([
-          { name: "Inicio", path: "/" },
-          { name: "Restaurantes", path: "/restaurantes" },
-          { name: "Cartas", path: "/restaurantes/cartas" },
-        ])}
+        data={breadcrumbSchema(
+          [
+            { name: tNav("home"), path: "/" },
+            { name: tNav("restaurantes"), path: "/restaurantes" },
+            { name: tNav("carta"), path: "/restaurantes/cartas" },
+          ],
+          locale
+        )}
       />
 
       <section className="mx-auto max-w-4xl px-4 py-16 font-sans text-cream sm:py-20">

@@ -1,8 +1,19 @@
 import type { Location } from "@/data/locations";
 import { heroImageSrc } from "@/data/locations";
 import { menuByLocationSlug } from "@/data/menu";
+import { routing, type Locale } from "@/i18n/routing";
+import { localePath } from "@/lib/seo";
 
 const SITE_URL = "https://www.dananni.es";
+
+/* La descripción de la Organization se sirve en el idioma de la página.
+   Los textos EN/IT/CA salen de la pasada de traducción (DeepL + revisión). */
+const ORG_DESCRIPTION: Record<Locale, string> = {
+  es: "Pizzeria Trattoria Napoletana en Barcelona. Proyecto familiar napolitano desde 2018.",
+  en: "Pizzeria Trattoria Napoletana in Barcelona. A Neapolitan family project since 2018.",
+  it: "Pizzeria Trattoria Napoletana a Barcellona. Progetto familiare napoletano dal 2018.",
+  ca: "Pizzeria Trattoria Napoletana a Barcelona. Projecte familiar napolità des del 2018.",
+};
 const ALL_DAYS = [
   "Monday",
   "Tuesday",
@@ -13,7 +24,7 @@ const ALL_DAYS = [
   "Sunday",
 ];
 
-export function organizationSchema() {
+export function organizationSchema(locale: Locale = routing.defaultLocale) {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -22,8 +33,7 @@ export function organizationSchema() {
     url: SITE_URL,
     logo: `${SITE_URL}/images/logo/logo-nero.png`,
     foundingDate: "2018",
-    description:
-      "Pizzeria Trattoria Napoletana en Barcelona. Proyecto familiar napolitano desde 2018.",
+    description: ORG_DESCRIPTION[locale],
     sameAs: [
       "https://www.instagram.com/danannibcn/",
       "https://www.facebook.com/profile.php?id=61557151444831",
@@ -45,13 +55,13 @@ function postalAddress(location: Location) {
 }
 
 /** Acción "Pedir online" que Google puede asociar al botón de pedidos. */
-function orderAction(url: string) {
+function orderAction(url: string, locale: Locale) {
   return {
     "@type": "OrderAction",
     target: {
       "@type": "EntryPoint",
       urlTemplate: url,
-      inLanguage: "es",
+      inLanguage: locale,
       actionPlatform: [
         "http://schema.org/DesktopWebPlatform",
         "http://schema.org/MobileWebPlatform",
@@ -61,7 +71,11 @@ function orderAction(url: string) {
   };
 }
 
-export function restaurantSchema(location: Location, path: string) {
+export function restaurantSchema(
+  location: Location,
+  path: string,
+  locale: Locale = routing.defaultLocale
+) {
   const gallery = ["01", "02", "03"].map(
     (n) => `${SITE_URL}/images/${location.imageFolder}/${n}.jpg`
   );
@@ -78,9 +92,11 @@ export function restaurantSchema(location: Location, path: string) {
   return {
     "@context": "https://schema.org",
     "@type": "Restaurant",
+    // @id estable en la ruta es (canónica) para que Google funda las
+    // versiones de idioma en una sola entidad; url sí es la localizada.
     "@id": `${SITE_URL}${path}#restaurant`,
     name: location.name,
-    url: `${SITE_URL}${path}`,
+    url: `${SITE_URL}${localePath(locale, path)}`,
     image: images,
     telephone: location.phoneHref.replace("tel:", ""),
     servesCuisine: ["Italian", "Neapolitan Pizza"],
@@ -101,10 +117,10 @@ export function restaurantSchema(location: Location, path: string) {
     // Las trattorias reservan por teléfono; los take away no aceptan reserva.
     acceptsReservations: location.type === "dine-in",
     hasMenu: menuByLocationSlug[location.slug]
-      ? `${SITE_URL}/restaurantes/${location.urlSlug}/carta`
+      ? `${SITE_URL}${localePath(locale, `/restaurantes/${location.urlSlug}/carta`)}`
       : undefined,
     potentialAction: orderUrls.length
-      ? orderUrls.map(orderAction)
+      ? orderUrls.map((url) => orderAction(url, locale))
       : undefined,
     parentOrganization: { "@id": `${SITE_URL}/#organization` },
   };
@@ -122,7 +138,10 @@ export function faqSchema(items: { q: string; a: string }[]) {
   };
 }
 
-export function breadcrumbSchema(items: { name: string; path: string }[]) {
+export function breadcrumbSchema(
+  items: { name: string; path: string }[],
+  locale: Locale = routing.defaultLocale
+) {
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -130,7 +149,7 @@ export function breadcrumbSchema(items: { name: string; path: string }[]) {
       "@type": "ListItem",
       position: index + 1,
       name: item.name,
-      item: `${SITE_URL}${item.path}`,
+      item: `${SITE_URL}${localePath(locale, item.path)}`,
     })),
   };
 }

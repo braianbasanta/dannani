@@ -11,7 +11,9 @@ export function haversineKm(a: Coords, b: Coords) {
   return 2 * 6371 * Math.asin(Math.sqrt(h));
 }
 
-export const kmFormat = new Intl.NumberFormat("es-ES", {
-  minimumFractionDigits: 1,
-  maximumFractionDigits: 1,
-});
+export function kmFormat(locale: string) {
+  return new Intl.NumberFormat(locale, {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  });
+}

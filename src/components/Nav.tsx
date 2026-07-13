@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { dineInLocations, takeAwayLocations, hrefFor } from "@/data/locations";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 // Locales ordenados por año de apertura (queda más natural en los menús)
 const dineInByYear = [...dineInLocations].sort((a, b) => a.openedYear - b.openedYear);
@@ -155,6 +156,7 @@ export function Nav() {
             >
               {t("nuestraHistoria")}
             </Link>
+            <LanguageSwitcher variant="desktop" />
             <Link
               href="/contacto"
               className="rounded-full bg-electric px-5 py-2.5 font-semibold text-night transition-all duration-300 hover:bg-electric-dark hover:shadow-neon active:scale-[0.98]"
@@ -165,7 +167,7 @@ export function Nav() {
 
           <button
             type="button"
-            aria-label="Menú"
+            aria-label={t("menuButton")}
             aria-expanded={open}
             className="md:hidden"
             onClick={() => setOpen((v) => !v)}
@@ -256,7 +258,8 @@ export function Nav() {
             </Link>
           </div>
 
-          <div className="pt-6">
+          <div className="flex flex-col gap-4 pt-6">
+            <LanguageSwitcher variant="mobile" onNavigate={() => setOpen(false)} />
             <Link
               href="/contacto"
               className="block rounded-full bg-electric px-6 py-3.5 text-center text-sm font-semibold text-night transition-colors hover:bg-electric-dark"

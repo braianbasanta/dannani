@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import type { Locale } from "@/i18n/routing";
 import {
   locations,
   getLocationByUrlSlug,
@@ -11,6 +12,7 @@ import {
   hoursParts,
 } from "@/data/locations";
 import { menuByLocationSlug } from "@/data/menu";
+import { localizeLocation } from "@/data/translations";
 import { MenuSections } from "@/components/MenuSections";
 import { ReservaCTA } from "@/components/ReservaCTA";
 import { DeliveryCTA } from "@/components/DeliveryCTA";
@@ -28,48 +30,57 @@ export function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
+  const { locale, slug } = await params;
   const location = getLocationByUrlSlug(slug);
   if (!location || !menuByLocationSlug[location.slug]) return {};
 
   const isTakeAway = location.type === "take-away";
+  const tMeta = await getTranslations({ locale, namespace: "cartaPage" });
 
   return pageMetadata({
-    title: `Carta Da Nanni ${location.neighborhood} – Precios y Menú`,
-    description: `Carta y precios de Da Nanni ${location.neighborhood}, en ${location.address}. ${
-      isTakeAway
-        ? "Pizza napolitana al corte en 24 y 33 cm."
-        : "Pizza napolitana, antipasti y carta de vinos italianos."
-    }`,
+    title: tMeta(isTakeAway ? "metaTitleTakeAway" : "metaTitleDineIn", {
+      name: location.neighborhood,
+    }),
+    description: tMeta(
+      isTakeAway ? "metaDescriptionTakeAway" : "metaDescriptionDineIn",
+      { name: location.neighborhood, address: location.address }
+    ),
     path: cartaHrefFor(location),
     image: heroImageSrc(location),
+    locale: locale as Locale,
   });
 }
 
 export default async function CartaLocalPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 }) {
-  const { slug } = await params;
-  const location = getLocationByUrlSlug(slug);
-  const menu = location ? menuByLocationSlug[location.slug] : undefined;
-  const t = await getTranslations("cartaPage");
+  const { locale, slug } = await params;
+  const found = getLocationByUrlSlug(slug);
+  const menu = found ? menuByLocationSlug[found.slug] : undefined;
+  const t = await getTranslations({ locale, namespace: "cartaPage" });
+  const tNav = await getTranslations({ locale, namespace: "nav" });
 
-  if (!location || !menu) {
+  if (!found || !menu) {
     notFound();
   }
+
+  const location = localizeLocation(found, locale as Locale);
 
   return (
     <>
       <SchemaOrg
-        data={breadcrumbSchema([
-          { name: "Inicio", path: "/" },
-          { name: "Cartas", path: "/restaurantes/cartas" },
-          { name: location.name, path: cartaHrefFor(location) },
-        ])}
+        data={breadcrumbSchema(
+          [
+            { name: tNav("home"), path: "/" },
+            { name: tNav("carta"), path: "/restaurantes/cartas" },
+            { name: location.name, path: cartaHrefFor(location) },
+          ],
+          locale as Locale
+        )}
       />
 
       <section className="mx-auto max-w-4xl px-4 py-16 font-sans text-cream sm:py-20">

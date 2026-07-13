@@ -1,6 +1,8 @@
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import type { Locale } from "@/i18n/routing";
+import { localizeLocation } from "@/data/translations";
 import type { Location } from "@/data/locations";
 import {
   locations,
@@ -26,7 +28,7 @@ import { restaurantSchema, breadcrumbSchema } from "@/lib/schema";
 import { RichText } from "@/components/RichText";
 
 export function LocationDetail({
-  location,
+  location: locationProp,
   hubName,
   hubPath,
   path,
@@ -39,6 +41,9 @@ export function LocationDetail({
   const t = useTranslations("local");
   const tBadges = useTranslations("badges");
   const tCta = useTranslations("cta");
+  const tNav = useTranslations("nav");
+  const locale = useLocale() as Locale;
+  const location = localizeLocation(locationProp, locale);
   const menu = menuByLocationSlug[location.slug];
   const dishes = featuredDishesForLocation(location.slug);
   const reviews = reviewsByLocationSlug[location.slug];
@@ -52,12 +57,15 @@ export function LocationDetail({
     <>
       <SchemaOrg
         data={[
-          restaurantSchema(location, path),
-          breadcrumbSchema([
-            { name: "Inicio", path: "/" },
-            { name: hubName, path: hubPath },
-            { name: location.name, path },
-          ]),
+          restaurantSchema(location, path, locale),
+          breadcrumbSchema(
+            [
+              { name: tNav("home"), path: "/" },
+              { name: hubName, path: hubPath },
+              { name: location.name, path },
+            ],
+            locale
+          ),
         ]}
       />
 

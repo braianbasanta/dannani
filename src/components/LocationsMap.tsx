@@ -5,15 +5,18 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import type { Map as LeafletMap } from "leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import type { Location, Coords } from "@/data/locations";
 import { hrefFor, mapsUrl } from "@/data/locations";
 import { pinIcon, userIcon } from "./mapIcons";
 import { haversineKm, kmFormat } from "@/lib/geo";
+import { BCP47 } from "@/lib/seo";
+import type { Locale } from "@/i18n/routing";
 
 export function LocationsMap({ locations }: { locations: Location[] }) {
   const t = useTranslations("mapa");
+  const locale = useLocale() as Locale;
   const tCta = useTranslations("cta");
   const mapRef = useRef<LeafletMap | null>(null);
   const [userPos, setUserPos] = useState<Coords | null>(null);
@@ -134,7 +137,7 @@ export function LocationsMap({ locations }: { locations: Location[] }) {
           <p className="text-sm text-cream">
             {t("masCercano")}{" "}
             <span className="font-semibold">{nearest.location.name}</span> ·{" "}
-            {t("aDistancia", { km: kmFormat.format(nearest.km) })} ·{" "}
+            {t("aDistancia", { km: kmFormat(BCP47[locale]).format(nearest.km) })} ·{" "}
             <a
               href={mapsUrl(nearest.location)}
               target="_blank"

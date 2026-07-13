@@ -1,7 +1,10 @@
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
+import type { Locale } from "@/i18n/routing";
 import { dineInLocations, heroImageSrc, hoursParts } from "@/data/locations";
+import { localizeLocation } from "@/data/translations";
 import { HubHero } from "@/components/HubHero";
 import { ComoLlegar } from "@/components/ComoLlegar";
 import { LocationsMapLazy } from "@/components/LocationsMapLazy";
@@ -9,24 +12,38 @@ import { SchemaOrg } from "@/components/SchemaOrg";
 import { breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = pageMetadata({
-  title: "Restaurantes Italianos en Barcelona – Trattoria Napolitana",
-  description:
-    "Cuatro restaurantes italianos Da Nanni en Barcelona: trattoria y pizza napolitana de horno de leña en Born, Raval, Gràcia y Poblenou. Reserva tu mesa.",
-  path: "/restaurantes",
-  image: heroImageSrc(dineInLocations[0]),
-});
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "restaurantes" });
+
+  return pageMetadata({
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+    path: "/restaurantes",
+    image: heroImageSrc(dineInLocations[0]),
+    locale: locale as Locale,
+  });
+}
 
 export default function RestaurantesPage() {
   const t = useTranslations("restaurantes");
+  const tNav = useTranslations("nav");
+  const locale = useLocale() as Locale;
 
   return (
     <>
       <SchemaOrg
-        data={breadcrumbSchema([
-          { name: "Inicio", path: "/" },
-          { name: "Restaurantes", path: "/restaurantes" },
-        ])}
+        data={breadcrumbSchema(
+          [
+            { name: tNav("home"), path: "/" },
+            { name: tNav("restaurantes"), path: "/restaurantes" },
+          ],
+          locale
+        )}
       />
 
       <HubHero
@@ -56,7 +73,7 @@ export default function RestaurantesPage() {
         </div>
 
         <ul className="mt-10 grid gap-4 sm:grid-cols-2">
-          {dineInLocations.map((location) => (
+          {dineInLocations.map((l) => localizeLocation(l, locale)).map((location) => (
             <li
               key={location.slug}
               className="flex flex-col justify-between gap-4 rounded-[1.75rem] bg-night-soft p-6 shadow-card ring-1 ring-cream/10 sm:p-7"

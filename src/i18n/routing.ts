@@ -1,11 +1,12 @@
 import { defineRouting } from "next-intl/routing";
 
 /**
- * Único locale activo por ahora: es. Para lanzar en/it/fr más adelante:
- * añadir el código aquí + su messages/<locale>.json — sin tocar rutas ni componentes.
+ * es es el default (sin prefijo, localePrefix "as-needed"); en/it/ca
+ * cuelgan de /en, /it y /ca con las mismas rutas en español.
+ * Para añadir otro idioma: código aquí + su messages/<locale>.json.
  */
 export const routing = defineRouting({
-  locales: ["es"],
+  locales: ["es", "en", "it", "ca"],
   defaultLocale: "es",
   localePrefix: "as-needed",
 });

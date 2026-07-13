@@ -1,5 +1,7 @@
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
+import type { Locale } from "@/i18n/routing";
 import { Link } from "@/i18n/navigation";
 import {
   takeAwayLocations,
@@ -9,6 +11,7 @@ import {
   cartaHrefFor,
   getLocationBySlug,
 } from "@/data/locations";
+import { localizeLocation } from "@/data/translations";
 import { HubHero } from "@/components/HubHero";
 import { ComoLlegar } from "@/components/ComoLlegar";
 import { LocationsMapLazy } from "@/components/LocationsMapLazy";
@@ -17,27 +20,40 @@ import { FaqSection } from "@/components/FaqSection";
 import { breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = pageMetadata({
-  title: "Pizza para Llevar en Barcelona – Napolitana desde 3 €",
-  description:
-    'Pizza napolitana "de bolsillo" desde 3 € en formato 24 cm y desde 6 € en 33 cm, lista en minutos. Da Nanni en el Barrio Gótico y el Raval, todos los días de 12:00 a 22:30h.',
-  path: "/pizza-para-llevar",
-  image: heroImageSrc(takeAwayLocations[0]),
-});
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "paraLlevar" });
+  return pageMetadata({
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+    path: "/pizza-para-llevar",
+    image: heroImageSrc(takeAwayLocations[0]),
+    locale: locale as Locale,
+  });
+}
 
 const gotic = getLocationBySlug("gotic")!;
 const ravalTakeAway = getLocationBySlug("raval-take-away")!;
 
 export default function ParaLlevarPage() {
   const t = useTranslations("paraLlevar");
+  const tNav = useTranslations("nav");
+  const locale = useLocale() as Locale;
 
   return (
     <>
       <SchemaOrg
-        data={breadcrumbSchema([
-          { name: "Inicio", path: "/" },
-          { name: "Pizza Para Llevar", path: "/pizza-para-llevar" },
-        ])}
+        data={breadcrumbSchema(
+          [
+            { name: tNav("home"), path: "/" },
+            { name: tNav("paraLlevar"), path: "/pizza-para-llevar" },
+          ],
+          locale
+        )}
       />
 
       <HubHero
@@ -53,22 +69,19 @@ export default function ParaLlevarPage() {
         <aside className="flex flex-col items-start justify-between gap-4 rounded-[1.75rem] bg-mustard/15 p-6 ring-1 ring-mustard/30 sm:flex-row sm:items-center sm:p-7">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-mustard">
-              Solo hasta las 16:00h
+              {t("promoBadge")}
             </p>
             <p className="mt-1.5 font-display text-xl tracking-tight text-cream sm:text-2xl">
-              Pizza de bolsillo de 24 cm — Margherita por 3,50 €
+              {t("promoTitle")}
             </p>
-            <p className="mt-1 text-sm text-cream/75">
-              Por la tarde seguimos con el formato grande de 33 cm hasta las
-              22:30h.
-            </p>
+            <p className="mt-1 text-sm text-cream/75">{t("promoText")}</p>
           </div>
           <Link
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             href={cartaHrefFor(gotic) as any}
             className="inline-flex shrink-0 items-center justify-center rounded-full bg-mustard px-6 py-3 font-sans text-sm font-semibold text-night transition-colors duration-500 ease-fluid hover:bg-mustard-dark active:scale-[0.98]"
           >
-            Ver la carta
+            {t("promoCta")}
           </Link>
         </aside>
       </div>
@@ -93,7 +106,7 @@ export default function ParaLlevarPage() {
         </div>
 
         <ul className="mt-10 grid gap-4 sm:grid-cols-2">
-          {takeAwayLocations.map((location) => (
+          {takeAwayLocations.map((l) => localizeLocation(l, locale)).map((location) => (
             <li
               key={location.slug}
               className="flex flex-col justify-between gap-4 rounded-[1.75rem] bg-night-soft p-6 shadow-card ring-1 ring-cream/10 sm:p-7"
@@ -127,83 +140,67 @@ export default function ParaLlevarPage() {
 
       <article className="mx-auto max-w-3xl px-4 pb-16 font-sans text-cream sm:pb-24">
         <h2 className="font-display text-3xl tracking-tight sm:text-4xl">
-          Pizza al corte, al estilo de Nápoles
+          {t("articleTitle")}
         </h2>
         <div className="mt-5 space-y-5 leading-relaxed text-cream/80">
           <p>
-            En Nápoles la pizza también se come por la calle, doblada en
-            cuatro. Esa es la idea de nuestros dos locales para llevar:{" "}
-            <strong>pizza napolitana al corte</strong> en dos formatos,{" "}
-            <strong>24 cm</strong> (la &quot;pizza de bolsillo&quot;,
-            disponible hasta las 16:00h) y <strong>33 cm</strong>, recién
-            salida del horno y lista en minutos, con{" "}
-            <strong>horario corrido de 12:00 a 22:30h todos los días</strong>
-            .
+            {t.rich("articleP1", {
+              strong: (chunks) => <strong>{chunks}</strong>,
+            })}
           </p>
           <p>
-            El local de{" "}
-            <Link
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              href={hrefFor(gotic) as any}
-              className="font-medium underline underline-offset-2 hover:text-electric"
-            >
-              el Barrio Gótico
-            </Link>{" "}
-            está en Carrer de la Llibreteria, 10, a un paso de la Catedral de
-            Barcelona: fue el primer Da Nanni y sigue siendo la parada
-            perfecta entre callejuelas. El de{" "}
-            <Link
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              href={hrefFor(ravalTakeAway) as any}
-              className="font-medium underline underline-offset-2 hover:text-electric"
-            >
-              el Raval
-            </Link>{" "}
-            (Carrer dels Tallers, 72, a pasos del MACBA) suma barra y una
-            pequeña terraza para comerla allí mismo.
+            {t.rich("articleP2", {
+              goticLink: (chunks) => (
+                <Link
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  href={hrefFor(gotic) as any}
+                  className="font-medium underline underline-offset-2 hover:text-electric"
+                >
+                  {chunks}
+                </Link>
+              ),
+              ravalLink: (chunks) => (
+                <Link
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  href={hrefFor(ravalTakeAway) as any}
+                  className="font-medium underline underline-offset-2 hover:text-electric"
+                >
+                  {chunks}
+                </Link>
+              ),
+            })}
           </p>
           <p>
-            Los dos comparten la misma carta: 24 pizzas napolitanas, de la
-            Margherita clásica a la Tartufata, con opciones vegetarianas y
-            veganas. Puedes verla con foto y video de cada pizza en la{" "}
-            <Link
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              href={cartaHrefFor(gotic) as any}
-              className="font-medium underline underline-offset-2 hover:text-electric"
-            >
-              carta del Gòtic
-            </Link>{" "}
-            o la{" "}
-            <Link
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              href={cartaHrefFor(ravalTakeAway) as any}
-              className="font-medium underline underline-offset-2 hover:text-electric"
-            >
-              carta del Raval
-            </Link>
-            .
+            {t.rich("articleP3", {
+              goticCartaLink: (chunks) => (
+                <Link
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  href={cartaHrefFor(gotic) as any}
+                  className="font-medium underline underline-offset-2 hover:text-electric"
+                >
+                  {chunks}
+                </Link>
+              ),
+              ravalCartaLink: (chunks) => (
+                <Link
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  href={cartaHrefFor(ravalTakeAway) as any}
+                  className="font-medium underline underline-offset-2 hover:text-electric"
+                >
+                  {chunks}
+                </Link>
+              ),
+            })}
           </p>
         </div>
       </article>
 
       <FaqSection
         items={[
-          {
-            q: "¿Cuánto cuesta una pizza para llevar en Da Nanni?",
-            a: "El formato de bolsillo de 24 cm empieza en 3 € (la marinara; la margherita está en 3,50 €) y está disponible hasta las 16:00h. El formato grande de 33 cm va de 6 a 13 € y se sirve todo el día.",
-          },
-          {
-            q: "¿Hasta qué hora se puede pedir pizza para llevar?",
-            a: "Todos los días de 12:00 a 22:30h, con horario corrido, tanto en el local del Barrio Gótico (Llibreteria 10) como en el del Raval (Tallers 72).",
-          },
-          {
-            q: "¿Se puede comer en el local?",
-            a: "Son locales pensados para llevar: el del Raval tiene barra y una pequeña terraza, sin servicio de mesa. Si prefieres sentarte con servicio completo, tenemos cuatro trattorias en el Born, Tallers, Poblenou y Gràcia.",
-          },
-          {
-            q: "¿Hacéis también entrega a domicilio?",
-            a: "El local del Gòtic reparte a través de las apps de delivery; el del Raval, de momento, solo recogida. También llevan a casa las trattorias del Born, Poblenou y Gràcia — todas las opciones están en la página A Domicilio.",
-          },
+          { q: t("faq.q1"), a: t("faq.a1") },
+          { q: t("faq.q2"), a: t("faq.a2") },
+          { q: t("faq.q3"), a: t("faq.a3") },
+          { q: t("faq.q4"), a: t("faq.a4") },
         ]}
       />
     </>

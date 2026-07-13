@@ -1,7 +1,10 @@
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
+import type { Locale } from "@/i18n/routing";
+import { pageMetadata, BCP47 } from "@/lib/seo";
 import { SchemaOrg } from "@/components/SchemaOrg";
 import { organizationSchema } from "@/lib/schema";
 import {
@@ -21,12 +24,7 @@ import { FeaturedDishesCarousel } from "@/components/FeaturedDishesCarousel";
 import { LocationsMapLazy } from "@/components/LocationsMapLazy";
 import { featuredDishEntries } from "@/data/featured";
 import { heroClip, experienceClips } from "@/data/experience";
-
-const ratingFormat = new Intl.NumberFormat("es-ES", {
-  minimumFractionDigits: 1,
-  maximumFractionDigits: 1,
-});
-const countFormat = new Intl.NumberFormat("es-ES", { useGrouping: "always" });
+import { translateData } from "@/data/translations";
 
 const ratedLocations = locations.filter(
   (l) => l.googleRating !== undefined && l.googleReviewCount !== undefined
@@ -65,26 +63,30 @@ const marqueeReviews = Object.entries(reviewsByLocationSlug).flatMap(
  * volúmenes mensuales en Barcelona): "restaurante italiano barcelona" (~2.900),
  * "pizzería barcelona" (~2.400) y "pizzería napolitana barcelona" (~880).
  * Keyword primero, marca al final; description ≤160 caracteres.
+ * El título no incluye "| Da Nanni": lo añade el template del layout raíz.
  */
-const HOME_TITLE =
-  "Pizzería Napolitana y Restaurante Italiano en Barcelona | Da Nanni";
-const HOME_DESCRIPTION =
-  "Pizzería napolitana y restaurante italiano en Barcelona. Pizza de masa fermentada 48 horas y horno de leña en 6 locales, del Born a Gràcia, también para llevar.";
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "meta.home" });
 
-export const metadata: Metadata = {
-  title: { absolute: HOME_TITLE },
-  description: HOME_DESCRIPTION,
-  alternates: { canonical: "/" },
-  openGraph: {
-    title: HOME_TITLE,
-    description: HOME_DESCRIPTION,
-    url: "/",
-    type: "website",
-    siteName: "Da Nanni",
-    locale: "es_ES",
-    images: [{ url: "/images/og/home.jpg", width: 1200, height: 630 }],
-  },
-};
+  // La home lleva la marca como sufijo (patrón "keyword | Marca"), fuera
+  // del template del layout, que no aplica a su propio segmento.
+  const title = `${t("title")} | Da Nanni`;
+  return {
+    ...pageMetadata({
+      title,
+      description: t("description"),
+      path: "/",
+      image: "/images/og/home.jpg",
+      locale: locale as Locale,
+    }),
+    title: { absolute: title },
+  };
+}
 
 function ArrowIcon() {
   return (
@@ -189,10 +191,18 @@ function LocationTile({
 export default function HomePage() {
   const t = useTranslations("home");
   const tBadges = useTranslations("badges");
+  const locale = useLocale() as Locale;
+  const ratingFormat = new Intl.NumberFormat(BCP47[locale], {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  });
+  const countFormat = new Intl.NumberFormat(BCP47[locale], {
+    useGrouping: "always",
+  });
 
   return (
     <>
-      <SchemaOrg data={organizationSchema()} />
+      <SchemaOrg data={organizationSchema(locale)} />
 
       {/* 1 · Hero: claim + reel de elaboración. En móvil el video es el fondo
           a pantalla completa con el texto encima; en desktop va dentro de una
@@ -283,7 +293,7 @@ export default function HomePage() {
                   priority
                   src={heroClip.video}
                   poster={heroClip.poster}
-                  aria-label={heroClip.alt}
+                  aria-label={translateData(heroClip.alt, locale)}
                   className="absolute inset-0 h-full w-full object-cover"
                 />
               </PhoneFrame>
@@ -489,7 +499,7 @@ export default function HomePage() {
               <AutoplayVideo
                 src={clip.video}
                 poster={clip.poster}
-                aria-label={clip.alt}
+                aria-label={translateData(clip.alt, locale)}
                 className="h-full w-full object-cover"
               />
             </div>
@@ -569,7 +579,7 @@ export default function HomePage() {
               <div className="relative aspect-[4/5] overflow-hidden rounded-[calc(1.75rem-0.5rem)]">
                 <Image
                   src="/images/historia/nanni-nino-pizza.jpg"
-                  alt="Nanni, el pequeño de la casa, comiendo una porción de pizza"
+                  alt={t("historiaImgAlt")}
                   fill
                   sizes="(min-width: 768px) 40vw, 100vw"
                   loading="lazy"

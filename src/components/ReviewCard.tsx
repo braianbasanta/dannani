@@ -1,12 +1,15 @@
+import { useTranslations } from "next-intl";
+
 const STAR_PATH =
   "M12 2.6l2.7 5.95 6.55.55-4.97 4.3 1.5 6.4L12 17.1 5.72 19.8l1.5-6.4L2.25 9.1l6.55-.55z";
 
 function CardStars({ rating }: { rating: number }) {
+  const t = useTranslations("local");
   return (
     <span
       className="inline-flex gap-0.5"
       role="img"
-      aria-label={`${rating} de 5 estrellas`}
+      aria-label={t("estrellas", { rating })}
     >
       {Array.from({ length: 5 }).map((_, i) => (
         <svg

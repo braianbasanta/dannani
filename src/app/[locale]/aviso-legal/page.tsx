@@ -1,34 +1,43 @@
 import type { Metadata } from "next";
+import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 
-export const metadata: Metadata = {
-  title: "Aviso Legal",
-  robots: { index: false },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "legal.avisoLegal" });
+
+  return {
+    title: t("metaTitle"),
+    robots: { index: false },
+  };
+}
 
 export default function AvisoLegalPage() {
+  const t = useTranslations("legal");
+
   return (
     <section className="mx-auto max-w-3xl px-4 py-16 font-sans text-cream">
-      <h1 className="font-display text-4xl">Aviso Legal</h1>
+      <h1 className="font-display text-4xl">{t("avisoLegal.h1")}</h1>
 
       <div className="mt-8 space-y-6 leading-relaxed">
         <p>
-          En cumplimiento del deber de información recogido en el artículo 10
-          de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la
-          Información y del Comercio Electrónico, se informa a los usuarios de
-          los siguientes datos: el titular de este sitio web es{" "}
-          <strong>Nanni 2015, S.L.</strong>, con CIF{" "}
-          <strong>B01732486</strong> y domicilio social en{" "}
-          <strong>Calle Tuset 8, 08006 Barcelona</strong>.
+          {t.rich("avisoLegal.p1", {
+            strong: (chunks) => <strong>{chunks}</strong>,
+          })}
         </p>
         <p>
-          Para cualquier consulta relacionada con este aviso legal puede
-          contactar a través del teléfono de cualquiera de nuestros locales,
-          disponibles en la página de{" "}
-          <Link href="/contacto" className="underline hover:text-electric">
-            contacto
-          </Link>
-          .
+          {t.rich("avisoLegal.p2", {
+            contacto: (chunks) => (
+              <Link href="/contacto" className="underline hover:text-electric">
+                {chunks}
+              </Link>
+            ),
+          })}
         </p>
       </div>
     </section>

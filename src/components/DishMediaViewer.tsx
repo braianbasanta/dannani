@@ -10,8 +10,10 @@ import {
   type TransitionEvent as ReactTransitionEvent,
   type WheelEvent as ReactWheelEvent,
 } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import type { Locale } from "@/i18n/routing";
 import type { MenuItem } from "@/data/menu";
+import { translateData } from "@/data/translations";
 
 export type MediaEntry = { item: MenuItem; sectionTitle: string };
 
@@ -31,6 +33,7 @@ export function DishMediaViewer({
   onClose,
 }: DishMediaViewerProps) {
   const t = useTranslations("menuVideo");
+  const locale = useLocale() as Locale;
   const n = entries.length;
   const [index, setIndex] = useState(() =>
     Math.min(Math.max(startIndex, 0), n - 1)
@@ -250,7 +253,7 @@ export function DishMediaViewer({
                 </p>
                 {entry.item.description ? (
                   <p className="mt-2 max-w-md text-sm italic leading-snug text-cream/75">
-                    {entry.item.description}
+                    {translateData(entry.item.description, locale)}
                   </p>
                 ) : null}
               </div>

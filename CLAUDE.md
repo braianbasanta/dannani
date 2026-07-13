@@ -29,11 +29,14 @@ Sitio de marketing/SEO para **Da Nanni**, cadena de pizzería/trattoria napolita
 
 Todas las rutas de página cuelgan de `src/app/[locale]/`. La config vive en `src/i18n/`:
 
-- `routing.ts` — define locales activos (hoy solo `es`) y `localePrefix: "as-needed"`. Añadir un idioma nuevo es: agregar el código aquí + `messages/<locale>.json`, sin tocar rutas ni componentes.
+- `routing.ts` — locales activos: `es` (default, sin prefijo), `en`, `it`, `ca` (bajo `/en`, `/it`, `/ca` con las mismas rutas en español; `localePrefix: "as-needed"`). Añadir un idioma nuevo es: agregar el código aquí + `messages/<locale>.json` + regenerar los diccionarios de datos (ver abajo).
 - `request.ts` — resuelve el locale por request y carga el JSON de mensajes correspondiente.
 - `navigation.ts` — re-exporta `Link`/`redirect`/`usePathname`/`useRouter` "locale-aware" de next-intl; úsalos en vez de los de `next/navigation` o `next/link` dentro de `[locale]`.
 - `src/proxy.ts` — el proxy (ex-middleware) que aplica el enrutado de next-intl.
-- Textos de UI (nav, CTAs, badges, etc.) están en `messages/es.json`. Al añadir una clave nueva, añadirla a **todos** los archivos de idioma existentes en `messages/`, aunque hoy solo exista `es.json`.
+- Textos de UI y copy de páginas están en `messages/{es,en,it,ca}.json`. `es.json` es la fuente de verdad; los otros tres deben mantener **paridad exacta de claves** (y de placeholders ICU `{var}` y tags rich-text). Al añadir una clave nueva, añadirla a los cuatro.
+- El contenido data-driven (`locations.ts`, `menu.ts`, `experience.ts`) se traduce vía `src/data/translations.{en,it,ca}.ts`: diccionarios keyed por el **texto español exacto**, con fallback al original si falta la clave (así los nombres de plato en italiano pasan intactos). Helpers en `src/data/translations.ts` (`translateData`, `localizeLocation`). `reviews.ts` NO se traduce (citas reales de Google).
+- `scripts/translate-content.mjs` regenera `messages/{en,it,ca}.json` + los tres diccionarios desde cero vía DeepL (key en `~/.deepl-api-key`). OJO: pisa la revisión editorial manual — tras correrlo, revisar el diff y re-aplicar tono/terminología, o traducir a mano solo las claves nuevas.
+- SEO multi-idioma: `pageMetadata` (`src/lib/seo.ts`) acepta `locale` y genera canonical + hreflang (`languageAlternates`); los schemas de `src/lib/schema.ts` aceptan `locale` como último argumento; `sitemap.ts` emite las 4 variantes de cada URL con `xhtml:link`. El selector de idioma vive en `src/components/LanguageSwitcher.tsx` (dropdown desktop + píldoras móvil, montado en `Nav`).
 
 ### Modelo de datos: locations (el corazón del sitio)
 
