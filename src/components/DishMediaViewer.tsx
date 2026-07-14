@@ -228,14 +228,17 @@ export function DishMediaViewer({
               className="relative h-full shrink-0 bg-black"
             >
               {entry.item.video ? (
+                // Solo el slide activo (i === 1) descarga y reproduce; los
+                // laterales muestran su póster hasta que el swipe los hace
+                // activos (ahorra ~2 MB por apertura y por navegación).
                 <video
                   src={entry.item.video}
                   poster={entry.item.poster}
-                  autoPlay
+                  autoPlay={i === 1}
                   muted
                   loop
                   playsInline
-                  preload="auto"
+                  preload={i === 1 ? "auto" : "none"}
                   draggable={false}
                   className="h-full w-full object-cover"
                 />

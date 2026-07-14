@@ -1,6 +1,7 @@
 "use client";
 
 import { useLayoutEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { AutoplayVideo } from "./AutoplayVideo";
 import { priceLabel, type MediaEntry } from "./DishMediaViewer";
@@ -109,22 +110,26 @@ export function DishCardsCarousel({
             aria-label={t("verVideo", { plato: entry.item.name })}
             className="group relative aspect-[9/16] w-[230px] shrink-0 snap-start overflow-hidden rounded-2xl bg-night-soft text-left shadow-card transition-shadow duration-500 ease-fluid hover:shadow-card-hover sm:w-[300px]"
           >
-            {entry.item.video ? (
-              <AutoplayVideo
-                src={entry.item.video}
-                poster={entry.item.poster!}
-                className="h-full w-full object-cover transition-transform duration-700 ease-fluid group-hover:scale-[1.04]"
-              />
-            ) : (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={entry.item.photo}
-                alt={entry.item.name}
-                loading="lazy"
-                draggable={false}
-                className="h-full w-full object-cover transition-transform duration-700 ease-fluid group-hover:scale-[1.04]"
-              />
-            )}
+            {/* Póster/foto por next/image (lazy + redimensionado + WebP);
+                el video va encima sin atributo poster — queda transparente
+                y deja ver la imagen hasta que arranca en viewport. */}
+            <div className="absolute inset-0 transition-transform duration-700 ease-fluid group-hover:scale-[1.04]">
+              {(entry.item.poster ?? entry.item.photo) && (
+                <Image
+                  src={(entry.item.poster ?? entry.item.photo)!}
+                  alt={entry.item.name}
+                  fill
+                  sizes="(min-width: 640px) 300px, 230px"
+                  className="object-cover"
+                />
+              )}
+              {entry.item.video && (
+                <AutoplayVideo
+                  src={entry.item.video}
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+              )}
+            </div>
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-night/85 via-night/10 to-transparent" />
             <div className="pointer-events-none absolute inset-x-0 bottom-0 p-4 text-cream sm:p-5">
               <p className="font-display text-xl leading-tight tracking-tight sm:text-2xl">

@@ -1,6 +1,7 @@
 import type { Location } from "@/data/locations";
 import { heroImageSrc } from "@/data/locations";
-import { menuByLocationSlug } from "@/data/menu";
+import { menuByLocationSlug, type MenuSection } from "@/data/menu";
+import { translateData } from "@/data/translations";
 import { routing, type Locale } from "@/i18n/routing";
 import { localePath } from "@/lib/seo";
 
@@ -123,6 +124,69 @@ export function restaurantSchema(
       ? orderUrls.map((url) => orderAction(url, locale))
       : undefined,
     parentOrganization: { "@id": `${SITE_URL}/#organization` },
+  };
+}
+
+/** "3,50€" → "3.50" (schema.org espera punto decimal y sin símbolo). */
+const schemaPrice = (price: string) =>
+  price.replace("€", "").trim().replace(",", ".");
+
+const menuItemOffer = (price: string, name?: string) => ({
+  "@type": "Offer",
+  name,
+  price: schemaPrice(price),
+  priceCurrency: "EUR",
+});
+
+const MENU_NAME: Record<Locale, string> = {
+  es: "Carta",
+  en: "Menu",
+  it: "Menù",
+  ca: "Carta",
+};
+
+/**
+ * Menu completo de un local en JSON-LD (MenuSection/MenuItem con precios y
+ * descripciones). Además del rich data, recupera para los crawlers las
+ * descripciones de plato que en la página viven dentro del visor de video
+ * (client-side) y ya no están en el HTML inicial.
+ */
+export function menuSchema(
+  location: Location,
+  menu: MenuSection[],
+  locale: Locale = routing.defaultLocale
+) {
+  const path = `/restaurantes/${location.urlSlug}/carta`;
+  return {
+    "@context": "https://schema.org",
+    "@type": "Menu",
+    "@id": `${SITE_URL}${path}#menu`,
+    name: `${MENU_NAME[locale]} — ${location.name}`,
+    url: `${SITE_URL}${localePath(locale, path)}`,
+    inLanguage: locale,
+    hasMenuSection: menu.map((section) => ({
+      "@type": "MenuSection",
+      name: translateData(section.title, locale),
+      description: section.note
+        ? translateData(section.note, locale)
+        : undefined,
+      hasMenuItem: section.items.map((item) => ({
+        "@type": "MenuItem",
+        name: item.name,
+        description: item.description
+          ? translateData(item.description, locale)
+          : undefined,
+        suitableForDiet: item.vegetarian
+          ? "https://schema.org/VegetarianDiet"
+          : undefined,
+        offers: item.price33
+          ? [
+              menuItemOffer(item.price, "24 cm"),
+              menuItemOffer(item.price33, "33 cm"),
+            ]
+          : menuItemOffer(item.price),
+      })),
+    })),
   };
 }
 

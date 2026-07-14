@@ -4,6 +4,15 @@ import createNextIntlPlugin from "next-intl/plugin";
 const nextConfig: NextConfig = {
   images: {
     qualities: [75, 90],
+    // Pósters de los videos de platos (Vercel Blob): se sirven vía
+    // next/image para que lleguen redimensionados y en WebP/AVIF en vez
+    // del JPEG original de ~40-90 KB cada uno.
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "obmqnxm4jz6jfagp.public.blob.vercel-storage.com",
+      },
+    ],
   },
   // 301 de la estructura de URLs antigua (jul-2026): las fichas take away
   // vivían en /para-llevar/<slug> y las cartas en /carta/<slug interno>.

@@ -20,7 +20,7 @@ import { ReservaCTA } from "@/components/ReservaCTA";
 import { DeliveryCTA } from "@/components/DeliveryCTA";
 import { ComoLlegar } from "@/components/ComoLlegar";
 import { SchemaOrg } from "@/components/SchemaOrg";
-import { breadcrumbSchema } from "@/lib/schema";
+import { breadcrumbSchema, menuSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
 
 export function generateStaticParams() {
@@ -84,6 +84,7 @@ export default async function CartaLocalPage({
           locale as Locale
         )}
       />
+      <SchemaOrg data={menuSchema(found, menu, locale as Locale)} />
 
       <section className="mx-auto max-w-4xl px-4 py-16 font-sans text-cream sm:py-20">
         <p className="eyebrow">{t("title")}</p>

@@ -4,7 +4,9 @@ import { useEffect, useRef } from "react";
 
 type AutoplayVideoProps = {
   src: string;
-  poster: string;
+  /** Omitir cuando el póster se renderiza aparte (p. ej. next/image detrás
+   * del video): el video queda transparente hasta que arranca. */
+  poster?: string;
   className?: string;
   /** Solo para el video del hero: precarga agresiva. El resto usa preload="none". */
   priority?: boolean;
