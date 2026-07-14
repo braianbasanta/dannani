@@ -86,7 +86,7 @@ export const locations: Location[] = [
       "En pleno Barrio Gótico, a un paso de la **Catedral de Barcelona** y de la Plaça Sant Jaume, este fue **el primer Da Nanni**: abrió en 2018 con una idea sencilla, la **pizza napolitana \"de bolsillo\"**, lista para llevarte por las callejuelas históricas de la Llibreteria. **Pizza al corte en formato 24 y 33 cm**, para comer paseando entre piedra medieval y el bullicio del centro de Barcelona.",
     imageCount: 9,
     imageFolder: "llibreteria",
-    heroImage: "01",
+    heroImage: "02",
     hasMenu: true,
     openedYear: 2018,
     metaTitle: "Pizza para Llevar en el Barrio Gótico, Barcelona",
@@ -144,7 +144,7 @@ export const locations: Location[] = [
     ],
     description:
       "A pocos pasos de la **Basílica de Santa Maria del Mar**, en una de las calles con más carácter del Born, esta **trattoria y pizzería napolitana** abrió sus puertas en 2022. **Techos altos, mesas cercanas y el aroma del horno de leña** se mezclan con el ambiente histórico del barrio, uno de los rincones más visitados de Barcelona.",
-    imageCount: 8,
+    imageCount: 10,
     imageFolder: "rec",
     heroImage: "02",
     hasMenu: true,
@@ -204,7 +204,7 @@ export const locations: Location[] = [
     openingHours: [{ opens: "13:00", closes: "00:00" }],
     description:
       "En la Rambla del Poblenou, a un corto paseo de las **playas de Bogatell y Nova Icària**, este es el **Da Nanni más cercano al mar**. **Horario corrido de mediodía a medianoche**, terraza con el ambiente relajado y marinero típico del Poblenou, perfecto para una **pizza napolitana después de un día de playa**.",
-    imageCount: 9,
+    imageCount: 10,
     imageFolder: "poblenou",
     heroImage: "08",
     hasMenu: true,
@@ -239,7 +239,7 @@ export const locations: Location[] = [
     ],
     description:
       "En la emblemática **Carrer de Verdi**, epicentro cultural de Gràcia y a un paso de la Plaça del Sol, esta trattoria napolitana abrió en 2023. Ambiente de barrio, vecinos de toda la vida y visitantes se mezclan en las mesas de nuestro local con **la carta más completa del grupo**: **pizza, antipasti y una selecta carta de vinos italianos**.",
-    imageCount: 9,
+    imageCount: 10,
     imageFolder: "verdi",
     heroImage: "01",
     hasMenu: true,
