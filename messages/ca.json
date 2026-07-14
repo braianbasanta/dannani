@@ -284,7 +284,7 @@
     "cookies": {
       "metaTitle": "Política de Cookies",
       "h1": "Política de Cookies",
-      "p1": "Aquest lloc utilitza cookies tècniques necessàries per al seu funcionament. Quan s'hi incorporin eines d'analítica o de reserves en línia (per exemple, Cover Manager), aquesta pàgina s'actualitzarà detallant quines cookies de tercers s'instal·len i amb quina finalitat.",
+      "p1": "Aquest lloc utilitza galetes tècniques necessàries per al seu funcionament i, només si les acceptes a l'avís de galetes, galetes d'anàlisi de tercers: Microsoft Clarity (mapes de calor i gravacions anònimes de navegació) i Google Analytics (estadístiques de visites). Si les rebutges, el web funciona igualment i no s'instal·la cap galeta d'anàlisi.",
       "p2": "Pots configurar el navegador per bloquejar o eliminar les cookies instal·lades al teu equip en qualsevol moment."
     },
     "privacidad": {
@@ -379,5 +379,11 @@
       "q4": "Feu pizza napolitana a domicili?",
       "a4": "Sí. Els locals del Gòtic, Born, Poblenou i Gràcia reparteixen a domicili a través de Glovo i Just Eat."
     }
+  },
+  "cookieBanner": {
+    "text": "Utilitzem galetes d'anàlisi (Microsoft Clarity i Google Analytics) per entendre com s'utilitza el web i millorar-lo. Només s'activen si les acceptes.",
+    "accept": "Acceptar",
+    "reject": "Rebutjar",
+    "policy": "Més informació"
   }
 }

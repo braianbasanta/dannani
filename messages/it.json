@@ -284,7 +284,7 @@
     "cookies": {
       "metaTitle": "Politica sui cookie",
       "h1": "Politica sui cookie",
-      "p1": "Questo sito utilizza cookie tecnici necessari al suo funzionamento. Quando verranno integrati strumenti di analisi o di prenotazione online (ad esempio, Cover Manager), questa pagina verrà aggiornata specificando quali cookie di terze parti vengono installati e a quale scopo.",
+      "p1": "Questo sito utilizza cookie tecnici necessari al suo funzionamento e, solo se li accetti nell'informativa sui cookie, cookie di analisi di terze parti: Microsoft Clarity (mappe di calore e registrazioni anonime della navigazione) e Google Analytics (statistiche sulle visite). Se li rifiuti, il sito funziona comunque e non viene installato alcun cookie di analisi.",
       "p2": "Puoi impostare il tuo browser in modo da bloccare o eliminare i cookie installati sul tuo dispositivo in qualsiasi momento."
     },
     "privacidad": {
@@ -379,5 +379,11 @@
       "q4": "Consegnate la pizza napoletana a domicilio?",
       "a4": "Sì. I locali del Gòtic, del Born, di Poblenou e di Gràcia consegnano a domicilio tramite Glovo e Just Eat."
     }
+  },
+  "cookieBanner": {
+    "text": "Utilizziamo cookie di analisi (Microsoft Clarity e Google Analytics) per capire come viene utilizzato il sito web e migliorarlo. Vengono attivati solo se li accetti.",
+    "accept": "Accetta",
+    "reject": "Rifiuta",
+    "policy": "Maggiori informazioni"
   }
 }

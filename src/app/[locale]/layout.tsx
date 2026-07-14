@@ -8,6 +8,7 @@ import { routing } from "@/i18n/routing";
 import { OG_LOCALES } from "@/lib/seo";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
+import { CookieConsent } from "@/components/CookieConsent";
 import "../globals.css";
 
 const fraunces = Fraunces({
@@ -93,6 +94,7 @@ export default async function LocaleLayout({
           <Nav />
           <main className="flex-1">{children}</main>
           <Footer />
+          <CookieConsent />
         </NextIntlClientProvider>
         <Analytics />
       </body>

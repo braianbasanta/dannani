@@ -284,7 +284,7 @@
     "cookies": {
       "metaTitle": "Cookie Policy",
       "h1": "Cookie Policy",
-      "p1": "This site uses technical cookies that are necessary for it to function. When analytics or online booking tools (e.g. Cover Manager) are added, this page will be updated to detail which third-party cookies are installed and for what purpose.",
+      "p1": "This site uses technical cookies that are necessary for it to function and, only if you accept them in the cookie notice, third-party analytics cookies: Microsoft Clarity (heatmaps and anonymous browsing recordings) and Google Analytics (visitor statistics). If you reject them, the website still works as normal and no analytics cookies are installed.",
       "p2": "You can configure your browser to block or delete cookies stored on your device at any time."
     },
     "privacidad": {
@@ -379,5 +379,11 @@
       "q4": "Do you deliver Neapolitan pizza?",
       "a4": "Yes. The branches in the Gòtic, Born, Poblenou and Gràcia deliver via Glovo and Just Eat."
     }
+  },
+  "cookieBanner": {
+    "text": "We use analytics cookies (Microsoft Clarity and Google Analytics) to understand how the website is used and to improve it. They are only activated if you accept them.",
+    "accept": "Accept",
+    "reject": "Reject",
+    "policy": "More information"
   }
 }
