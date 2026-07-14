@@ -1,10 +1,14 @@
 "use client";
 
+import { createPortal } from "react-dom";
 import { useTranslations } from "next-intl";
 
 /** Shell del modal de CTAs (reserva/pedido): fondo oscuro clickable,
  * tarjeta crema y botón de cerrar al pie. Los botones de acción llegan
- * como children y se apilan en columna. */
+ * como children y se apilan en columna. Se monta en document.body vía
+ * portal: si quedara dentro de un ancestro con filter/transform (p. ej.
+ * el hero, con drop-shadow y fade-up), el `fixed` se acota a ese div y
+ * el fondo se ve como un recuadro en vez de cubrir el viewport. */
 export function CtaModal({
   title,
   body,
@@ -18,7 +22,7 @@ export function CtaModal({
 }) {
   const t = useTranslations("reserva");
 
-  return (
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
@@ -43,6 +47,7 @@ export function CtaModal({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
