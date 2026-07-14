@@ -12,6 +12,7 @@ import {
   hoursParts,
 } from "@/data/locations";
 import { menuByLocationSlug } from "@/data/menu";
+import { menuWithBorrowedVideos } from "@/data/featured";
 import { localizeLocation } from "@/data/translations";
 import { MenuSections } from "@/components/MenuSections";
 import { ReservaCTA } from "@/components/ReservaCTA";
@@ -110,7 +111,7 @@ export default async function CartaLocalPage({
         </div>
 
         <div className="mt-12">
-          <MenuSections menu={menu} />
+          <MenuSections menu={menuWithBorrowedVideos(found.slug, menu)} />
         </div>
 
         <div className="mt-16 border-t border-cream/10 pt-8">

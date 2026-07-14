@@ -4,7 +4,7 @@ import { menuByLocationSlug } from "@/data/menu";
 import { routing, type Locale } from "@/i18n/routing";
 import { localePath } from "@/lib/seo";
 
-const SITE_URL = "https://www.dananni.es";
+const SITE_URL = "https://dananni.es";
 
 /* La descripción de la Organization se sirve en el idioma de la página.
    Los textos EN/IT/CA salen de la pasada de traducción (DeepL + revisión). */

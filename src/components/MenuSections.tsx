@@ -5,10 +5,17 @@ import { useLocale, useTranslations } from "next-intl";
 import type { Locale } from "@/i18n/routing";
 import type { MenuSection } from "@/data/menu";
 import { translateData } from "@/data/translations";
+import { DishCardsCarousel } from "./DishCardsCarousel";
 import { DishMediaViewer, type MediaEntry } from "./DishMediaViewer";
 
 type Category = "comida" | "bebidas";
 
+/**
+ * Carta de un local con el patrón visual de la home: cada sección (Pizze,
+ * Insalate…) muestra su título y un carrusel de tarjetas de video/foto que
+ * abren el visor fullscreen. Los items sin media quedan en lista de texto
+ * bajo el carrusel para que ningún plato desaparezca de la carta.
+ */
 export function MenuSections({ menu }: { menu: MenuSection[] }) {
   const t = useTranslations("menu");
   const locale = useLocale() as Locale;
@@ -48,19 +55,33 @@ export function MenuSections({ menu }: { menu: MenuSection[] }) {
               ? section.items.filter((item) => item.vegetarian)
               : section.items,
         }))
-        .filter((section) => section.items.length > 0),
+        .filter((section) => section.items.length > 0)
+        .map((section) => ({
+          ...section,
+          media: section.items
+            .filter((item) => item.video || item.photo)
+            .map<MediaEntry>((item) => ({ item, sectionTitle: section.title })),
+          textItems: section.items.filter((item) => !item.video && !item.photo),
+        })),
     [localizedMenu, category, vegetarianOnly]
   );
 
-  const mediaEntries = useMemo<MediaEntry[]>(
-    () =>
-      visibleSections.flatMap((section) =>
-        section.items
-          .filter((item) => item.video || item.photo)
-          .map((item) => ({ item, sectionTitle: section.title }))
-      ),
+  // El visor navega por todos los videos de la categoría visible, en el
+  // mismo orden en que aparecen los carruseles; cada sección abre con su
+  // offset dentro de esa lista global.
+  const mediaEntries = useMemo(
+    () => visibleSections.flatMap((section) => section.media),
     [visibleSections]
   );
+  const sectionOffsets = useMemo(() => {
+    const offsets: Record<string, number> = {};
+    let acc = 0;
+    for (const section of visibleSections) {
+      offsets[section.id] = acc;
+      acc += section.media.length;
+    }
+    return offsets;
+  }, [visibleSections]);
 
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
@@ -105,53 +126,43 @@ export function MenuSections({ menu }: { menu: MenuSection[] }) {
       {visibleSections.length === 0 ? (
         <p className="mt-8 text-sm text-cream/60">{t("sinResultados")}</p>
       ) : (
-        <div className="mt-8 grid gap-x-10 gap-y-8 sm:grid-cols-2">
-          {visibleSections.map((section) => {
-            const isLong = section.items.length >= 15;
-            return (
-              <div key={section.id} className={isLong ? "sm:col-span-2" : undefined}>
-                <h3 className="font-display text-lg text-mustard">
-                  {section.title}
-                </h3>
-                {section.note && (
-                  <p className="mt-1 text-xs italic text-cream/60">
-                    {section.note}
-                  </p>
-                )}
+        <div className="mt-10 space-y-14">
+          {visibleSections.map((section) => (
+            <section key={section.id}>
+              <h3 className="font-display text-2xl tracking-tight text-cream sm:text-3xl">
+                {section.title}
+              </h3>
+              {section.note && (
+                <p className="mt-2 text-sm italic text-cream/60">
+                  {section.note}
+                </p>
+              )}
+
+              {section.media.length > 0 && (
+                <div className="mt-5">
+                  <DishCardsCarousel
+                    entries={section.media}
+                    onOpen={(i) =>
+                      setActiveIndex(sectionOffsets[section.id] + i)
+                    }
+                  />
+                </div>
+              )}
+
+              {section.textItems.length > 0 && (
                 <ul
                   className={
-                    "mt-2" +
-                    (isLong
-                      ? " sm:columns-2 sm:gap-x-10"
-                      : " divide-y divide-cream/10")
+                    "divide-y divide-cream/10" +
+                    (section.media.length > 0 ? " mt-4" : " mt-4 max-w-2xl")
                   }
                 >
-                  {section.items.map((item) => (
+                  {section.textItems.map((item) => (
                     <li
                       key={item.name}
-                      className={
-                        "flex justify-between gap-4 py-2" +
-                        (isLong
-                          ? " break-inside-avoid border-b border-cream/10 last:border-b-0"
-                          : "")
-                      }
+                      className="flex justify-between gap-4 py-2"
                     >
                       <span>
-                        {item.video || item.photo ? (
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setActiveIndex(
-                                mediaEntries.findIndex((v) => v.item === item)
-                              )
-                            }
-                            className="text-left font-medium text-electric underline decoration-electric/40 underline-offset-2 transition hover:text-electric-dark hover:decoration-electric-dark"
-                          >
-                            {item.name}
-                          </button>
-                        ) : (
-                          item.name
-                        )}
+                        {item.name}
                         {item.description && (
                           <span className="block text-xs text-cream/60">
                             {item.description}
@@ -171,9 +182,9 @@ export function MenuSections({ menu }: { menu: MenuSection[] }) {
                     </li>
                   ))}
                 </ul>
-              </div>
-            );
-          })}
+              )}
+            </section>
+          ))}
         </div>
       )}
 

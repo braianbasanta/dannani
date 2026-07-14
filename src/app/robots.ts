@@ -8,6 +8,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://www.dananni.es/sitemap.xml",
+    sitemap: "https://dananni.es/sitemap.xml",
   };
 }

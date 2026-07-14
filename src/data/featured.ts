@@ -1,4 +1,4 @@
-import { menuByLocationSlug } from "./menu";
+import { menuByLocationSlug, type MenuSection } from "./menu";
 import type { MediaEntry } from "@/components/DishMediaViewer";
 
 /**
@@ -115,6 +115,31 @@ function findInMenu(menuSlug: string, name: string) {
     if (item) return { item, sectionTitle: section.title };
   }
   return null;
+}
+
+/**
+ * Aplica el préstamo de VIDEO_FALLBACK a una carta completa (para la página
+ * de carta de Gràcia): los items sin media toman el video del plato homónimo
+ * de la carta origen; los que no matchean quedan como están (lista de texto).
+ * A diferencia del resolver de destacados, aquí no se lanza error: el
+ * préstamo es oportunista.
+ */
+export function menuWithBorrowedVideos(
+  slug: string,
+  menu: MenuSection[]
+): MenuSection[] {
+  const fallback = VIDEO_FALLBACK[slug];
+  if (!fallback) return menu;
+  return menu.map((section) => ({
+    ...section,
+    items: section.items.map((item) => {
+      if (item.video || item.photo) return item;
+      const sourceName = fallback.alias?.[item.name] ?? item.name;
+      const source = findInMenu(fallback.menuSlug, sourceName);
+      if (!source?.item.video) return item;
+      return { ...item, video: source.item.video, poster: source.item.poster };
+    }),
+  }));
 }
 
 export function featuredDishesForLocation(slug: string): MediaEntry[] {

@@ -4,7 +4,7 @@ import { menuByLocationSlug } from "@/data/menu";
 import { routing } from "@/i18n/routing";
 import { localePath, languageAlternates } from "@/lib/seo";
 
-const SITE_URL = "https://www.dananni.es";
+const SITE_URL = "https://dananni.es";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes = [

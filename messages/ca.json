@@ -59,7 +59,9 @@
     "cerrar": "Tanca el vídeo",
     "cerrarFondo": "Tanca",
     "anterior": "Plat anterior",
-    "siguiente": "Plat següent"
+    "siguiente": "Plat següent",
+    "verVideo": "Veure el vídeo de {plato}",
+    "desliza": "Llisca per veure'n més"
   },
   "menu": {
     "comida": "Menjar",
@@ -73,13 +75,11 @@
     "claim": "Una família napolitana. Sis locals. El mateix nivell a tots.",
     "heroResenas": "{count} ressenyes a Google",
     "descubre": "Descobreix",
-    "platosDesliza": "Llisca per veure'n més",
     "ctaComerAqui": "Menjar aquí",
     "ctaParaLlevar": "Pizza per emportar",
     "platosTitle": "Els nostres plats",
     "platosSubtitle": "Gravats tal com surten de les nostres cuines. Toca'n un i mira-te'l de prop.",
     "platosCta": "Veure la carta completa",
-    "platosVerVideo": "Veure el vídeo de {plato}",
     "dondeTitle": "On vols gaudir de Da Nanni?",
     "dondeRestaurantesTitle": "Restaurants",
     "dondeRestaurantesText": "Quatre trattories per seure a taula: forn de llenya, pasta fresca i vins italians.",

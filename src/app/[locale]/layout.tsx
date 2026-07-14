@@ -43,7 +43,7 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: "meta.layout" });
 
   return {
-    metadataBase: new URL("https://www.dananni.es"),
+    metadataBase: new URL("https://dananni.es"),
     title: {
       default: t("title"),
       template: "%s | Da Nanni",

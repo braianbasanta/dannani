@@ -59,7 +59,9 @@
     "cerrar": "Cerrar video",
     "cerrarFondo": "Cerrar",
     "anterior": "Plato anterior",
-    "siguiente": "Plato siguiente"
+    "siguiente": "Plato siguiente",
+    "verVideo": "Ver video de {plato}",
+    "desliza": "Desliza para ver más"
   },
   "menu": {
     "comida": "Comida",
@@ -73,13 +75,11 @@
     "claim": "Una familia napolitana. Seis locales. El mismo nivel en todos.",
     "heroResenas": "{count} reseñas en Google",
     "descubre": "Descubre",
-    "platosDesliza": "Desliza para ver más",
     "ctaComerAqui": "Comer aquí",
     "ctaParaLlevar": "Pizza para llevar",
     "platosTitle": "Nuestros platos",
     "platosSubtitle": "Grabados tal cual salen de nuestras cocinas. Toca uno y míralo de cerca.",
     "platosCta": "Ver la carta completa",
-    "platosVerVideo": "Ver video de {plato}",
     "dondeTitle": "¿Dónde quieres disfrutar Da Nanni?",
     "dondeRestaurantesTitle": "Restaurantes",
     "dondeRestaurantesText": "Cuatro trattorias para sentarte a la mesa: horno de leña, pasta fresca y vinos italianos.",

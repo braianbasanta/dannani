@@ -17,6 +17,11 @@ import { translateData } from "@/data/translations";
 
 export type MediaEntry = { item: MenuItem; sectionTitle: string };
 
+/** Precio mostrado sobre el video: doble formato 24/33cm en take away, único en el resto. */
+export function priceLabel(item: MenuItem) {
+  return item.price33 ? `24cm ${item.price} · 33cm ${item.price33}` : item.price;
+}
+
 type DishMediaViewerProps = {
   entries: MediaEntry[];
   startIndex: number;
@@ -249,7 +254,7 @@ export function DishMediaViewer({
                   {entry.item.name}
                 </h2>
                 <p className="mt-1 font-sans text-lg font-semibold text-mustard">
-                  {entry.item.price}
+                  {priceLabel(entry.item)}
                 </p>
                 {entry.item.description ? (
                   <p className="mt-2 max-w-md text-sm italic leading-snug text-cream/75">

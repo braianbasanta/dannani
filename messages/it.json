@@ -59,7 +59,9 @@
     "cerrar": "Chiudi video",
     "cerrarFondo": "Chiudi",
     "anterior": "Piatto precedente",
-    "siguiente": "Piatto successivo"
+    "siguiente": "Piatto successivo",
+    "verVideo": "Guarda il video di {plato}",
+    "desliza": "Scorri per vedere di più"
   },
   "menu": {
     "comida": "Cucina",
@@ -73,13 +75,11 @@
     "claim": "Una famiglia napoletana. Sei locali. Lo stesso livello in tutti.",
     "heroResenas": "{count} recensioni su Google",
     "descubre": "Scopri",
-    "platosDesliza": "Scorri per vedere di più",
     "ctaComerAqui": "Mangia qui",
     "ctaParaLlevar": "Pizza da asporto",
     "platosTitle": "I nostri piatti",
     "platosSubtitle": "Ripresi così come escono dalle nostre cucine. Toccane uno e guardalo da vicino.",
     "platosCta": "Vedi il menù completo",
-    "platosVerVideo": "Guarda il video di {plato}",
     "dondeTitle": "Dove vuoi gustare Da Nanni?",
     "dondeRestaurantesTitle": "Ristoranti",
     "dondeRestaurantesText": "Quattro trattorie dove sederti a tavola: forno a legna, pasta fresca e vini italiani.",

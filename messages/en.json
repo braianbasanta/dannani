@@ -59,7 +59,9 @@
     "cerrar": "Close video",
     "cerrarFondo": "Close",
     "anterior": "Previous dish",
-    "siguiente": "Next dish"
+    "siguiente": "Next dish",
+    "verVideo": "Watch the video of {plato}",
+    "desliza": "Swipe to see more"
   },
   "menu": {
     "comida": "Food",
@@ -73,13 +75,11 @@
     "claim": "A Neapolitan family. Six locations. The same high standard in every one.",
     "heroResenas": "{count} Google reviews",
     "descubre": "Discover",
-    "platosDesliza": "Swipe to see more",
     "ctaComerAqui": "Eat here",
     "ctaParaLlevar": "Takeaway pizza",
     "platosTitle": "Our dishes",
     "platosSubtitle": "Filmed just as they leave our kitchens. Tap one and take a closer look.",
     "platosCta": "View the full menu",
-    "platosVerVideo": "Watch the video of {plato}",
     "dondeTitle": "Where would you like to enjoy Da Nanni?",
     "dondeRestaurantesTitle": "Restaurants",
     "dondeRestaurantesText": "Four trattorias where you can sit down to eat: wood-fired oven, fresh pasta and Italian wines.",

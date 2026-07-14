@@ -57,7 +57,7 @@ Cada location puede tener `delivery: { glovo?, justEat? }` con las URLs de sus t
 
 ### SEO / structured data
 
-- `src/lib/schema.ts` genera JSON-LD (Organization, Restaurant, BreadcrumbList) — `SITE_URL` está hardcodeado ahí (`https://www.dananni.es`) y se repite en `sitemap.ts` y el layout raíz; si cambia el dominio, actualizar los tres.
+- `src/lib/schema.ts` genera JSON-LD (Organization, Restaurant, BreadcrumbList) — `SITE_URL` está hardcodeado ahí (`https://dananni.es`) y se repite en `sitemap.ts` y el layout raíz; si cambia el dominio, actualizar los tres.
 - `src/lib/seo.ts` (`pageMetadata`) centraliza title/description + canonical + Open Graph de cada página. Toda página indexable nueva debe usarlo (las legales van con `robots: { index: false }`).
 - `<SchemaOrg data={...}>` (en `src/components/`) inyecta ese JSON-LD como `<script type="application/ld+json">` en cualquier página.
 - `src/app/sitemap.ts` y `src/app/robots.ts` generan sitemap/robots a partir de las mismas listas de `locations.ts` — al añadir un local o ruta estática nueva, actualizar `sitemap.ts` también.
