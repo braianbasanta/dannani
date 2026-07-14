@@ -156,7 +156,7 @@ export function LocationDetail({
           {t("platosTitle")}
         </h2>
         {dishes.length > 0 && (
-          <div className="-mx-4 mt-6">
+          <div className="mt-6 mx-[calc(50%-50vw)]">
             <FeaturedDishesCarousel entries={dishes} />
           </div>
         )}

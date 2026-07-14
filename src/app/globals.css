@@ -72,6 +72,13 @@
   }
 }
 
+/* Los carruseles de carta se salen del contenedor con calc(50% - 50vw);
+   clip evita el scroll horizontal fantasma por el ancho del scrollbar
+   (a diferencia de hidden, no rompe position: sticky). */
+html {
+  overflow-x: clip;
+}
+
 body {
   background: var(--color-night);
   color: var(--color-cream);

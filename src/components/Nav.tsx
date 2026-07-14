@@ -4,12 +4,20 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
-import { dineInLocations, takeAwayLocations, hrefFor } from "@/data/locations";
+import {
+  dineInLocations,
+  takeAwayLocations,
+  hrefFor,
+  cartaHrefFor,
+} from "@/data/locations";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 // Locales ordenados por año de apertura (queda más natural en los menús)
 const dineInByYear = [...dineInLocations].sort((a, b) => a.openedYear - b.openedYear);
 const takeAwayByYear = [...takeAwayLocations].sort((a, b) => a.openedYear - b.openedYear);
+// Todas las cartas para el desplegable de "Carta": trattorias primero,
+// take away al final (con su etiqueta). Hoy los 6 locales tienen carta.
+const cartaLocations = [...dineInByYear, ...takeAwayByYear];
 
 export function Nav() {
   const t = useTranslations("nav");
@@ -147,9 +155,32 @@ export function Nav() {
             <Link href="/a-domicilio" className={desktopLink("/a-domicilio")}>
               {t("aDomicilio")}
             </Link>
-            <Link href="/restaurantes/cartas" className={desktopLink("/restaurantes/cartas")}>
-              {t("carta")}
-            </Link>
+            <div className="group relative">
+              <Link href="/restaurantes/cartas" className={desktopLink("/restaurantes/cartas")}>
+                {t("carta")}
+              </Link>
+              <div className="invisible absolute left-0 top-full w-64 translate-y-2 pt-3 opacity-0 transition-all duration-300 ease-fluid group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+                <div className="rounded-2xl bg-night-soft p-2 text-cream ring-1 ring-cream/10 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.7),0_0_30px_rgba(85,153,170,0.08)]">
+                  {cartaLocations.map((l) => (
+                    <Link
+                      key={l.slug}
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                      href={cartaHrefFor(l) as any}
+                      className="group/item flex items-baseline justify-between gap-3 rounded-xl px-4 py-3 transition-colors duration-200 hover:bg-electric/10"
+                    >
+                      <span className="font-display text-lg tracking-tight transition-colors duration-200 group-hover/item:text-electric">
+                        {l.neighborhood}
+                      </span>
+                      {l.type === "take-away" && (
+                        <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-cream/40 transition-colors duration-200 group-hover/item:text-electric/70">
+                          {t("paraLlevar")}
+                        </span>
+                      )}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
             <Link
               href="/nuestra-historia"
               className={desktopLink("/nuestra-historia")}
@@ -234,6 +265,34 @@ export function Nav() {
             </div>
           </div>
 
+          <div className="mt-6">
+            <Link
+              href="/restaurantes/cartas"
+              className={`font-display text-3xl tracking-tight ${isActive("/restaurantes/cartas") ? "text-electric" : ""}`}
+              onClick={() => setOpen(false)}
+            >
+              {t("carta")}
+            </Link>
+            <div className="mt-4 grid grid-cols-2 gap-2">
+              {cartaLocations.map((l) => (
+                <Link
+                  key={l.slug}
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  href={cartaHrefFor(l) as any}
+                  className="rounded-xl bg-cream/5 px-5 py-4 text-lg font-medium ring-1 ring-cream/10 transition-colors active:bg-cream/10"
+                  onClick={() => setOpen(false)}
+                >
+                  {l.neighborhood}
+                  {l.type === "take-away" && (
+                    <span className="block text-xs font-medium text-mustard">
+                      {t("paraLlevar")}
+                    </span>
+                  )}
+                </Link>
+              ))}
+            </div>
+          </div>
+
           <div className="mt-6 flex flex-col gap-6">
             <Link
               href="/a-domicilio"
@@ -241,13 +300,6 @@ export function Nav() {
               onClick={() => setOpen(false)}
             >
               {t("aDomicilio")}
-            </Link>
-            <Link
-              href="/restaurantes/cartas"
-              className={`font-display text-3xl tracking-tight ${isActive("/restaurantes/cartas") ? "text-electric" : ""}`}
-              onClick={() => setOpen(false)}
-            >
-              {t("carta")}
             </Link>
             <Link
               href="/nuestra-historia"

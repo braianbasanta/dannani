@@ -15,6 +15,7 @@ import { menuByLocationSlug } from "@/data/menu";
 import { menuWithBorrowedVideos } from "@/data/featured";
 import { localizeLocation } from "@/data/translations";
 import { MenuSections } from "@/components/MenuSections";
+import { OtherCartasCarousel } from "@/components/OtherCartasCarousel";
 import { ReservaCTA } from "@/components/ReservaCTA";
 import { DeliveryCTA } from "@/components/DeliveryCTA";
 import { ComoLlegar } from "@/components/ComoLlegar";
@@ -114,26 +115,25 @@ export default async function CartaLocalPage({
           <MenuSections menu={menuWithBorrowedVideos(found.slug, menu)} />
         </div>
 
-        <div className="mt-16 border-t border-cream/10 pt-8">
-          <p className="text-sm font-medium text-cream/70">
+        <div className="mt-16 border-t border-cream/10 pt-10">
+          <p className="font-display text-2xl tracking-tight text-cream sm:text-3xl">
             {t("otrosLocales")}
           </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {locations
-              .filter(
-                (l) => menuByLocationSlug[l.slug] && l.slug !== location.slug
-              )
-              .map((l) => (
-                <Link
-                  key={l.slug}
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  href={cartaHrefFor(l) as any}
-                  className="rounded-full bg-cream/10 px-4 py-2 text-sm font-medium text-cream ring-1 ring-cream/10 transition hover:bg-cream/20"
-                >
-                  {l.neighborhood}
-                  {l.type === "take-away" && ` ${t("sufijoParaLlevar")}`}
-                </Link>
-              ))}
+          <div className="mt-6 mx-[calc(50%-50vw)]">
+            <OtherCartasCarousel
+              items={locations
+                .filter(
+                  (l) => menuByLocationSlug[l.slug] && l.slug !== location.slug
+                )
+                .map((l) => ({
+                  slug: l.slug,
+                  href: cartaHrefFor(l),
+                  image: heroImageSrc(l),
+                  name: l.name,
+                  neighborhood: l.neighborhood,
+                  takeAway: l.type === "take-away",
+                }))}
+            />
           </div>
         </div>
       </section>

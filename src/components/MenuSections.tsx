@@ -138,10 +138,13 @@ export function MenuSections({ menu }: { menu: MenuSection[] }) {
                 </p>
               )}
 
+              {/* Full-bleed: el carrusel ocupa todo el ancho de pantalla,
+                  como el de la home, aunque la página esté contenida. */}
               {section.media.length > 0 && (
-                <div className="mt-5">
+                <div className="mt-5 mx-[calc(50%-50vw)]">
                   <DishCardsCarousel
                     entries={section.media}
+                    trackClassName="px-4 scroll-px-4"
                     onOpen={(i) =>
                       setActiveIndex(sectionOffsets[section.id] + i)
                     }
@@ -150,12 +153,7 @@ export function MenuSections({ menu }: { menu: MenuSection[] }) {
               )}
 
               {section.textItems.length > 0 && (
-                <ul
-                  className={
-                    "divide-y divide-cream/10" +
-                    (section.media.length > 0 ? " mt-4" : " mt-4 max-w-2xl")
-                  }
-                >
+                <ul className="mt-4 max-w-2xl divide-y divide-cream/10">
                   {section.textItems.map((item) => (
                     <li
                       key={item.name}
