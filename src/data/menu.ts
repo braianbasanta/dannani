@@ -78,88 +78,6 @@ const pizzaTakeAway: MenuSection[] = [
   },
 ];
 
-const gracia: MenuSection[] = [
-  {
-    id: "pizze",
-    title: "Pizze",
-    category: "comida",
-    items: [
-      { name: "Margherita", description: "Tomate San Marzano, mozzarella FDL, albahaca y AOVE. Disponible en versión ruota di carro +3€.", price: "9,50€", vegetarian: true },
-      { name: "Bufalina", description: "Tomate San Marzano, mozzarella de búfala, albahaca y AOVE.", price: "12,50€", vegetarian: true },
-      { name: "Marinara", description: "Tomate San Marzano, ajo, orégano y AOVE.", price: "8,50€", vegetarian: true },
-      { name: "Napoletana", description: "Tomate San Marzano, mozzarella FDL, anchoas, olivas y orégano.", price: "13,00€", vegetarian: false },
-      { name: "Diavola", description: "Tomate San Marzano, mozzarella FDL y salami picante.", price: "12,00€", vegetarian: false },
-      { name: "Quattro Formaggi", description: "Próvola, parmesano, gorgonzola y queso de cabra.", price: "14,00€", vegetarian: true },
-      { name: "Prosciutto e funghi", description: "Tomate San Marzano, mozzarella FDL, jamón dulce y champiñones.", price: "13,00€", vegetarian: false },
-      { name: "Vegetariana", description: "Mozzarella FDL, berenjena, calabacín y champiñones.", price: "14,00€", vegetarian: true },
-      { name: "Salsiccia e friarielli", description: "Próvola, salsiccia y friarielli.", price: "15,00€", vegetarian: false },
-      { name: "Calzone al forno", description: "Ricotta, FDL, Tomate San Marzano, Salami Napoli, pimienta negra.", price: "14,50€", vegetarian: false },
-    ],
-  },
-  {
-    id: "pizze-gourmet",
-    title: "Pizze Gourmet",
-    category: "comida",
-    note: "Disponible también con masa integral (+3€).",
-    items: [
-      { name: "Pizza ruotiello", description: "Tomates cherry amarillos y rojos, anchoas del Cantábrico, aceitunas.", price: "15,90€", vegetarian: false },
-      { name: "La catalana", description: "Próvola, sobrasada, queso de cabra, miel y chips de berenjenas.", price: "17,90€", vegetarian: false },
-      { name: "Parmigianella", description: "Tomate, FDL, parmigiana de berenjena, burrata, albahaca y AOVE.", price: "17,90€", vegetarian: true },
-      { name: "La mortadella", description: "Mozzarella FDL, mortadella, burrata, pesto de pistacho.", price: "17,90€", vegetarian: false },
-      { name: "Capricciosa 2.0", description: "Tomate, FDL, champiñones, aceitunas, jamón asado y alcachofas a la salida.", price: "17,90€", vegetarian: false },
-      { name: "La bufalina 2.0", description: "Tomate S. M., mozzarella de búfala, jamón de Parma y burrata.", price: "17,90€", vegetarian: false },
-      { name: "La tropea", description: "Cebolla caramelizada, FDL, filetes de atún añadidos después de la cocción.", price: "17,90€", vegetarian: false },
-      { name: "La carbonara", description: "Crema de huevo, guanciale, FDL, pimienta negra y fonduta de queso.", price: "17,90€", vegetarian: false },
-      { name: "Ripassata alla Genovese", description: "Base blanca con próvola, salsa genovese y hojuelas de parmesano.", price: "17,90€", vegetarian: false },
-      { name: "Pizza ragù", description: "Próvola, albóndigas de ternera, ragú de tomate y albahaca.", price: "17,90€", vegetarian: false },
-      { name: "Zuccarella", description: "Crema de calabaza, próvola, 'Nduja (sobrasada picante calabresa), salame picante, burrata y pesto de pistacho.", price: "17,90€", vegetarian: false },
-    ],
-  },
-  {
-    id: "antipasti",
-    title: "Antipasti",
-    category: "comida",
-    items: [
-      { name: "Parmigiana di melanzane", description: "Parmigiana de berenjena con tomate y próvola.", price: "14,50€", vegetarian: true },
-      { name: "Tris di bruschette (3 uds)", description: "Tomate San Marzano, mozzarella de búfala, albahaca y AOVE.", price: "10,00€", vegetarian: true },
-      { name: "Polpette di carne (3 uds)", description: "Albóndigas de ternera con salsa ragú napoletano y parmesano.", price: "15,00€", vegetarian: false },
-      { name: "Polipetti affogati", description: "Pulpitos, salsa de tomate y picatostes.", price: "16,00€", vegetarian: false },
-      { name: "Carpaccio di bresaola", description: "Carpaccio de bresaola, rúcula y copos de parmesano.", price: "16,00€", vegetarian: false },
-      { name: "Burrata e Parma", description: "Burrata, tomates cherry, jamón de Parma y AOVE.", price: "15,00€", vegetarian: false },
-      { name: "Insalata Mediterranea", description: "Tomates, atún, olivas, cebolla y huevo duro.", price: "15,00€", vegetarian: false },
-    ],
-  },
-  {
-    id: "vini-rossi",
-    title: "Vini Rossi",
-    category: "bebidas",
-    items: [
-      { name: "Campostellato Rosso", price: "22€" },
-      { name: "Aglianico Irpinia", price: "23€" },
-      { name: "Valpolicella DOC", price: "28€" },
-      { name: "Piedirosso", price: "28€" },
-      { name: "Munazei Rosso", price: "32€" },
-    ],
-  },
-  {
-    id: "vini-bianchi",
-    title: "Vini Bianchi",
-    category: "bebidas",
-    items: [
-      { name: "Pinot Grigio", price: "20€" },
-      { name: "Campostellato Bianco", price: "22€" },
-      { name: "Chardonnay", price: "24,50€" },
-      { name: "Greco di Tufo", price: "38€" },
-    ],
-  },
-  {
-    id: "vini-rosato",
-    title: "Rosato",
-    category: "bebidas",
-    items: [{ name: "Lambrusco Rosato", price: "20€" }],
-  },
-];
-
 const bornPoblenouTallers69: MenuSection[] = [
   {
     id: "pizze",
@@ -353,6 +271,90 @@ const bornPoblenouTallers69: MenuSection[] = [
       { name: "Vino rosado copa", price: "6,00€", photo: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/photos/bebidas/chiaretto-pasqua.jpg" },
       { name: "Vino tinto copa", price: "6,00€", photo: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/photos/bebidas/campostellato-rosso.jpg" },
     ],
+  },
+];
+
+/**
+ * Carta nueva de Gràcia (jul. 2026, PDF "meno spagnolo gracia" del cliente):
+ * adopta la carta de mesa de las trattorias con menos platos — sin I Secondi,
+ * sin Puttanesca ni Tagliere misto y con I Primi reducido — más un plato
+ * propio (Gnocchi al pesto) y dos precios propios (Ischitana 16€ y Peroni
+ * Lemon 4€). Se deriva de `bornPoblenouTallers69` para heredar descripciones
+ * y videos; si un nombre deja de existir allí, esto lanza en build
+ * (preferimos el fallo ruidoso, como el resolver de featured.ts).
+ */
+const dineInSection = (id: string): MenuSection => {
+  const section = bornPoblenouTallers69.find((s) => s.id === id);
+  if (!section) throw new Error(`Sección dine-in no encontrada: ${id}`);
+  return section;
+};
+
+const dineInItems = (
+  id: string,
+  names: string[],
+  overrides: Record<string, Partial<MenuItem>> = {}
+): MenuItem[] =>
+  names.map((name) => {
+    const item = dineInSection(id).items.find((i) => i.name === name);
+    if (!item) throw new Error(`Plato dine-in no encontrado: ${id}/${name}`);
+    return overrides[name] ? { ...item, ...overrides[name] } : item;
+  });
+
+const gracia: MenuSection[] = [
+  dineInSection("pizze"),
+  dineInSection("pizze-gourmet"),
+  {
+    id: "insalate",
+    title: "Insalate",
+    category: "comida",
+    items: dineInItems(
+      "insalate",
+      ["Burrata", "Ischitana", "César Salad", "Mediterranea"],
+      { Ischitana: { price: "16,00€" } }
+    ),
+  },
+  {
+    id: "antipasti",
+    title: "Antipasti",
+    category: "comida",
+    items: dineInItems("antipasti", [
+      "Parmigiana di melanzane",
+      "Bruschette ai pomodorini (4 uds)",
+      "Polpette al ragù",
+    ]),
+  },
+  dineInSection("fritti"),
+  {
+    id: "i-primi",
+    title: "I Primi",
+    category: "comida",
+    note: "Disponible pasta sin gluten (+2€).",
+    items: [
+      ...dineInItems("i-primi", [
+        "Gnocchi alla Sorrentina",
+        "Mezzanelli alla Genovese",
+        "Fettuccine alla Bolognese",
+        "Spaghetti alla carbonara",
+        "Spaghetti pomodoro fresco",
+        "Spaghetti alla Nerano",
+        "Ziti alla Norma",
+      ]),
+      { name: "Gnocchi al pesto", description: "Gnocchi con pesto de albahaca fresca.", price: "15,00€", vegetarian: true },
+    ],
+  },
+  dineInSection("dolci"),
+  dineInSection("vini-rossi"),
+  dineInSection("vini-bianchi"),
+  dineInSection("vini-rosato"),
+  dineInSection("birre-artigianali"),
+  dineInSection("chupitos-licores"),
+  {
+    ...dineInSection("bibite"),
+    items: dineInItems(
+      "bibite",
+      dineInSection("bibite").items.map((i) => i.name),
+      { "Peroni Lemon 33cl": { price: "4,00€" } }
+    ),
   },
 ];
 

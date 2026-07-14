@@ -86,26 +86,22 @@ const FEATURED_BY_LOCATION: Record<string, string[]> = {
     "Napoletana",
     "Prosciutto e funghi",
     "Parmigiana di melanzane",
-    "Burrata e Parma",
+    "Burrata",
     "Marinara",
   ],
 };
 
 /**
- * La carta de Gràcia no tiene videos propios: el video se toma prestado
- * del plato equivalente de la carta dine-in (mismo plato grabado en
- * cocina), manteniendo precio y descripción de la carta de Gràcia.
- * `alias` mapea nombres que difieren entre ambas cartas.
+ * Préstamo de videos para cartas sin grabaciones propias: el video se toma
+ * del plato homónimo de otra carta (mismo plato grabado en cocina),
+ * manteniendo precio y descripción locales. `alias` mapea nombres que
+ * difieren entre cartas. Hoy está vacío: desde jul-2026 la carta de Gràcia
+ * deriva de la dine-in en menu.ts y hereda los videos directamente.
  */
 const VIDEO_FALLBACK: Record<
   string,
   { menuSlug: string; alias?: Record<string, string> }
-> = {
-  gracia: {
-    menuSlug: "born",
-    alias: { "Burrata e Parma": "Burrata" },
-  },
-};
+> = {};
 
 function findInMenu(menuSlug: string, name: string) {
   for (const section of menuByLocationSlug[menuSlug]) {

@@ -107,6 +107,8 @@ export const en: Record<string, string> = {
   "Flor de calabacín rebozada rellena de ricotta y próvola.": "Battered courgette flower stuffed with ricotta and provola.",
   "Masa de pizza frita con salsa de ragù y albahaca, salsa genovese (cebolla), o ricotta, mortadela y pesto de pistacho.": "Fried pizza dough with ragù sauce and basil, Genovese sauce (onion), or ricotta, mortadella and pistachio pesto.",
   "Disponible también en pasta sin gluten (+2€) en Ziti Mare e Sole y Spaghetti al lo scoglio.": "Also available with gluten-free pasta (+€2) in Ziti Mare e Sole and Spaghetti al lo scoglio.",
+  "Disponible pasta sin gluten (+2€).": "Gluten-free pasta available (+€2).",
+  "Gnocchi con pesto de albahaca fresca.": "Gnocchi with fresh basil pesto.",
   "Próvola, salsa de tomate, parmesano y pimienta.": "Provola, tomato sauce, Parmesan and pepper.",
   "Ragú de cebolla con carne de ternera, parmesano y pimienta.": "Onion ragù with veal, Parmesan and pepper.",
   "Mixto de mariscos con pasta.": "Mixed seafood with pasta.",
