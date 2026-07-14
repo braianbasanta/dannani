@@ -7,7 +7,7 @@ import { Link } from "@/i18n/navigation";
 /** IDs de las herramientas de análisis. GA_ID queda vacío hasta que exista
  * la propiedad GA4; con "" simplemente no se carga. */
 const CLARITY_ID = "xmir5waytr";
-const GA_ID = "";
+const GA_ID = "G-VL3GX7LPHY";
 
 const STORAGE_KEY = "dananni-cookie-consent";
 
