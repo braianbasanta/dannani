@@ -23,10 +23,18 @@ function siteUrl(): string {
   );
 }
 
+const FROM_DEFAULT = "Da Nanni <reservas@dananni.es>";
+
 function fromAddress(): string {
-  // reservas@dananni.es una vez verificado el dominio en Resend; hasta entonces
-  // se puede usar onboarding@resend.dev vía la env.
-  return process.env.RESERVATIONS_FROM_EMAIL || "Da Nanni <reservas@dananni.es>";
+  // Solo usamos el env si tiene un formato válido para Resend ("email@x.y" o
+  // "Nombre <email@x.y>"); si está mal (p. ej. comillas al pegarlo en Vercel),
+  // caemos al remitente por defecto (dananni.es está verificado en Resend).
+  const raw = (process.env.RESERVATIONS_FROM_EMAIL || "")
+    .trim()
+    .replace(/^["']+|["']+$/g, "");
+  const plain = /^[^<>@\s]+@[^<>@\s]+\.[^<>@\s]+$/.test(raw);
+  const named = /<[^<>@\s]+@[^<>@\s]+\.[^<>@\s]+>\s*$/.test(raw);
+  return plain || named ? raw : FROM_DEFAULT;
 }
 
 let resendClient: Resend | null = null;
