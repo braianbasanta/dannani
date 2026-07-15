@@ -125,7 +125,8 @@ function CtaPill({
     | "/restaurantes"
     | "/pizza-para-llevar"
     | "/nuestra-historia"
-    | "/restaurantes/cartas";
+    | "/restaurantes/cartas"
+    | "/reservar";
   variant: "electric" | "ghost" | "hoverElectric";
   className?: string;
   children: React.ReactNode;
