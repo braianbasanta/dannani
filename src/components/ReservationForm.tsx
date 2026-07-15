@@ -85,10 +85,6 @@ export function ReservationForm({
   const [date, setDate] = useState(initialAvail.date);
   const [time, setTime] = useState(initialAvail.time);
   const [partySize, setPartySize] = useState(2);
-  // Texto libre del campo de grupo grande (>15). Se mantiene desacoplado de
-  // partySize para que el usuario pueda teclear cifras intermedias (p. ej. "1"
-  // camino de "19") sin que el clamp lo empuje al máximo.
-  const [partyExact, setPartyExact] = useState(String(PARTY_MAX + 1));
   const [childrenCount, setChildrenCount] = useState(0);
   const [needsHighChair, setNeedsHighChair] = useState(false);
   const [firstName, setFirstName] = useState("");
@@ -106,7 +102,7 @@ export function ReservationForm({
   const [manageToken, setManageToken] = useState<string | null>(null);
 
   const location = reservableLocations.find((l) => l.slug === locationSlug);
-  const isLargeGroup = partySize > 15;
+  const isLargeGroup = partySize > PARTY_MAX;
 
   const slots = useMemo(
     () => (location ? computeSlots(location, date, today) : []),
@@ -321,7 +317,7 @@ export function ReservationForm({
 
       {step === 2 && (
         <>
-          {/* Comensales + niños (o nº exacto si es grupo grande) */}
+          {/* Comensales + niños */}
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className={LABEL} htmlFor="rf-party">
@@ -330,81 +326,39 @@ export function ReservationForm({
               <select
                 id="rf-party"
                 className={FIELD}
-                value={isLargeGroup ? PARTY_MAX + 1 : partySize}
+                value={partySize}
+                onChange={(e) => setPartySize(Number(e.target.value))}
+              >
+                {Array.from({ length: PARTY_MAX_TOTAL }, (_, i) => i + 1).map(
+                  (n) => (
+                    <option key={n} value={n}>
+                      {n}
+                    </option>
+                  )
+                )}
+              </select>
+            </div>
+            <div>
+              <label className={LABEL} htmlFor="rf-children">
+                {t("children")}
+              </label>
+              <select
+                id="rf-children"
+                className={FIELD}
+                value={childrenCount}
                 onChange={(e) => {
                   const n = Number(e.target.value);
-                  setPartySize(n);
-                  if (n > PARTY_MAX) setPartyExact(String(n));
+                  setChildrenCount(n);
+                  if (n === 0) setNeedsHighChair(false);
                 }}
               >
-                {Array.from({ length: PARTY_MAX }, (_, i) => i + 1).map((n) => (
+                {Array.from({ length: CHILDREN_MAX + 1 }, (_, i) => i).map((n) => (
                   <option key={n} value={n}>
                     {n}
                   </option>
                 ))}
-                <option value={PARTY_MAX + 1}>{t("moreThan15")}</option>
               </select>
             </div>
-            {isLargeGroup ? (
-              <div>
-                <label className={LABEL} htmlFor="rf-party-exact">
-                  {t("howMany")}
-                </label>
-                <input
-                  id="rf-party-exact"
-                  type="text"
-                  inputMode="numeric"
-                  autoComplete="off"
-                  value={partyExact}
-                  onChange={(e) => {
-                    // Solo dígitos, hasta 2 (máx. 40). Mientras el número sea
-                    // válido (>15) sincroniza partySize; si el usuario aún está
-                    // tecleando un valor incompleto (vacío o ≤15) conserva el
-                    // texto sin alterar partySize, para no salir de "grupo grande".
-                    const raw = e.target.value.replace(/\D/g, "").slice(0, 2);
-                    const n = Number(raw);
-                    if (n > PARTY_MAX_TOTAL) {
-                      setPartyExact(String(PARTY_MAX_TOTAL));
-                      setPartySize(PARTY_MAX_TOTAL);
-                      return;
-                    }
-                    setPartyExact(raw);
-                    if (n > PARTY_MAX) setPartySize(n);
-                  }}
-                  onBlur={() => {
-                    const n = Math.max(
-                      PARTY_MAX + 1,
-                      Math.min(PARTY_MAX_TOTAL, Number(partyExact) || PARTY_MAX + 1)
-                    );
-                    setPartySize(n);
-                    setPartyExact(String(n));
-                  }}
-                  className={FIELD}
-                />
-              </div>
-            ) : (
-              <div>
-                <label className={LABEL} htmlFor="rf-children">
-                  {t("children")}
-                </label>
-                <select
-                  id="rf-children"
-                  className={FIELD}
-                  value={childrenCount}
-                  onChange={(e) => {
-                    const n = Number(e.target.value);
-                    setChildrenCount(n);
-                    if (n === 0) setNeedsHighChair(false);
-                  }}
-                >
-                  {Array.from({ length: CHILDREN_MAX + 1 }, (_, i) => i).map((n) => (
-                    <option key={n} value={n}>
-                      {n}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
           </div>
 
           {isLargeGroup && (
@@ -413,7 +367,7 @@ export function ReservationForm({
             </p>
           )}
 
-          {!isLargeGroup && childrenCount > 0 && (
+          {childrenCount > 0 && (
             <label className="flex cursor-pointer items-center gap-2.5 rounded-2xl bg-cream/[0.03] px-4 py-3 text-sm text-cream/80 ring-1 ring-cream/10">
               <input
                 type="checkbox"
