@@ -9,13 +9,21 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
  */
 let cached: SupabaseClient | null = null;
 
+// La URL del proyecto NO es secreta (es la que iría en NEXT_PUBLIC). La fijamos
+// por defecto para no depender de que la env esté puesta en cada entorno; solo
+// la service_role (secreta) tiene que venir sí o sí del entorno.
+const SUPABASE_URL_DEFAULT = "https://ipxkhcyzycoktfassukz.supabase.co";
+
 export function getSupabaseAdmin(): SupabaseClient {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const url =
+    process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    process.env.SUPABASE_URL ||
+    SUPABASE_URL_DEFAULT;
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-  if (!url || !serviceKey) {
+  if (!serviceKey) {
     throw new Error(
-      "Supabase no configurado: define NEXT_PUBLIC_SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY en el entorno."
+      "Falta SUPABASE_SERVICE_ROLE_KEY en el entorno (Supabase → Settings → API → service_role)."
     );
   }
 
