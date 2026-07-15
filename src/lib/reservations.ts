@@ -21,8 +21,10 @@ export function getReservableLocation(slug: string): Location | undefined {
 }
 
 export const PARTY_MIN = 1;
-/** Máximo de comensales reservable online; por encima se deriva a contacto (grupos/eventos). */
+/** Máximo del desplegable de comensales; por encima se pide el nº exacto (grupo grande). */
 export const PARTY_MAX = 15;
+/** Tope absoluto de comensales aceptado por la API (grupos/eventos van como pendientes). */
+export const PARTY_MAX_TOTAL = 40;
 export const CHILDREN_MAX = 15;
 /** Más de este nº de comensales requiere confirmación manual de la manager. */
 export const APPROVAL_PARTY_THRESHOLD = 8;
@@ -151,11 +153,11 @@ export function validateReservationInput(raw: unknown): ValidationResult {
   if (
     !Number.isInteger(partySize) ||
     partySize < PARTY_MIN ||
-    partySize > PARTY_MAX
+    partySize > PARTY_MAX_TOTAL
   )
     return {
       ok: false,
-      error: `El número de comensales debe estar entre ${PARTY_MIN} y ${PARTY_MAX}.`,
+      error: `El número de comensales debe estar entre ${PARTY_MIN} y ${PARTY_MAX_TOTAL}.`,
     };
 
   const childrenRaw = Number(body.childrenCount ?? 0);
