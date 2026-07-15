@@ -257,11 +257,11 @@ export default function HomePage() {
               })}
             </h1>
             <div className="mt-9 flex flex-col gap-3 animate-fade-up [animation-delay:300ms] sm:flex-row sm:flex-wrap sm:items-center">
-              <CtaPill href="/restaurantes" variant="hoverElectric">
-                {t("ctaComerAqui")}
+              <CtaPill href="/reservar" variant="hoverElectric">
+                {t("ctaReservar")}
               </CtaPill>
-              <CtaPill href="/pizza-para-llevar" variant="hoverElectric">
-                {t("ctaParaLlevar")}
+              <CtaPill href="/restaurantes/cartas" variant="hoverElectric">
+                {t("ctaVerCarta")}
               </CtaPill>
             </div>
             <div className="mt-8 flex items-center justify-center gap-2 animate-fade-up font-sans text-sm text-cream/80 [animation-delay:400ms] md:justify-start">
