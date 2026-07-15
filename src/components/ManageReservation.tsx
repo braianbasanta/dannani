@@ -42,7 +42,7 @@ export function ManageReservation({
   token: string;
   locale: string;
   locationSlug: string;
-  initialStatus: "confirmed" | "cancelled";
+  initialStatus: "pending" | "confirmed" | "cancelled" | "rejected";
   initialData: ManageReservationData;
 }) {
   const t = useTranslations("gestion");
@@ -128,6 +128,7 @@ export function ManageReservation({
   }
 
   const dateLong = formatReservationDate(data.date, locale as Locale);
+  const inactive = status === "cancelled" || status === "rejected";
 
   return (
     <div className="space-y-6">
@@ -135,15 +136,23 @@ export function ManageReservation({
       <div className="rounded-[1.5rem] bg-night-soft p-6 shadow-card ring-1 ring-cream/10">
         <div className="flex items-center justify-between gap-3">
           <p className="font-display text-xl text-cream">{location?.name}</p>
-          {status === "cancelled" ? (
-            <span className="rounded-full bg-mustard/15 px-3 py-1 text-xs font-bold uppercase tracking-wider text-mustard">
-              {t("statusCancelled")}
-            </span>
-          ) : (
-            <span className="rounded-full bg-electric/15 px-3 py-1 text-xs font-bold uppercase tracking-wider text-electric">
-              {t("statusConfirmed")}
-            </span>
-          )}
+          <span
+            className={`rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider ${
+              status === "confirmed"
+                ? "bg-electric/15 text-electric"
+                : status === "pending"
+                  ? "bg-mustard/15 text-mustard"
+                  : "bg-cream/10 text-cream/50"
+            }`}
+          >
+            {status === "confirmed"
+              ? t("statusConfirmed")
+              : status === "pending"
+                ? t("statusPending")
+                : status === "rejected"
+                  ? t("statusRejected")
+                  : t("statusCancelled")}
+          </span>
         </div>
         {location && (
           <p className="mt-1 text-sm text-cream/60">{location.address}</p>
@@ -183,7 +192,7 @@ export function ManageReservation({
         </p>
       )}
 
-      {status === "cancelled" ? (
+      {inactive ? (
         <p className="rounded-[1.5rem] border border-cream/10 p-6 text-center text-sm text-cream/60">
           {t("cancelledNote")}
         </p>

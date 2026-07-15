@@ -18,6 +18,9 @@ const FIELD =
   "w-full rounded-2xl bg-cream/[0.04] px-4 py-3 font-sans text-sm text-cream ring-1 ring-cream/15 outline-none transition focus:ring-electric focus:bg-cream/[0.06] placeholder:text-cream/35";
 const LABEL = "block text-xs font-semibold uppercase tracking-wider text-cream/60 mb-1.5";
 
+/** Email de contacto para grupos/eventos de más de 15 personas (buzón que recibe). */
+const GROUP_INQUIRY_EMAIL = "danannipoblenou@gmail.com";
+
 function localDateString(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
     d.getDate()
@@ -102,6 +105,7 @@ export function ReservationForm({
   const [manageToken, setManageToken] = useState<string | null>(null);
 
   const location = reservableLocations.find((l) => l.slug === locationSlug);
+  const isLargeGroup = partySize > 15;
 
   const slots = useMemo(
     () => (location ? computeSlots(location, date, today) : []),
@@ -317,7 +321,7 @@ export function ReservationForm({
       {step === 2 && (
         <>
           {/* Comensales + niños */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className={isLargeGroup ? "" : "grid grid-cols-2 gap-3"}>
             <div>
               <label className={LABEL} htmlFor="rf-party">
                 {t("party")}
@@ -333,42 +337,83 @@ export function ReservationForm({
                     {n}
                   </option>
                 ))}
+                <option value={16}>{t("moreThan15")}</option>
               </select>
             </div>
-            <div>
-              <label className={LABEL} htmlFor="rf-children">
-                {t("children")}
-              </label>
-              <select
-                id="rf-children"
-                className={FIELD}
-                value={childrenCount}
-                onChange={(e) => {
-                  const n = Number(e.target.value);
-                  setChildrenCount(n);
-                  if (n === 0) setNeedsHighChair(false);
-                }}
-              >
-                {Array.from({ length: CHILDREN_MAX + 1 }, (_, i) => i).map((n) => (
-                  <option key={n} value={n}>
-                    {n}
-                  </option>
-                ))}
-              </select>
-            </div>
+            {!isLargeGroup && (
+              <div>
+                <label className={LABEL} htmlFor="rf-children">
+                  {t("children")}
+                </label>
+                <select
+                  id="rf-children"
+                  className={FIELD}
+                  value={childrenCount}
+                  onChange={(e) => {
+                    const n = Number(e.target.value);
+                    setChildrenCount(n);
+                    if (n === 0) setNeedsHighChair(false);
+                  }}
+                >
+                  {Array.from({ length: CHILDREN_MAX + 1 }, (_, i) => i).map((n) => (
+                    <option key={n} value={n}>
+                      {n}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
           </div>
 
-          {childrenCount > 0 && (
-            <label className="flex cursor-pointer items-center gap-2.5 rounded-2xl bg-cream/[0.03] px-4 py-3 text-sm text-cream/80 ring-1 ring-cream/10">
-              <input
-                type="checkbox"
-                checked={needsHighChair}
-                onChange={(e) => setNeedsHighChair(e.target.checked)}
-                className="h-4 w-4 accent-electric"
-              />
-              {t("highChair")}
-            </label>
-          )}
+          {isLargeGroup ? (
+            <div className="space-y-3">
+              <div className="rounded-2xl bg-cream/[0.04] p-5 text-center ring-1 ring-cream/10">
+                <p className="font-display text-lg text-cream">{t("groupTitle")}</p>
+                <p className="mt-1.5 text-sm text-cream/70">{t("groupText")}</p>
+                <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-center">
+                  {location && (
+                    <a
+                      href={location.phoneHref}
+                      className="inline-flex items-center justify-center rounded-full bg-electric px-5 py-2.5 text-sm font-bold text-night transition hover:bg-electric-dark"
+                    >
+                      {t("groupCall")} · {location.phone}
+                    </a>
+                  )}
+                  <a
+                    href={`mailto:${GROUP_INQUIRY_EMAIL}`}
+                    className="inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold text-cream ring-1 ring-cream/25 transition hover:bg-cream/5"
+                  >
+                    {t("groupEmail")}
+                  </a>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setPartySize(2)}
+                className="w-full rounded-full border border-cream/20 px-5 py-3 text-sm font-semibold text-cream transition hover:bg-cream/5"
+              >
+                {t("back")}
+              </button>
+            </div>
+          ) : (
+            <>
+              {childrenCount > 0 && (
+                <label className="flex cursor-pointer items-center gap-2.5 rounded-2xl bg-cream/[0.03] px-4 py-3 text-sm text-cream/80 ring-1 ring-cream/10">
+                  <input
+                    type="checkbox"
+                    checked={needsHighChair}
+                    onChange={(e) => setNeedsHighChair(e.target.checked)}
+                    className="h-4 w-4 accent-electric"
+                  />
+                  {t("highChair")}
+                </label>
+              )}
+
+              {partySize > 8 && (
+                <p className="rounded-xl bg-electric/10 px-4 py-2.5 text-sm text-electric">
+                  {t("groupNote")}
+                </p>
+              )}
 
           <div className="grid grid-cols-2 gap-3">
             <div>
@@ -532,6 +577,8 @@ export function ReservationForm({
               ),
             })}
           </p>
+            </>
+          )}
         </>
       )}
     </form>

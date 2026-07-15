@@ -14,7 +14,12 @@ import {
  * si falla, se registra pero NO se tira la reserva (ya está guardada en DB).
  */
 
-export type EmailKind = "created" | "rescheduled" | "cancelled";
+export type EmailKind =
+  | "created"
+  | "rescheduled"
+  | "cancelled"
+  | "requested"
+  | "rejected";
 
 function siteUrl(): string {
   return (process.env.NEXT_PUBLIC_SITE_URL || "https://dananni.es").replace(
@@ -96,6 +101,14 @@ interface CustomerCopy {
   manageHint: string;
   questions: (phone: string) => string;
   cancelledNote: string;
+  subjectRequested: string;
+  headingRequested: string;
+  leadRequested: string;
+  pendingNote: string;
+  subjectRejected: string;
+  headingRejected: string;
+  leadRejected: string;
+  rejectedNote: string;
 }
 
 const CUSTOMER: Record<Locale, CustomerCopy> = {
@@ -127,6 +140,17 @@ const CUSTOMER: Record<Locale, CustomerCopy> = {
     questions: (phone) => `¿Dudas? Llámanos al ${phone}.`,
     cancelledNote:
       "Si ha sido un error o quieres volver a reservar, escríbenos o llama al local.",
+    subjectRequested: "Hemos recibido tu solicitud de reserva",
+    headingRequested: "Solicitud recibida",
+    leadRequested:
+      "¡Gracias! Al ser un grupo grande, confirmaremos tu reserva manualmente y te avisaremos por email en breve. Estos son los datos:",
+    pendingNote: "Estado: pendiente de confirmación por el restaurante.",
+    subjectRejected: "No hemos podido confirmar tu reserva",
+    headingRejected: "Reserva no confirmada",
+    leadRejected:
+      "Lo sentimos, no hemos podido confirmar tu reserva para esta fecha. Estos eran los datos:",
+    rejectedNote:
+      "Prueba con otra fecha u hora, o llámanos y buscamos la mejor opción para tu grupo.",
   },
   en: {
     subjectCreated: "Your Da Nanni booking is confirmed",
@@ -156,6 +180,17 @@ const CUSTOMER: Record<Locale, CustomerCopy> = {
     questions: (phone) => `Questions? Call us on ${phone}.`,
     cancelledNote:
       "If this was a mistake or you'd like to book again, get in touch or call the restaurant.",
+    subjectRequested: "We've received your booking request",
+    headingRequested: "Request received",
+    leadRequested:
+      "Thank you! As this is a large group, we'll confirm your booking manually and email you shortly. Here are the details:",
+    pendingNote: "Status: pending confirmation by the restaurant.",
+    subjectRejected: "We couldn't confirm your booking",
+    headingRejected: "Booking not confirmed",
+    leadRejected:
+      "We're sorry, we couldn't confirm your booking for this date. These were the details:",
+    rejectedNote:
+      "Try another date or time, or call us and we'll find the best option for your group.",
   },
   it: {
     subjectCreated: "La tua prenotazione da Da Nanni è confermata",
@@ -185,6 +220,17 @@ const CUSTOMER: Record<Locale, CustomerCopy> = {
     questions: (phone) => `Domande? Chiamaci allo ${phone}.`,
     cancelledNote:
       "Se è stato un errore o vuoi prenotare di nuovo, scrivici o chiama il locale.",
+    subjectRequested: "Abbiamo ricevuto la tua richiesta di prenotazione",
+    headingRequested: "Richiesta ricevuta",
+    leadRequested:
+      "Grazie! Trattandosi di un gruppo numeroso, confermeremo la prenotazione manualmente e ti avviseremo via email a breve. Ecco i dettagli:",
+    pendingNote: "Stato: in attesa di conferma da parte del locale.",
+    subjectRejected: "Non abbiamo potuto confermare la tua prenotazione",
+    headingRejected: "Prenotazione non confermata",
+    leadRejected:
+      "Ci dispiace, non abbiamo potuto confermare la tua prenotazione per questa data. Questi erano i dettagli:",
+    rejectedNote:
+      "Prova con un'altra data o ora, oppure chiamaci e troviamo l'opzione migliore per il tuo gruppo.",
   },
   ca: {
     subjectCreated: "La teva reserva a Da Nanni està confirmada",
@@ -214,6 +260,17 @@ const CUSTOMER: Record<Locale, CustomerCopy> = {
     questions: (phone) => `Dubtes? Truca'ns al ${phone}.`,
     cancelledNote:
       "Si ha estat un error o vols tornar a reservar, escriu-nos o truca al local.",
+    subjectRequested: "Hem rebut la teva sol·licitud de reserva",
+    headingRequested: "Sol·licitud rebuda",
+    leadRequested:
+      "Gràcies! En ser un grup gran, confirmarem la teva reserva manualment i t'avisarem per email aviat. Aquestes són les dades:",
+    pendingNote: "Estat: pendent de confirmació pel restaurant.",
+    subjectRejected: "No hem pogut confirmar la teva reserva",
+    headingRejected: "Reserva no confirmada",
+    leadRejected:
+      "Ho sentim, no hem pogut confirmar la teva reserva per a aquesta data. Aquestes eren les dades:",
+    rejectedNote:
+      "Prova amb una altra data o hora, o truca'ns i busquem la millor opció per al teu grup.",
   },
 };
 
@@ -230,6 +287,7 @@ const BRAND = {
   border: "#e7e3d8",
   bg: "#f6f4ee",
   danger: "#b3261e",
+  mustard: "#c67d10",
 };
 
 function detailRow(label: string, value: string): string {
@@ -301,42 +359,62 @@ export function buildCustomerEmail(
   kind: EmailKind
 ): { subject: string; html: string } {
   const copy = CUSTOMER[asLocale(row.locale)];
-  const heading =
-    kind === "created"
-      ? copy.headingCreated
-      : kind === "rescheduled"
-        ? copy.headingRescheduled
-        : copy.headingCancelled;
-  const lead =
-    kind === "created"
-      ? copy.leadCreated
-      : kind === "rescheduled"
-        ? copy.leadRescheduled
-        : copy.leadCancelled;
-  const subject =
-    kind === "created"
-      ? copy.subjectCreated
-      : kind === "rescheduled"
-        ? copy.subjectRescheduled
-        : copy.subjectCancelled;
+  const headings: Record<EmailKind, string> = {
+    created: copy.headingCreated,
+    rescheduled: copy.headingRescheduled,
+    cancelled: copy.headingCancelled,
+    requested: copy.headingRequested,
+    rejected: copy.headingRejected,
+  };
+  const leads: Record<EmailKind, string> = {
+    created: copy.leadCreated,
+    rescheduled: copy.leadRescheduled,
+    cancelled: copy.leadCancelled,
+    requested: copy.leadRequested,
+    rejected: copy.leadRejected,
+  };
+  const subjects: Record<EmailKind, string> = {
+    created: copy.subjectCreated,
+    rescheduled: copy.subjectRescheduled,
+    cancelled: copy.subjectCancelled,
+    requested: copy.subjectRequested,
+    rejected: copy.subjectRejected,
+  };
 
-  const manage = kind !== "cancelled"
-    ? `<p style="color:${BRAND.muted};font-size:13px;margin:22px 0 10px">${esc(copy.manageHint)}</p>
-       <div>${button(manageUrl(row, "#reprogramar"), copy.btnReschedule, "outline")}&nbsp;&nbsp;${button(
-         manageUrl(row, "#cancelar"),
-         copy.btnCancel,
-         "danger"
-       )}</div>`
-    : `<p style="color:${BRAND.muted};font-size:13px;margin:22px 0 0">${esc(copy.cancelledNote)}</p>`;
+  const manageButtons = `<p style="color:${BRAND.muted};font-size:13px;margin:22px 0 10px">${esc(
+    copy.manageHint
+  )}</p><div>${button(manageUrl(row, "#reprogramar"), copy.btnReschedule, "outline")}&nbsp;&nbsp;${button(
+    manageUrl(row, "#cancelar"),
+    copy.btnCancel,
+    "danger"
+  )}</div>`;
+
+  let manage: string;
+  if (kind === "cancelled") {
+    manage = `<p style="color:${BRAND.muted};font-size:13px;margin:22px 0 0">${esc(copy.cancelledNote)}</p>`;
+  } else if (kind === "rejected") {
+    manage = `<p style="color:${BRAND.muted};font-size:13px;margin:22px 0 0">${esc(copy.rejectedNote)}</p>`;
+  } else if (kind === "requested") {
+    manage = `<div style="margin:16px 0 0;padding:10px 14px;border-radius:12px;background:#fbf1dd;color:#8a5a12;font-size:13px;font-weight:600">${esc(
+      copy.pendingNote
+    )}</div>${manageButtons}`;
+  } else {
+    manage = manageButtons;
+  }
 
   const inner = `
-    <h1 style="margin:0 0 6px;color:${BRAND.text};font-size:22px">${esc(heading)}</h1>
-    <p style="margin:0;color:${BRAND.text};font-size:15px;line-height:1.5">${esc(lead)}</p>
+    <h1 style="margin:0 0 6px;color:${BRAND.text};font-size:22px">${esc(headings[kind])}</h1>
+    <p style="margin:0;color:${BRAND.text};font-size:15px;line-height:1.5">${esc(leads[kind])}</p>
     ${detailsTable(row, location, copy)}
     ${manage}
     <p style="color:${BRAND.muted};font-size:13px;margin:22px 0 0">${esc(copy.questions(location.phone))}</p>
   `;
-  return { subject, html: shell(inner) };
+  return { subject: subjects[kind], html: shell(inner) };
+}
+
+function approvalUrl(row: ReservationRow, decision: "confirm" | "reject"): string {
+  // La manager gestiona en español; forzamos locale es en el enlace.
+  return `${siteUrl()}${localePath("es", `/reserva/${row.manage_token}/aprobar`)}?d=${decision}`;
 }
 
 export function buildManagerEmail(
@@ -346,16 +424,32 @@ export function buildManagerEmail(
 ): { subject: string; html: string } {
   // La manager siempre en español.
   const copy = CUSTOMER.es;
-  const tag =
-    kind === "created"
-      ? "NUEVA RESERVA"
-      : kind === "rescheduled"
-        ? "RESERVA MODIFICADA"
-        : "RESERVA CANCELADA";
-  const color = kind === "cancelled" ? BRAND.danger : BRAND.electric;
+  const tags: Record<EmailKind, string> = {
+    created: "NUEVA RESERVA",
+    rescheduled: "RESERVA MODIFICADA",
+    cancelled: "RESERVA CANCELADA",
+    requested: "CONFIRMAR · GRUPO GRANDE",
+    rejected: "RESERVA RECHAZADA",
+  };
+  const tag = tags[kind];
+  const color =
+    kind === "cancelled" || kind === "rejected"
+      ? BRAND.danger
+      : kind === "requested"
+        ? BRAND.mustard
+        : BRAND.electric;
   const dateStr = formatReservationDate(row.reservation_date, "es");
   const time = normalizeTime(row.reservation_time);
   const subject = `[${tag}] ${location.name} · ${dateStr} ${time} · ${row.party_size}p`;
+
+  const actions =
+    kind === "requested"
+      ? `<p style="margin:12px 0 10px;color:${BRAND.text};font-size:14px">Reserva de <b>${row.party_size} personas</b>. Revisa y decide:</p><div style="margin:0 0 8px">${button(
+          approvalUrl(row, "confirm"),
+          "Confirmar reserva",
+          "solid"
+        )}&nbsp;&nbsp;${button(approvalUrl(row, "reject"), "Rechazar", "danger")}</div>`
+      : "";
 
   const contactRows = [
     detailRow("Cliente", esc(`${row.first_name} ${row.last_name}`)),
@@ -367,6 +461,7 @@ export function buildManagerEmail(
   const inner = `
     <span style="display:inline-block;background:${color};color:#fff;font-size:11px;font-weight:700;letter-spacing:0.12em;padding:4px 10px;border-radius:999px">${tag}</span>
     <h1 style="margin:12px 0 4px;color:${BRAND.text};font-size:20px">${esc(location.name)}</h1>
+    ${actions}
     ${detailsTable(row, location, copy)}
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:8px 0 4px;border-top:1px solid ${BRAND.border}">${contactRows}</table>
     <p style="color:${BRAND.muted};font-size:12px;margin:20px 0 0">Reserva #${esc(
@@ -428,4 +523,15 @@ export async function notifyReservation(
     console.warn("[email] RESERVATIONS_NOTIFY_EMAIL no configurada; aviso a manager omitido.");
   }
   await Promise.all(tasks);
+}
+
+/** Envía solo el email al cliente (decisiones de la manager: confirmar/rechazar). */
+export async function notifyCustomer(
+  row: ReservationRow,
+  location: Location,
+  kind: EmailKind
+): Promise<void> {
+  const managerTo = process.env.RESERVATIONS_NOTIFY_EMAIL;
+  const customer = buildCustomerEmail(row, location, kind);
+  await send(row.email, customer.subject, customer.html, managerTo);
 }

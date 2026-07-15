@@ -21,8 +21,16 @@ export function getReservableLocation(slug: string): Location | undefined {
 }
 
 export const PARTY_MIN = 1;
-export const PARTY_MAX = 20;
-export const CHILDREN_MAX = 20;
+/** Máximo de comensales reservable online; por encima se deriva a contacto (grupos/eventos). */
+export const PARTY_MAX = 15;
+export const CHILDREN_MAX = 15;
+/** Más de este nº de comensales requiere confirmación manual de la manager. */
+export const APPROVAL_PARTY_THRESHOLD = 8;
+
+/** true si la reserva necesita aprobación de la manager (grupo de 9 a 15). */
+export function needsManagerApproval(partySize: number): boolean {
+  return partySize > APPROVAL_PARTY_THRESHOLD;
+}
 
 /** Franjas cada 30 min; última reserva 30 min antes del cierre y nunca más tarde de las 23:00. */
 export const SLOT_INTERVAL_MIN = 30;
@@ -200,7 +208,7 @@ export interface ReservationRow {
   dietary: string | null;
   marketing_opt_in: boolean;
   locale: string;
-  status: "confirmed" | "cancelled";
+  status: "pending" | "confirmed" | "cancelled" | "rejected";
   manage_token: string;
   created_at: string;
   updated_at: string;

@@ -3,6 +3,7 @@ import { randomBytes } from "crypto";
 import { getSupabaseAdmin, RESERVATIONS_TABLE } from "@/lib/supabase";
 import {
   validateReservationInput,
+  needsManagerApproval,
   type ReservationRow,
 } from "@/lib/reservations";
 import { notifyReservation } from "@/lib/email";
@@ -27,6 +28,10 @@ export async function POST(req: Request) {
   const token = randomBytes(20).toString("base64url");
   const supabase = getSupabaseAdmin();
 
+  // Grupos de 9 a 15 requieren confirmación manual de la manager (>15 se deriva
+  // a contacto y no llega a la API).
+  const pending = needsManagerApproval(value.partySize);
+
   const { data, error } = await supabase
     .from(RESERVATIONS_TABLE)
     .insert({
@@ -45,7 +50,7 @@ export async function POST(req: Request) {
       dietary: value.dietary ?? null,
       marketing_opt_in: value.marketingOptIn ?? false,
       locale: value.locale,
-      status: "confirmed",
+      status: pending ? "pending" : "confirmed",
       manage_token: token,
     })
     .select()
@@ -60,9 +65,9 @@ export async function POST(req: Request) {
   }
 
   const row = data as ReservationRow;
-  await notifyReservation(row, location, "created").catch((e) =>
-    console.error("[reservations] notify error:", e)
+  await notifyReservation(row, location, pending ? "requested" : "created").catch(
+    (e) => console.error("[reservations] notify error:", e)
   );
 
-  return NextResponse.json({ ok: true, token: row.manage_token });
+  return NextResponse.json({ ok: true, token: row.manage_token, pending });
 }

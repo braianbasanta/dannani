@@ -58,6 +58,13 @@ export default async function AdminReservasPage({
   const { data, error } = await query;
   const rows = (data as ReservationRow[] | null) ?? [];
 
+  // Pendientes de confirmar (grupos grandes) próximos, para el aviso de arriba.
+  const { count: pendingCount } = await supabase
+    .from(RESERVATIONS_TABLE)
+    .select("id", { count: "exact", head: true })
+    .eq("status", "pending")
+    .gte("reservation_date", today);
+
   // Agrupar por fecha → local
   const byDate = new Map<string, Map<string, ReservationRow[]>>();
   for (const r of rows) {
@@ -159,7 +166,7 @@ export default async function AdminReservasPage({
             </a>
           ))}
           <span className="mx-1 h-4 w-px bg-cream/15" />
-          {(["confirmed", "cancelled", "all"] as const).map((s) => (
+          {(["confirmed", "pending", "cancelled", "all"] as const).map((s) => (
             <a
               key={s}
               href={qs({ status: s })}
@@ -167,12 +174,27 @@ export default async function AdminReservasPage({
             >
               {s === "confirmed"
                 ? "Confirmadas"
-                : s === "cancelled"
-                  ? "Canceladas"
-                  : "Todas"}
+                : s === "pending"
+                  ? "Pendientes"
+                  : s === "cancelled"
+                    ? "Canceladas"
+                    : "Todas"}
             </a>
           ))}
         </div>
+
+        {pendingCount != null && pendingCount > 0 && statusParam !== "pending" && (
+          <a
+            href={qs({ status: "pending", date: "all" })}
+            className="mt-4 flex items-center justify-between rounded-xl bg-mustard/15 px-4 py-3 text-sm font-semibold text-mustard transition hover:bg-mustard/20"
+          >
+            <span>
+              ⚠️ {pendingCount} reserva{pendingCount === 1 ? "" : "s"} de grupo
+              grande pendiente{pendingCount === 1 ? "" : "s"} de confirmar
+            </span>
+            <span>Ver →</span>
+          </a>
+        )}
 
         {/* Listado */}
         {error && (

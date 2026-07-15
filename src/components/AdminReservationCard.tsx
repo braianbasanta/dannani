@@ -12,20 +12,22 @@ import {
 import { setReservationStatus } from "@/app/admin/actions";
 
 /**
- * Tarjeta de reserva del panel admin (client) con acciones apiladas a la
- * derecha: Cancelar/Restaurar arriba y Modificar debajo. Al modificar se
- * despliega un panel (día/hora/comensales) que reusa el endpoint de
- * reprogramar — reenvía el email de cambio al cliente.
+ * Tarjeta de reserva del panel admin (client). Acciones según estado:
+ * - pending: Confirmar / Rechazar (avisan al cliente por email) + Modificar
+ * - confirmed: Cancelar + Modificar
+ * - cancelled / rejected: Restaurar
  */
 export function AdminReservationCard({ r }: { r: ReservationRow }) {
-  const cancelled = r.status === "cancelled";
   const router = useRouter();
+  const status = r.status;
+  const inactive = status === "cancelled" || status === "rejected";
+  const pending = status === "pending";
 
   const [modOpen, setModOpen] = useState(false);
   const [d, setD] = useState(r.reservation_date);
   const [tm, setTm] = useState(normalizeTime(r.reservation_time));
   const [p, setP] = useState(r.party_size);
-  const [busy, setBusy] = useState(false);
+  const [busy, setBusy] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
 
   const location = getReservableLocation(r.location_slug);
@@ -34,7 +36,7 @@ export function AdminReservationCard({ r }: { r: ReservationRow }) {
     "rounded-lg bg-cream/[0.06] px-2 py-1.5 text-xs text-cream ring-1 ring-cream/15 outline-none focus:ring-electric [color-scheme:dark]";
 
   async function save() {
-    setBusy(true);
+    setBusy("save");
     setErr(null);
     try {
       const res = await fetch(`/api/reservations/${r.manage_token}/reschedule`, {
@@ -45,23 +47,54 @@ export function AdminReservationCard({ r }: { r: ReservationRow }) {
       const j = await res.json().catch(() => ({}));
       if (!res.ok) {
         setErr(j.error || "No se pudo modificar.");
-        setBusy(false);
+        setBusy(null);
         return;
       }
       setModOpen(false);
-      setBusy(false);
+      setBusy(null);
       router.refresh();
     } catch {
       setErr("Error de conexión.");
-      setBusy(false);
+      setBusy(null);
     }
   }
 
+  async function decide(decision: "confirm" | "reject") {
+    setBusy(decision);
+    setErr(null);
+    try {
+      const res = await fetch(`/api/reservations/${r.manage_token}/approve`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ decision }),
+      });
+      const j = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setErr(j.error || "No se pudo procesar.");
+        setBusy(null);
+        return;
+      }
+      setBusy(null);
+      router.refresh();
+    } catch {
+      setErr("Error de conexión.");
+      setBusy(null);
+    }
+  }
+
+  const badge = pending
+    ? { t: "Pendiente", c: "bg-mustard/15 text-mustard" }
+    : status === "cancelled"
+      ? { t: "Cancelada", c: "bg-cream/10 text-cream/50" }
+      : status === "rejected"
+        ? { t: "Rechazada", c: "bg-cream/10 text-cream/50" }
+        : null;
+
   return (
     <li
-      className={`rounded-2xl bg-night-soft p-4 ring-1 ring-cream/10 ${
-        cancelled ? "opacity-55" : ""
-      }`}
+      className={`rounded-2xl bg-night-soft p-4 ring-1 ${
+        pending ? "ring-mustard/30" : "ring-cream/10"
+      } ${inactive ? "opacity-55" : ""}`}
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="flex items-center gap-4">
@@ -74,9 +107,11 @@ export function AdminReservationCard({ r }: { r: ReservationRow }) {
           <div>
             <p className="font-semibold text-cream">
               {r.first_name} {r.last_name}
-              {cancelled && (
-                <span className="ml-2 rounded-full bg-mustard/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-mustard">
-                  Cancelada
+              {badge && (
+                <span
+                  className={`ml-2 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${badge.c}`}
+                >
+                  {badge.t}
                 </span>
               )}
             </p>
@@ -100,26 +135,47 @@ export function AdminReservationCard({ r }: { r: ReservationRow }) {
           </div>
         </div>
 
-        {/* Acciones apiladas: Cancelar arriba, Modificar debajo */}
-        <div className="flex w-28 flex-col gap-2">
-          <form action={setReservationStatus}>
-            <input type="hidden" name="id" value={r.id} />
-            <input
-              type="hidden"
-              name="status"
-              value={cancelled ? "confirmed" : "cancelled"}
-            />
-            <button
-              className={`w-full rounded-full px-3 py-1.5 text-xs font-semibold ring-1 transition ${
-                cancelled
-                  ? "text-electric ring-electric/40 hover:bg-electric/10"
-                  : "text-mustard ring-mustard/40 hover:bg-mustard/10"
-              }`}
-            >
-              {cancelled ? "Restaurar" : "Cancelar"}
-            </button>
-          </form>
-          {!cancelled && (
+        {/* Acciones según estado */}
+        <div className="flex w-32 flex-col gap-2">
+          {pending && (
+            <>
+              <button
+                type="button"
+                onClick={() => decide("confirm")}
+                disabled={busy !== null}
+                className="w-full rounded-full bg-electric px-3 py-1.5 text-xs font-bold text-night transition hover:bg-electric-dark disabled:opacity-60"
+              >
+                {busy === "confirm" ? "…" : "Confirmar"}
+              </button>
+              <button
+                type="button"
+                onClick={() => decide("reject")}
+                disabled={busy !== null}
+                className="w-full rounded-full px-3 py-1.5 text-xs font-semibold text-mustard ring-1 ring-mustard/40 transition hover:bg-mustard/10 disabled:opacity-60"
+              >
+                {busy === "reject" ? "…" : "Rechazar"}
+              </button>
+            </>
+          )}
+          {status === "confirmed" && (
+            <form action={setReservationStatus}>
+              <input type="hidden" name="id" value={r.id} />
+              <input type="hidden" name="status" value="cancelled" />
+              <button className="w-full rounded-full px-3 py-1.5 text-xs font-semibold text-mustard ring-1 ring-mustard/40 transition hover:bg-mustard/10">
+                Cancelar
+              </button>
+            </form>
+          )}
+          {inactive && (
+            <form action={setReservationStatus}>
+              <input type="hidden" name="id" value={r.id} />
+              <input type="hidden" name="status" value="confirmed" />
+              <button className="w-full rounded-full px-3 py-1.5 text-xs font-semibold text-electric ring-1 ring-electric/40 transition hover:bg-electric/10">
+                Restaurar
+              </button>
+            </form>
+          )}
+          {!inactive && (
             <button
               type="button"
               onClick={() => setModOpen((v) => !v)}
@@ -131,7 +187,9 @@ export function AdminReservationCard({ r }: { r: ReservationRow }) {
         </div>
       </div>
 
-      {modOpen && !cancelled && (
+      {err && <p className="mt-2 text-xs text-mustard">{err}</p>}
+
+      {modOpen && !inactive && (
         <div className="mt-3 flex flex-wrap items-center gap-2 rounded-xl bg-cream/[0.04] p-2 ring-1 ring-cream/10">
           <input
             type="date"
@@ -139,11 +197,7 @@ export function AdminReservationCard({ r }: { r: ReservationRow }) {
             onChange={(e) => setD(e.target.value)}
             className={field}
           />
-          <select
-            value={tm}
-            onChange={(e) => setTm(e.target.value)}
-            className={field}
-          >
+          <select value={tm} onChange={(e) => setTm(e.target.value)} className={field}>
             {!slots.includes(tm) && <option value={tm}>{tm}</option>}
             {slots.map((s) => (
               <option key={s} value={s}>
@@ -165,10 +219,10 @@ export function AdminReservationCard({ r }: { r: ReservationRow }) {
           <button
             type="button"
             onClick={save}
-            disabled={busy}
+            disabled={busy !== null}
             className="rounded-full bg-electric px-3 py-1.5 text-xs font-bold text-night transition hover:bg-electric-dark disabled:opacity-60"
           >
-            {busy ? "Guardando…" : "Guardar"}
+            {busy === "save" ? "Guardando…" : "Guardar"}
           </button>
           <button
             type="button"
@@ -180,7 +234,6 @@ export function AdminReservationCard({ r }: { r: ReservationRow }) {
           >
             Cerrar
           </button>
-          {err && <span className="w-full text-xs text-mustard">{err}</span>}
         </div>
       )}
     </li>
