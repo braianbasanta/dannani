@@ -8,6 +8,7 @@ import {
   reservableLocations,
   getSlotsForLocation,
   PARTY_MAX,
+  PARTY_MAX_TOTAL,
   CHILDREN_MAX,
 } from "@/lib/reservations";
 import { DEFAULT_COUNTRY_ISO, dialForIso } from "@/lib/countries";
@@ -84,6 +85,10 @@ export function ReservationForm({
   const [date, setDate] = useState(initialAvail.date);
   const [time, setTime] = useState(initialAvail.time);
   const [partySize, setPartySize] = useState(2);
+  // Texto libre del campo de grupo grande (>15). Se mantiene desacoplado de
+  // partySize para que el usuario pueda teclear cifras intermedias (p. ej. "1"
+  // camino de "19") sin que el clamp lo empuje al máximo.
+  const [partyExact, setPartyExact] = useState(String(PARTY_MAX + 1));
   const [childrenCount, setChildrenCount] = useState(0);
   const [needsHighChair, setNeedsHighChair] = useState(false);
   const [firstName, setFirstName] = useState("");
@@ -325,15 +330,19 @@ export function ReservationForm({
               <select
                 id="rf-party"
                 className={FIELD}
-                value={isLargeGroup ? 16 : partySize}
-                onChange={(e) => setPartySize(Number(e.target.value))}
+                value={isLargeGroup ? PARTY_MAX + 1 : partySize}
+                onChange={(e) => {
+                  const n = Number(e.target.value);
+                  setPartySize(n);
+                  if (n > PARTY_MAX) setPartyExact(String(n));
+                }}
               >
                 {Array.from({ length: PARTY_MAX }, (_, i) => i + 1).map((n) => (
                   <option key={n} value={n}>
                     {n}
                   </option>
                 ))}
-                <option value={16}>{t("moreThan15")}</option>
+                <option value={PARTY_MAX + 1}>{t("moreThan15")}</option>
               </select>
             </div>
             {isLargeGroup ? (
@@ -343,15 +352,33 @@ export function ReservationForm({
                 </label>
                 <input
                   id="rf-party-exact"
-                  type="number"
-                  min={16}
-                  max={40}
-                  value={partySize}
-                  onChange={(e) =>
-                    setPartySize(
-                      Math.max(16, Math.min(40, Number(e.target.value) || 16))
-                    )
-                  }
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="off"
+                  value={partyExact}
+                  onChange={(e) => {
+                    // Solo dígitos, hasta 2 (máx. 40). Mientras el número sea
+                    // válido (>15) sincroniza partySize; si el usuario aún está
+                    // tecleando un valor incompleto (vacío o ≤15) conserva el
+                    // texto sin alterar partySize, para no salir de "grupo grande".
+                    const raw = e.target.value.replace(/\D/g, "").slice(0, 2);
+                    const n = Number(raw);
+                    if (n > PARTY_MAX_TOTAL) {
+                      setPartyExact(String(PARTY_MAX_TOTAL));
+                      setPartySize(PARTY_MAX_TOTAL);
+                      return;
+                    }
+                    setPartyExact(raw);
+                    if (n > PARTY_MAX) setPartySize(n);
+                  }}
+                  onBlur={() => {
+                    const n = Math.max(
+                      PARTY_MAX + 1,
+                      Math.min(PARTY_MAX_TOTAL, Number(partyExact) || PARTY_MAX + 1)
+                    );
+                    setPartySize(n);
+                    setPartyExact(String(n));
+                  }}
                   className={FIELD}
                 />
               </div>
