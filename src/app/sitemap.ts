@@ -17,6 +17,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/a-domicilio",
     "/restaurantes/cartas",
     "/contacto",
+    "/reservar",
   ];
 
   const locationRoutes = locations.map((location) => hrefFor(location));

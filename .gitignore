@@ -36,6 +36,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# archivo temporal para pegar claves de reservas (nunca commitear)
+/RESERVAS_CLAVES.txt
+
 # videos y fotos de platos/bebidas generados localmente (producción usa Vercel Blob)
 /public/videos/
 /public/photos/

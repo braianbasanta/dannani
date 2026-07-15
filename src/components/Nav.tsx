@@ -22,6 +22,7 @@ const cartaLocations = [...dineInByYear, ...takeAwayByYear];
 export function Nav() {
   const t = useTranslations("nav");
   const tLocal = useTranslations("local");
+  const tReservar = useTranslations("reservar");
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const sentinelRef = useRef<HTMLDivElement>(null);
@@ -187,12 +188,15 @@ export function Nav() {
             >
               {t("nuestraHistoria")}
             </Link>
+            <Link href="/contacto" className={desktopLink("/contacto")}>
+              {t("contacto")}
+            </Link>
             <LanguageSwitcher variant="desktop" />
             <Link
-              href="/contacto"
+              href="/reservar"
               className="rounded-full bg-electric px-5 py-2.5 font-semibold text-night transition-all duration-300 hover:bg-electric-dark hover:shadow-neon active:scale-[0.98]"
             >
-              {t("contacto")}
+              {tReservar("navLabel")}
             </Link>
           </nav>
 
@@ -310,11 +314,18 @@ export function Nav() {
             </Link>
           </div>
 
-          <div className="flex flex-col gap-4 pt-6">
+          <div className="flex flex-col gap-3 pt-6">
             <LanguageSwitcher variant="mobile" onNavigate={() => setOpen(false)} />
             <Link
-              href="/contacto"
+              href="/reservar"
               className="block rounded-full bg-electric px-6 py-3.5 text-center text-sm font-semibold text-night transition-colors hover:bg-electric-dark"
+              onClick={() => setOpen(false)}
+            >
+              {tReservar("navLabel")}
+            </Link>
+            <Link
+              href="/contacto"
+              className="block rounded-full border border-cream/20 px-6 py-3.5 text-center text-sm font-semibold text-cream transition-colors hover:bg-cream/5"
               onClick={() => setOpen(false)}
             >
               {t("contacto")}

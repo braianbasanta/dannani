@@ -4,14 +4,13 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import type { Location } from "@/data/locations";
 import { CtaModal } from "./CtaModal";
+import { ReservationModal } from "./ReservationModal";
 import { DeliveryButtons } from "./DeliveryCTA";
 
 /**
- * CTA de reserva (dine-in) / pedido (take-away): abre un modal con llamada
- * directa al local. En take-away el modal también ofrece el delivery
- * (Glovo/Just Eat) — un único CTA de pedido, no dos que suenan igual.
- * El día que se integre Cover Manager (u otra plataforma de reservas), este
- * componente pasa a renderizar su iframe/script sin tocar el resto.
+ * CTA de reserva (dine-in) / pedido (take-away). En dine-in abre el modal de
+ * reserva online (formulario propio, puente hasta Cover Manager). En take-away
+ * abre un modal con llamada directa + delivery (Glovo/Just Eat).
  */
 export function ReservaCTA({
   location,
@@ -43,23 +42,19 @@ export function ReservaCTA({
         {label}
       </button>
 
-      {open && (
+      {open && !isTakeAway && (
+        <ReservationModal location={location} onClose={() => setOpen(false)} />
+      )}
+
+      {open && isTakeAway && (
         <CtaModal
-          title={
-            isTakeAway
-              ? tReserva("modalTitleTakeAway")
-              : tReserva("modalTitleDineIn")
-          }
-          body={
-            isTakeAway
-              ? tReserva(
-                  location.delivery
-                    ? "modalBodyTakeAwayDomicilio"
-                    : "modalBodyTakeAway",
-                  { name: location.name }
-                )
-              : tReserva("modalBodyDineIn", { name: location.name })
-          }
+          title={tReserva("modalTitleTakeAway")}
+          body={tReserva(
+            location.delivery
+              ? "modalBodyTakeAwayDomicilio"
+              : "modalBodyTakeAway",
+            { name: location.name }
+          )}
           onClose={() => setOpen(false)}
         >
           <a
@@ -68,7 +63,7 @@ export function ReservaCTA({
           >
             {t("llamar")} · {location.phone}
           </a>
-          {isTakeAway && <DeliveryButtons location={location} />}
+          <DeliveryButtons location={location} />
         </CtaModal>
       )}
     </>
