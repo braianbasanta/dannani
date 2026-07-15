@@ -31,6 +31,11 @@ export default function PrivacidadPage() {
         </p>
         <p>{t("privacidad.p2")}</p>
         <p>
+          {t.rich("privacidad.p4", {
+            strong: (chunks) => <strong>{chunks}</strong>,
+          })}
+        </p>
+        <p>
           {t.rich("privacidad.p3", {
             strong: (chunks) => <strong>{chunks}</strong>,
           })}
