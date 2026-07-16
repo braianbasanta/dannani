@@ -112,6 +112,7 @@ export const en: Record<string, string> = {
   "Próvola, salsa de tomate, parmesano y pimienta.": "Provola, tomato sauce, Parmesan and pepper.",
   "Ragú de cebolla con carne de ternera, parmesano y pimienta.": "Onion ragù with veal, Parmesan and pepper.",
   "Mixto de mariscos con pasta.": "Mixed seafood with pasta.",
+  "Ziti con crema de tomates amarillos, bacalao y polvo de aceitunas negras.": "Ziti with a yellow tomato cream sauce, cod and black olive powder.",
   "Crema de calabacín, provolone del Mónaco y chips de calabacín.": "Courgette cream, Provolone del Monaco and courgette crisps.",
   "Pasta fresca con ragú de carne picada.": "Fresh pasta with minced meat ragù.",
   "Huevo, guanciale, pecorino y pimienta.": "Egg, guanciale, pecorino and pepper.",

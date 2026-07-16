@@ -112,6 +112,7 @@ export const ca: Record<string, string> = {
   "Próvola, salsa de tomate, parmesano y pimienta.": "Provola, salsa de tomàquet, parmesà i pebre.",
   "Ragú de cebolla con carne de ternera, parmesano y pimienta.": "Ragù de ceba amb carn de vedella, parmesà i pebre.",
   "Mixto de mariscos con pasta.": "Variat de marisc amb pasta.",
+  "Ziti con crema de tomates amarillos, bacalao y polvo de aceitunas negras.": "Ziti amb crema de tomàquets grocs, bacallà i pols d'olives negres.",
   "Crema de calabacín, provolone del Mónaco y chips de calabacín.": "Crema de carbassó, provolone del Monaco i xips de carbassó.",
   "Pasta fresca con ragú de carne picada.": "Pasta fresca amb ragù de carn picada.",
   "Huevo, guanciale, pecorino y pimienta.": "Ou, guanciale, pecorino i pebre.",

@@ -118,7 +118,7 @@ const bornPoblenouTallers69: MenuSection[] = [
     category: "comida",
     items: [
       { name: "Burrata", description: "Burrata, tomates cherry, rúcula, jamón de Parma y AOVE.", price: "16,00€", video: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/videos/dine-in/burrata.mp4", poster: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/videos/dine-in/burrata.jpg", vegetarian: false },
-      { name: "Ischitana", description: "Atún, tomates secos, aceitunas verdes, crostones de pan, cebolla morada y aceite aromatizado al tomate.", price: "19,50€", video: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/videos/dine-in/ischitana.mp4", poster: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/videos/dine-in/ischitana.jpg", vegetarian: false },
+      { name: "Ischitana", description: "Atún, tomates secos, aceitunas verdes, crostones de pan, cebolla morada y aceite aromatizado al tomate.", price: "16,00€", video: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/videos/dine-in/ischitana.mp4", poster: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/videos/dine-in/ischitana.jpg", vegetarian: false },
       { name: "César Salad", description: "Tiras de pechuga de pollo a la parrilla, ensalada, tomatito cherry, dados de pan crujientes y salsa César.", price: "18,50€", video: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/videos/dine-in/cesar-salad.mp4", poster: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/videos/dine-in/cesar-salad.jpg", vegetarian: false },
       { name: "Mediterranea", description: "Huevos cocidos, lechuga, filetes de atún, tomatito cherry, aceitunas negras, dados de pan tostado y vinagreta de mostaza.", price: "16,50€", video: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/videos/dine-in/mediterranea.mp4", poster: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/videos/dine-in/mediterranea.jpg", vegetarian: false },
       { name: "Puttanesca", description: "Láminas de bacalao, patatas, aceitunas taggiasche, alcaparras, tomates secos y migas de pan crujiente aromatizado.", price: "19,50€", video: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/videos/dine-in/puttanesca.mp4", poster: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/videos/dine-in/puttanesca.jpg", vegetarian: false },
@@ -155,7 +155,7 @@ const bornPoblenouTallers69: MenuSection[] = [
     items: [
       { name: "Gnocchi alla Sorrentina", description: "Próvola, salsa de tomate, parmesano y pimienta.", price: "15,00€", video: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/videos/dine-in/gnocchi-alla-sorrentina.mp4", poster: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/videos/dine-in/gnocchi-alla-sorrentina.jpg", vegetarian: true },
       { name: "Mezzanelli alla Genovese", description: "Ragú de cebolla con carne de ternera, parmesano y pimienta.", price: "17,00€", video: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/videos/dine-in/mezzanelli-alla-genovese.mp4", poster: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/videos/dine-in/mezzanelli-alla-genovese.jpg", vegetarian: false },
-      { name: "Ziti Mare e Sole", description: "Mixto de mariscos con pasta.", price: "19,00€", video: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/videos/dine-in/ziti-mare-e-sole.mp4", poster: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/videos/dine-in/ziti-mare-e-sole.jpg", vegetarian: false },
+      { name: "Ziti Mare e Sole", description: "Ziti con crema de tomates amarillos, bacalao y polvo de aceitunas negras.", price: "19,00€", video: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/videos/dine-in/ziti-mare-e-sole.mp4", poster: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/videos/dine-in/ziti-mare-e-sole.jpg", vegetarian: false },
       { name: "Spaghetti alla Nerano", description: "Crema de calabacín, provolone del Mónaco y chips de calabacín.", price: "16,00€", video: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/videos/dine-in/spaghetti-alla-nerano.mp4", poster: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/videos/dine-in/spaghetti-alla-nerano.jpg", vegetarian: true },
       { name: "Fettuccine alla Bolognese", description: "Pasta fresca con ragú de carne picada.", price: "16,00€", video: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/videos/dine-in/fettuccine-alla-bolognese.mp4", poster: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/videos/dine-in/fettuccine-alla-bolognese.jpg", vegetarian: false },
       { name: "Spaghetti alla carbonara", description: "Huevo, guanciale, pecorino y pimienta.", price: "17,00€", video: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/videos/dine-in/spaghetti-alla-carbonara.mp4", poster: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/videos/dine-in/spaghetti-alla-carbonara.jpg", vegetarian: false },
@@ -258,7 +258,7 @@ const bornPoblenouTallers69: MenuSection[] = [
       { name: "Fanta Lemon 33cl", price: "4,00€", photo: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/photos/bebidas/fanta-lemon.jpg" },
       { name: "Nestea 33cl", price: "4,00€", photo: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/photos/bebidas/nestea.jpg" },
       { name: "Aquarius 33cl", price: "4,00€", photo: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/photos/bebidas/aquarius.jpg" },
-      { name: "Peroni Lemon 33cl", price: "4,50€", photo: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/photos/bebidas/peroni-lemon.jpg" },
+      { name: "Peroni Lemon 33cl", price: "4,00€", photo: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/photos/bebidas/peroni-lemon.jpg" },
       { name: "Peroni Mediana 33cl", price: "4,50€", photo: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/photos/bebidas/peroni-mediana.jpg" },
       { name: "Peroni Grande 50cl", price: "6,00€", photo: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/photos/bebidas/peroni-grande.jpg" },
       { name: "Peroni 00 (sin alcohol)", price: "4,50€", photo: "https://obmqnxm4jz6jfagp.public.blob.vercel-storage.com/photos/bebidas/peroni-00.jpg" },
@@ -278,8 +278,7 @@ const bornPoblenouTallers69: MenuSection[] = [
  * Carta nueva de Gràcia (jul. 2026, PDF "meno spagnolo gracia" del cliente):
  * adopta la carta de mesa de las trattorias con menos platos — sin I Secondi,
  * sin Puttanesca ni Tagliere misto y con I Primi reducido — más un plato
- * propio (Gnocchi al pesto) y dos precios propios (Ischitana 16€ y Peroni
- * Lemon 4€). Se deriva de `bornPoblenouTallers69` para heredar descripciones
+ * propio (Gnocchi al pesto). Se deriva de `bornPoblenouTallers69` para heredar descripciones
  * y videos; si un nombre deja de existir allí, esto lanza en build
  * (preferimos el fallo ruidoso, como el resolver de featured.ts).
  */
@@ -307,11 +306,12 @@ const gracia: MenuSection[] = [
     id: "insalate",
     title: "Insalate",
     category: "comida",
-    items: dineInItems(
-      "insalate",
-      ["Burrata", "Ischitana", "César Salad", "Mediterranea"],
-      { Ischitana: { price: "16,00€" } }
-    ),
+    items: dineInItems("insalate", [
+      "Burrata",
+      "Ischitana",
+      "César Salad",
+      "Mediterranea",
+    ]),
   },
   {
     id: "antipasti",
@@ -348,14 +348,7 @@ const gracia: MenuSection[] = [
   dineInSection("vini-rosato"),
   dineInSection("birre-artigianali"),
   dineInSection("chupitos-licores"),
-  {
-    ...dineInSection("bibite"),
-    items: dineInItems(
-      "bibite",
-      dineInSection("bibite").items.map((i) => i.name),
-      { "Peroni Lemon 33cl": { price: "4,00€" } }
-    ),
-  },
+  dineInSection("bibite"),
 ];
 
 /** slugs de locales, todos con carta confirmada */
