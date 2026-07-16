@@ -9,6 +9,7 @@ import { OG_LOCALES } from "@/lib/seo";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { CookieConsent } from "@/components/CookieConsent";
+import { AttributionTracker } from "@/components/AttributionTracker";
 import "../globals.css";
 
 const fraunces = Fraunces({
@@ -96,6 +97,7 @@ export default async function LocaleLayout({
           <Footer />
           <CookieConsent />
         </NextIntlClientProvider>
+        <AttributionTracker />
         <Analytics />
       </body>
     </html>

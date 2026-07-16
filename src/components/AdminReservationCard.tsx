@@ -6,6 +6,7 @@ import {
   getReservableLocation,
   getSlotsForLocation,
   normalizeTime,
+  attributionLabel,
   PARTY_MAX,
   type ReservationRow,
 } from "@/lib/reservations";
@@ -31,7 +32,24 @@ export function AdminReservationCard({ r }: { r: ReservationRow }) {
   const [err, setErr] = useState<string | null>(null);
 
   const location = getReservableLocation(r.location_slug);
-  const slots = location ? getSlotsForLocation(location) : [];
+  const slots = location ? getSlotsForLocation(location, d) : [];
+
+  const attr = r.attribution;
+  const attrLabel = attributionLabel(attr);
+  const attrTitle = attr
+    ? [
+        attr.utm_source && `source: ${attr.utm_source}`,
+        attr.utm_medium && `medium: ${attr.utm_medium}`,
+        attr.utm_campaign && `campaign: ${attr.utm_campaign}`,
+        attr.utm_content && `content: ${attr.utm_content}`,
+        attr.gclid && `gclid: ${attr.gclid}`,
+        attr.fbclid && `fbclid: ${attr.fbclid}`,
+        attr.referrer && `ref: ${attr.referrer}`,
+        attr.landing && `landing: ${attr.landing}`,
+      ]
+        .filter(Boolean)
+        .join(" · ")
+    : undefined;
   const field =
     "rounded-lg bg-cream/[0.06] px-2 py-1.5 text-xs text-cream ring-1 ring-cream/15 outline-none focus:ring-electric [color-scheme:dark]";
 
@@ -130,6 +148,7 @@ export function AdminReservationCard({ r }: { r: ReservationRow }) {
               {r.needs_high_chair && <Tag>Trona</Tag>}
               {r.dietary && <Tag>⚠️ {r.dietary}</Tag>}
               {r.marketing_opt_in && <Tag>✉︎ marketing</Tag>}
+              {attrLabel && <Tag title={attrTitle}>📍 {attrLabel}</Tag>}
             </div>
             {r.notes && <p className="mt-1.5 text-sm text-cream/70">“{r.notes}”</p>}
           </div>
@@ -210,7 +229,7 @@ export function AdminReservationCard({ r }: { r: ReservationRow }) {
             onChange={(e) => setP(Number(e.target.value))}
             className={field}
           >
-            {Array.from({ length: PARTY_MAX }, (_, i) => i + 1).map((n) => (
+            {Array.from({ length: Math.max(PARTY_MAX, r.party_size) }, (_, i) => i + 1).map((n) => (
               <option key={n} value={n}>
                 {n} pax
               </option>
@@ -240,9 +259,18 @@ export function AdminReservationCard({ r }: { r: ReservationRow }) {
   );
 }
 
-function Tag({ children }: { children: React.ReactNode }) {
+function Tag({
+  children,
+  title,
+}: {
+  children: React.ReactNode;
+  title?: string;
+}) {
   return (
-    <span className="rounded-full bg-cream/[0.06] px-2 py-0.5 text-cream/70">
+    <span
+      title={title}
+      className="rounded-full bg-cream/[0.06] px-2 py-0.5 text-cream/70"
+    >
       {children}
     </span>
   );

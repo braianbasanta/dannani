@@ -57,17 +57,23 @@ export async function POST(
   }
 
   const time = normalizeTime(typeof b.time === "string" ? b.time : "");
-  if (!getSlotsForLocation(location).includes(time)) {
+  // Conservar la fecha/hora que ya tenía la reserva siempre vale (permite tocar
+  // solo los comensales aunque esa franja esté bloqueada para reservas nuevas).
+  const keepsSlot =
+    date === row.reservation_date && time === normalizeTime(row.reservation_time);
+  if (!keepsSlot && !getSlotsForLocation(location, date).includes(time)) {
     return NextResponse.json(
       { error: "Esa hora no está disponible en este local." },
       { status: 400 }
     );
   }
 
+  // Los grupos grandes creados a mano (p. ej. 17 pax) conservan su tope propio.
+  const maxParty = Math.max(PARTY_MAX, row.party_size);
   const partySize = Number(b.partySize);
-  if (!Number.isInteger(partySize) || partySize < PARTY_MIN || partySize > PARTY_MAX) {
+  if (!Number.isInteger(partySize) || partySize < PARTY_MIN || partySize > maxParty) {
     return NextResponse.json(
-      { error: `Los comensales deben estar entre ${PARTY_MIN} y ${PARTY_MAX}.` },
+      { error: `Los comensales deben estar entre ${PARTY_MIN} y ${maxParty}.` },
       { status: 400 }
     );
   }

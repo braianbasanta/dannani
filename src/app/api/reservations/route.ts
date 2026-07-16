@@ -50,6 +50,7 @@ export async function POST(req: Request) {
       dietary: value.dietary ?? null,
       marketing_opt_in: value.marketingOptIn ?? false,
       locale: value.locale,
+      attribution: value.attribution ?? null,
       status: pending ? "pending" : "confirmed",
       manage_token: token,
     })

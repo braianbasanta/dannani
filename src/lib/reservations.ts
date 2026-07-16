@@ -40,6 +40,31 @@ export const LAST_BOOKING_BEFORE_CLOSE_MIN = 30;
 /** Tope duro: no se acepta ninguna reserva después de esta hora. */
 export const LAST_BOOKING_TIME = "23:00";
 
+/** Aforo de sala por local (pax por turno), para decidir bloqueos. */
+export const LOCATION_CAPACITY: Record<string, number> = {
+  raval: 35, // Tallers 69
+};
+
+/**
+ * Franjas retiradas permanentemente por local. Tallers 69 (35 pax) trabaja la
+ * cena en dos turnos fijos — 20:00 y 21:30 — y de 22:00 en adelante vuelve el
+ * horario normal cada 30 min.
+ */
+const REMOVED_SLOTS: Record<string, string[]> = {
+  raval: ["20:30", "21:00"],
+};
+
+/**
+ * Bloqueos puntuales por fecha (local → YYYY-MM-DD → horas cerradas), para
+ * cerrar franjas cuando la sala ya está comprometida (grupos grandes, eventos).
+ */
+export const BLOCKED_DATE_SLOTS: Record<string, Record<string, string[]>> = {
+  raval: {
+    // 17/07: grupo de 17 pax a las 20:00 — cena cerrada hasta las 22:00.
+    "2026-07-17": ["20:00", "20:30", "21:00", "21:30"],
+  },
+};
+
 function toMinutes(hhmm: string): number {
   const [h, m] = hhmm.split(":").map(Number);
   return h * 60 + m;
@@ -55,9 +80,13 @@ function toHHMM(min: number): string {
 /**
  * Genera las franjas horarias reservables de un local a partir de su
  * openingHours. Los cierres a medianoche ("00:00") se tratan como fin de día.
+ * Excluye las franjas retiradas del local y, si se pasa `date`, también los
+ * bloqueos puntuales de esa fecha.
  */
-export function getSlotsForLocation(location: Location): string[] {
+export function getSlotsForLocation(location: Location, date?: string): string[] {
   const capMin = toMinutes(LAST_BOOKING_TIME);
+  const removed = REMOVED_SLOTS[location.slug] ?? [];
+  const blocked = (date && BLOCKED_DATE_SLOTS[location.slug]?.[date]) || [];
   const slots: string[] = [];
   for (const { opens, closes } of location.openingHours) {
     const start = toMinutes(opens);
@@ -65,7 +94,9 @@ export function getSlotsForLocation(location: Location): string[] {
     if (end <= start) end += 1440; // cierre pasada medianoche (00:00)
     const last = Math.min(end - LAST_BOOKING_BEFORE_CLOSE_MIN, capMin);
     for (let t = start; t <= last; t += SLOT_INTERVAL_MIN) {
-      slots.push(toHHMM(t));
+      const hhmm = toHHMM(t);
+      if (removed.includes(hhmm) || blocked.includes(hhmm)) continue;
+      slots.push(hhmm);
     }
   }
   return slots;
@@ -87,6 +118,77 @@ export function todayInMadrid(): string {
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
+/**
+ * Atribución de marketing de una reserva (de dónde vino el cliente). Se captura
+ * en el navegador al aterrizar (first-touch de la sesión) y viaja con el POST
+ * para guardarse junto a la reserva. Sirve para medir qué ficha de GBP / campaña
+ * trae reservas SIN depender de que el usuario acepte cookies (a diferencia de GA).
+ */
+export interface Attribution {
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
+  utm_term?: string;
+  utm_content?: string;
+  gclid?: string;
+  fbclid?: string;
+  msclkid?: string;
+  referrer?: string;
+  landing?: string; // pathname de aterrizaje
+  ts?: string; // ISO de captura (first-touch)
+}
+
+/** Claves aceptadas en el objeto de atribución (whitelist anti-inyección de basura). */
+export const ATTRIBUTION_KEYS: (keyof Attribution)[] = [
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_term",
+  "utm_content",
+  "gclid",
+  "fbclid",
+  "msclkid",
+  "referrer",
+  "landing",
+  "ts",
+];
+
+/**
+ * Sanea el objeto de atribución que llega del cliente: solo claves conocidas,
+ * strings recortados. Devuelve null si no queda nada útil (así el insert guarda NULL).
+ */
+export function sanitizeAttribution(raw: unknown): Attribution | null {
+  if (!raw || typeof raw !== "object") return null;
+  const src = raw as Record<string, unknown>;
+  const out: Attribution = {};
+  for (const key of ATTRIBUTION_KEYS) {
+    const v = src[key];
+    if (typeof v === "string") {
+      const trimmed = v.trim().slice(0, 300);
+      if (trimmed) out[key] = trimmed;
+    }
+  }
+  return Object.keys(out).length ? out : null;
+}
+
+/**
+ * Etiqueta corta y legible del origen de una reserva para el panel admin
+ * (campaña > fuente > dominio del referrer > "directo").
+ */
+export function attributionLabel(a: Attribution | null | undefined): string | null {
+  if (!a) return null;
+  if (a.utm_campaign) return a.utm_campaign;
+  if (a.utm_source) return a.utm_source;
+  if (a.referrer) {
+    try {
+      return new URL(a.referrer).hostname.replace(/^www\./, "");
+    } catch {
+      return a.referrer;
+    }
+  }
+  return "directo";
+}
+
 export interface ReservationInput {
   locationSlug: string;
   firstName: string;
@@ -103,6 +205,7 @@ export interface ReservationInput {
   dietary?: string;
   marketingOptIn?: boolean;
   locale: string;
+  attribution?: Attribution | null;
 }
 
 export type ValidationResult =
@@ -146,7 +249,7 @@ export function validateReservationInput(raw: unknown): ValidationResult {
     return { ok: false, error: "La fecha ya ha pasado." };
 
   const time = normalizeTime(str(body.time));
-  if (!getSlotsForLocation(location).includes(time))
+  if (!getSlotsForLocation(location, date).includes(time))
     return { ok: false, error: "Esa hora no está disponible en este local." };
 
   const partySize = Number(body.partySize);
@@ -188,6 +291,7 @@ export function validateReservationInput(raw: unknown): ValidationResult {
       marketingOptIn:
         body.marketingOptIn === true || body.marketingOptIn === "true",
       locale,
+      attribution: sanitizeAttribution(body.attribution),
     },
   };
 }
@@ -210,6 +314,7 @@ export interface ReservationRow {
   dietary: string | null;
   marketing_opt_in: boolean;
   locale: string;
+  attribution: Attribution | null;
   status: "pending" | "confirmed" | "cancelled" | "rejected";
   manage_token: string;
   created_at: string;

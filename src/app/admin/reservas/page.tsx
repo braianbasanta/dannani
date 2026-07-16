@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getLocationBySlug } from "@/data/locations";
 import {
   isAdminAuthed,
@@ -104,6 +105,12 @@ export default async function AdminReservasPage({
               {rows.length} reserva{rows.length === 1 ? "" : "s"} · {totalCovers}{" "}
               comensales
             </span>
+            <Link
+              href="/admin/reservas/nueva"
+              className="rounded-full bg-electric px-3 py-1.5 text-xs font-bold text-night transition hover:bg-electric-dark"
+            >
+              + Nueva reserva
+            </Link>
             <form action={logoutAdmin}>
               <button className="rounded-full ring-1 ring-cream/15 px-3 py-1.5 text-xs hover:bg-cream/5">
                 Salir

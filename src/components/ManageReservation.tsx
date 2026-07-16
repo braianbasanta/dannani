@@ -63,7 +63,7 @@ export function ManageReservation({
 
   const slots = useMemo(() => {
     if (!location) return [] as string[];
-    const all = getSlotsForLocation(location);
+    const all = getSlotsForLocation(location, date);
     if (date === today) {
       const now = new Date();
       const cutoff = now.getHours() * 60 + now.getMinutes() + 30;

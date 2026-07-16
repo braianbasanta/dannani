@@ -8,6 +8,7 @@ import {
   normalizeTime,
   type ReservationRow,
 } from "@/lib/reservations";
+import { sendReservationTelegram } from "@/lib/telegram";
 
 /**
  * Emails transaccionales de reservas vía Resend. El envío es "best effort":
@@ -505,17 +506,17 @@ async function send(
   }
 }
 
-/** Dispara los dos emails de una reserva (cliente + manager). Best effort. */
-export async function notifyReservation(
+/**
+ * Avisa solo a la manager (email + Telegram). Se usa suelto para reservas
+ * creadas desde el admin sin email del cliente.
+ */
+export async function notifyManager(
   row: ReservationRow,
   location: Location,
   kind: EmailKind
 ): Promise<void> {
   const managerTo = process.env.RESERVATIONS_NOTIFY_EMAIL;
-  const customer = buildCustomerEmail(row, location, kind);
-  const tasks: Promise<boolean>[] = [
-    send(row.email, customer.subject, customer.html, managerTo),
-  ];
+  const tasks: Promise<unknown>[] = [sendReservationTelegram(row, location, kind)];
   if (managerTo) {
     const manager = buildManagerEmail(row, location, kind);
     tasks.push(send(managerTo, manager.subject, manager.html, row.email));
@@ -523,6 +524,23 @@ export async function notifyReservation(
     console.warn("[email] RESERVATIONS_NOTIFY_EMAIL no configurada; aviso a manager omitido.");
   }
   await Promise.all(tasks);
+}
+
+/**
+ * Dispara los avisos de una reserva: email al cliente, email a la manager y
+ * Telegram al grupo de reservas (el email a veces no le notifica). Best effort.
+ */
+export async function notifyReservation(
+  row: ReservationRow,
+  location: Location,
+  kind: EmailKind
+): Promise<void> {
+  const managerTo = process.env.RESERVATIONS_NOTIFY_EMAIL;
+  const customer = buildCustomerEmail(row, location, kind);
+  await Promise.all([
+    send(row.email, customer.subject, customer.html, managerTo),
+    notifyManager(row, location, kind),
+  ]);
 }
 
 /** Envía solo el email al cliente (decisiones de la manager: confirmar/rechazar). */

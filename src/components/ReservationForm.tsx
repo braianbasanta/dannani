@@ -12,6 +12,7 @@ import {
   CHILDREN_MAX,
 } from "@/lib/reservations";
 import { DEFAULT_COUNTRY_ISO, dialForIso } from "@/lib/countries";
+import { readAttribution } from "@/lib/attribution";
 import { InlineCalendar } from "./InlineCalendar";
 import { CountrySelect } from "./CountrySelect";
 
@@ -33,7 +34,7 @@ function addDays(dateStr: string, n: number): string {
 
 /** Franjas disponibles del local en `date`; si es hoy, filtra las ya pasadas (+30 min). */
 function computeSlots(location: Location, date: string, today: string): string[] {
-  const all = getSlotsForLocation(location);
+  const all = getSlotsForLocation(location, date);
   if (date && date === today) {
     const now = new Date();
     const cutoff = now.getHours() * 60 + now.getMinutes() + 30;
@@ -159,6 +160,7 @@ export function ReservationForm({
           notes,
           marketingOptIn: true,
           locale,
+          attribution: readAttribution(),
         }),
       });
       const data = await res.json();
