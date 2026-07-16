@@ -12,6 +12,7 @@ import {
   type ReservationRow,
 } from "@/lib/reservations";
 import { notifyCustomer } from "@/lib/email";
+import { aiConfigured, extractReservation } from "@/lib/reservation-ai";
 
 export const runtime = "nodejs";
 
@@ -210,6 +211,16 @@ async function handleMessage(msg: TgMessage): Promise<void> {
   }
 
   const text = (msg.text ?? "").trim();
+
+  // Mención al bot (o mensaje directo en privado) → alta por lenguaje natural.
+  const mention = /@dananni_bot/i;
+  const isPrivate = msg.chat.id > 0;
+  if (!text.startsWith("/") && (mention.test(text) || (isPrivate && text))) {
+    const cleaned = text.replace(mention, "").trim();
+    if (cleaned) await handleAiReservation(msg, cleaned);
+    return;
+  }
+
   if (!text.startsWith("/")) return;
   const [cmdRaw, ...args] = text.split(/\s+/);
   const cmd = cmdRaw.split("@")[0].toLowerCase();
@@ -250,6 +261,13 @@ async function handleCallback(cb: TgCallbackQuery): Promise<void> {
   const msg = cb.message;
   if (!msg || !isAllowed(msg.chat.id, cb.from.id)) return;
   const parts = (cb.data ?? "").split("|");
+
+  // Confirmación del alta por lenguaje natural.
+  if (parts[0] === "nrc" && parts[1] === "ok") {
+    await confirmAiReservation(msg);
+    return;
+  }
+
   if (parts[0] !== "nr") return;
 
   const edit = (text: string, keyboard?: InlineKeyboard) =>
@@ -349,6 +367,215 @@ async function handleCallback(cb: TgCallbackQuery): Promise<void> {
   });
 }
 
+/* ------------------------------------------------------------------ *
+ * Alta por lenguaje natural (mención al bot + Claude)
+ * ------------------------------------------------------------------ */
+
+async function handleAiReservation(msg: TgMessage, text: string): Promise<void> {
+  const say = (t: string, extra: Record<string, unknown> = {}) =>
+    tg("sendMessage", {
+      chat_id: msg.chat.id,
+      reply_to_message_id: msg.message_id,
+      text: t,
+      disable_web_page_preview: true,
+      ...extra,
+    });
+
+  if (!aiConfigured()) {
+    await say(
+      "El alta por lenguaje natural aún no está activa (falta la API key). Usá /reserva con botones."
+    );
+    return;
+  }
+
+  await tg("sendChatAction", { chat_id: msg.chat.id, action: "typing" });
+
+  const today = todayInMadrid();
+  const r = await extractReservation(text, today);
+  if (!r) {
+    await say("No pude interpretar el mensaje. Probá de nuevo o usá /reserva con botones.");
+    return;
+  }
+
+  // ¿Falta algo esencial? Preguntar y que lo manden completo de nuevo.
+  const location = getReservableLocation(r.location_slug);
+  const essentialsMissing =
+    !location || !r.date || !r.time || !r.party_size || !r.name.trim();
+  if (essentialsMissing) {
+    await say(
+      (r.missing ||
+        "Me falta algún dato (restaurante, día, hora, personas o nombre).") +
+        "\nMandá el mensaje completo de nuevo mencionándome."
+    );
+    return;
+  }
+
+  if (r.date < today) {
+    await say("Esa fecha ya pasó. Revisá el día y mandalo de nuevo.");
+    return;
+  }
+  if (
+    !Number.isInteger(r.party_size) ||
+    r.party_size < PARTY_MIN ||
+    r.party_size > PARTY_MAX_TOTAL
+  ) {
+    await say(`Los comensales deben estar entre ${PARTY_MIN} y ${PARTY_MAX_TOTAL}.`);
+    return;
+  }
+  const slots = getSlotsForLocation(location, r.date);
+  if (!slots.includes(r.time)) {
+    await say(
+      `Las ${r.time} no están disponibles en ${location.name} el ${formatReservationDate(r.date, "es")}.\n` +
+        (slots.length ? `Horas posibles: ${slots.join(", ")}` : "Ese día no hay horas disponibles.")
+    );
+    return;
+  }
+
+  const payload: ExtractedPayload = {
+    l: r.location_slug,
+    d: r.date,
+    t: r.time,
+    p: r.party_size,
+    n: r.name.trim().slice(0, 120),
+    ph: r.phone.trim().slice(0, 40),
+    e: r.email.trim().slice(0, 120),
+    no: r.notes.trim().replace(/\s*\n\s*/g, "; ").slice(0, 400),
+  };
+
+  const lines = [
+    `🤖 ¿Creo esta reserva?`,
+    `📍 ${location.name} · ${formatReservationDate(r.date, "es")} · ${r.time} · ${r.party_size} pax`,
+    `👤 ${payload.n}${payload.ph ? ` · ${payload.ph}` : ""}`,
+  ];
+  if (payload.e) lines.push(`📧 ${payload.e} (recibirá la confirmación)`);
+  if (payload.no) lines.push(`📝 ${payload.no}`);
+  lines.push("", `#nrc ${JSON.stringify(payload)}`);
+
+  await say(lines.join("\n"), {
+    reply_markup: {
+      inline_keyboard: [
+        [
+          { text: "✅ Crear reserva", callback_data: "nrc|ok" },
+          { text: "✖️ Cancelar", callback_data: "nr|x" },
+        ],
+      ],
+    },
+  });
+}
+
+interface ExtractedPayload {
+  l: string; // slug
+  d: string; // fecha YYYY-MM-DD
+  t: string; // hora HH:MM
+  p: number; // pax
+  n: string; // nombre
+  ph: string; // teléfono
+  e: string; // email
+  no: string; // notas
+}
+
+/** Inserta una reserva confirmada creada desde Telegram. Null si falla. */
+async function insertTelegramReservation(input: {
+  slug: string;
+  date: string;
+  time: string;
+  partySize: number;
+  name: string;
+  phone: string;
+  email: string;
+  notes: string;
+}): Promise<ReservationRow | null> {
+  const hasEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.email);
+  const [firstName, ...lastParts] = input.name.split(/\s+/);
+  const supabase = getSupabaseAdmin();
+  const { data, error } = await supabase
+    .from(RESERVATIONS_TABLE)
+    .insert({
+      location_slug: input.slug,
+      first_name: firstName.slice(0, 80),
+      last_name: lastParts.join(" ").slice(0, 80),
+      phone: (input.phone || "(sin teléfono)").slice(0, 40),
+      email: hasEmail ? input.email : "reservas@dananni.es",
+      reservation_date: input.date,
+      reservation_time: input.time,
+      party_size: input.partySize,
+      notes: (input.notes ? `${input.notes}\n` : "") + "Creada desde Telegram.",
+      marketing_opt_in: false,
+      locale: "es",
+      attribution: { utm_source: "telegram", utm_medium: "manual" },
+      status: "confirmed",
+      manage_token: randomBytes(20).toString("base64url"),
+    })
+    .select()
+    .single();
+  if (error || !data) {
+    console.error("[telegram-bot] insert error:", error);
+    return null;
+  }
+  return data as ReservationRow;
+}
+
+/** Callback ✅ del alta por IA: lee el #nrc del propio mensaje y crea la reserva. */
+async function confirmAiReservation(msg: TgMessage): Promise<void> {
+  const edit = (text: string) =>
+    tg("editMessageText", {
+      chat_id: msg.chat.id,
+      message_id: msg.message_id,
+      text,
+      disable_web_page_preview: true,
+    });
+
+  const m = (msg.text ?? "").match(/#nrc (\{.*\})/);
+  if (!m) {
+    await edit("No pude leer la ficha. Empezá de nuevo mencionando al bot.");
+    return;
+  }
+  let p: ExtractedPayload;
+  try {
+    p = JSON.parse(m[1]) as ExtractedPayload;
+  } catch {
+    await edit("La ficha está dañada. Empezá de nuevo mencionando al bot.");
+    return;
+  }
+
+  const location = getReservableLocation(p.l);
+  const today = todayInMadrid();
+  if (!location || !p.d || p.d < today || !getSlotsForLocation(location, p.d).includes(p.t)) {
+    await edit("Esa reserva ya no es válida (fecha u hora no disponible). Empezá de nuevo.");
+    return;
+  }
+
+  const row = await insertTelegramReservation({
+    slug: p.l,
+    date: p.d,
+    time: p.t,
+    partySize: Number(p.p),
+    name: p.n,
+    phone: p.ph,
+    email: p.e,
+    notes: p.no,
+  });
+  if (!row) {
+    await edit("⚠️ No pude guardar la reserva. Probá de nuevo o usá dananni.es/admin/reservas/nueva.");
+    return;
+  }
+
+  const hasEmail = row.email !== "reservas@dananni.es";
+  if (hasEmail) {
+    await notifyCustomer(row, location, "created").catch((e) =>
+      console.error("[telegram-bot] notifyCustomer error:", e)
+    );
+  }
+  await edit(
+    `✅ Reserva creada — ${location.name}\n` +
+      `📅 ${formatReservationDate(row.reservation_date, "es")} · ${p.t} · ${row.party_size} pax\n` +
+      `👤 ${row.first_name} ${row.last_name}`.trimEnd() +
+      `${p.ph ? ` · ${p.ph}` : ""}\n` +
+      (hasEmail ? `📧 ${row.email} — confirmación enviada al cliente\n` : "") +
+      `Se puede ver y modificar en dananni.es/admin/reservas`
+  );
+}
+
 /**
  * Parsea la respuesta del manager a la ficha. Formato flexible: líneas
  * separadas (nombre / teléfono / email / notas, en cualquier orden) o todo en
@@ -416,36 +643,20 @@ async function completeReservation(msg: TgMessage, fichaText: string): Promise<v
   }
   const hasEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-  const [firstName, ...lastParts] = name.split(/\s+/);
-  const supabase = getSupabaseAdmin();
-  const { data, error } = await supabase
-    .from(RESERVATIONS_TABLE)
-    .insert({
-      location_slug: slug,
-      first_name: firstName.slice(0, 80),
-      last_name: lastParts.join(" ").slice(0, 80),
-      phone: (phone || "(sin teléfono)").slice(0, 40),
-      email: hasEmail ? email : "reservas@dananni.es",
-      reservation_date: date,
-      reservation_time: time,
-      party_size: partySize,
-      notes: (notes ? `${notes}\n` : "") + "Creada desde Telegram.",
-      marketing_opt_in: false,
-      locale: "es",
-      attribution: { utm_source: "telegram", utm_medium: "manual" },
-      status: "confirmed",
-      manage_token: randomBytes(20).toString("base64url"),
-    })
-    .select()
-    .single();
-
-  if (error || !data) {
-    console.error("[telegram-bot] insert error:", error);
+  const row = await insertTelegramReservation({
+    slug,
+    date,
+    time,
+    partySize,
+    name,
+    phone,
+    email,
+    notes,
+  });
+  if (!row) {
     await say("⚠️ No pude guardar la reserva. Probá de nuevo o usá dananni.es/admin/reservas/nueva.");
     return;
   }
-
-  const row = data as ReservationRow;
   // Si dejaron email, el cliente recibe su confirmación con enlace de gestión.
   if (hasEmail) {
     await notifyCustomer(row, location, "created").catch((e) =>

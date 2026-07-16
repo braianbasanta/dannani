@@ -25,6 +25,8 @@ export function AdminReservationCard({ r }: { r: ReservationRow }) {
   const pending = status === "pending";
 
   const [modOpen, setModOpen] = useState(false);
+  const [confirmCancel, setConfirmCancel] = useState(false);
+  const [cancelText, setCancelText] = useState("");
   const [d, setD] = useState(r.reservation_date);
   const [tm, setTm] = useState(normalizeTime(r.reservation_time));
   const [p, setP] = useState(r.party_size);
@@ -177,13 +179,16 @@ export function AdminReservationCard({ r }: { r: ReservationRow }) {
             </>
           )}
           {status === "confirmed" && (
-            <form action={setReservationStatus}>
-              <input type="hidden" name="id" value={r.id} />
-              <input type="hidden" name="status" value="cancelled" />
-              <button className="w-full rounded-full px-3 py-1.5 text-xs font-semibold text-mustard ring-1 ring-mustard/40 transition hover:bg-mustard/10">
-                Cancelar
-              </button>
-            </form>
+            <button
+              type="button"
+              onClick={() => {
+                setConfirmCancel((v) => !v);
+                setCancelText("");
+              }}
+              className="w-full rounded-full px-3 py-1.5 text-xs font-semibold text-mustard ring-1 ring-mustard/40 transition hover:bg-mustard/10"
+            >
+              Cancelar
+            </button>
           )}
           {inactive && (
             <form action={setReservationStatus}>
@@ -207,6 +212,40 @@ export function AdminReservationCard({ r }: { r: ReservationRow }) {
       </div>
 
       {err && <p className="mt-2 text-xs text-mustard">{err}</p>}
+
+      {/* Cancelar exige confirmación doble: escribir "cancelar" + botón (anti-missclick). */}
+      {confirmCancel && status === "confirmed" && (
+        <form
+          action={setReservationStatus}
+          className="mt-3 flex flex-wrap items-center gap-2 rounded-xl bg-mustard/10 p-2 ring-1 ring-mustard/30"
+        >
+          <input type="hidden" name="id" value={r.id} />
+          <input type="hidden" name="status" value="cancelled" />
+          <span className="px-1 text-xs text-mustard">
+            Se avisará al cliente por email. Escribe <b>cancelar</b> para confirmar:
+          </span>
+          <input
+            value={cancelText}
+            onChange={(e) => setCancelText(e.target.value)}
+            placeholder="cancelar"
+            className={field}
+            autoFocus
+          />
+          <button
+            disabled={cancelText.trim().toLowerCase() !== "cancelar"}
+            className="rounded-full bg-mustard px-3 py-1.5 text-xs font-bold text-night transition hover:bg-mustard-dark disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            Confirmar cancelación
+          </button>
+          <button
+            type="button"
+            onClick={() => setConfirmCancel(false)}
+            className="rounded-full px-3 py-1.5 text-xs font-semibold text-cream/60 hover:text-cream"
+          >
+            Volver
+          </button>
+        </form>
+      )}
 
       {modOpen && !inactive && (
         <div className="mt-3 flex flex-wrap items-center gap-2 rounded-xl bg-cream/[0.04] p-2 ring-1 ring-cream/10">
