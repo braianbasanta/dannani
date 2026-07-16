@@ -11,6 +11,7 @@ import {
   PARTY_MAX_TOTAL,
   type ReservationRow,
 } from "@/lib/reservations";
+import { notifyCustomer } from "@/lib/email";
 
 export const runtime = "nodejs";
 
@@ -337,34 +338,45 @@ async function handleCallback(cb: TgCallbackQuery): Promise<void> {
     chat_id: msg.chat.id,
     text:
       `📝 ${location.name} · ${formatReservationDate(date, "es")} · ${time} · ${paxStr} pax\n\n` +
-      `RESPONDÉ a este mensaje con nombre y teléfono del cliente.\n` +
-      `Ej: "Juan Pérez, 600 111 222" (líneas extra = notas; sin teléfono, solo el nombre)\n\n` +
+      `RESPONDÉ a este mensaje con los datos del cliente, uno por línea:\n\n` +
+      `Nombre y apellido\n` +
+      `Teléfono\n` +
+      `Email (opcional: le llega la confirmación)\n` +
+      `Notas (opcional)\n\n` +
+      `Solo el nombre es obligatorio.\n\n` +
       `#nr ${slug} ${date} ${time} ${paxStr}`,
     reply_markup: { force_reply: true, selective: true },
   });
 }
 
-/** Parsea "Nombre Apellido, 600 111 222\nnotas..." de la respuesta del manager. */
+/**
+ * Parsea la respuesta del manager a la ficha. Formato flexible: líneas
+ * separadas (nombre / teléfono / email / notas, en cualquier orden) o todo en
+ * una línea con comas. El email y el teléfono se detectan por su forma; la
+ * primera línea que no es ninguno de los dos es el nombre y el resto, notas.
+ */
 function parseContact(text: string): {
   name: string;
   phone: string;
+  email: string;
   notes: string;
 } {
-  const [first = "", ...rest] = text.split("\n");
-  let name = first.trim();
-  let phone = "";
-  const comma = first.indexOf(",");
-  if (comma !== -1) {
-    name = first.slice(0, comma).trim();
-    phone = first.slice(comma + 1).trim();
-  } else {
-    const m = first.match(/(\+?\d[\d\s.\-()]{5,}\d)\s*$/);
-    if (m && m.index !== undefined) {
-      phone = m[1].trim();
-      name = first.slice(0, m.index).trim();
-    }
-  }
-  return { name, phone, notes: rest.join("\n").trim() };
+  let rest = text;
+
+  const emailMatch = rest.match(/[^\s@,;]+@[^\s@,;]+\.[^\s@,;]+/);
+  const email = emailMatch ? emailMatch[0] : "";
+  if (emailMatch) rest = rest.replace(emailMatch[0], " ");
+
+  const phoneMatch = rest.match(/\+?\d[\d\s.\-()]{5,}\d/);
+  const phone = phoneMatch ? phoneMatch[0].replace(/\s+/g, " ").trim() : "";
+  if (phoneMatch) rest = rest.replace(phoneMatch[0], " ");
+
+  const clean = (s: string) =>
+    s.replace(/\s+/g, " ").replace(/^[\s,;]+|[\s,;]+$/g, "").trim();
+  const lines = rest.split("\n").map(clean).filter(Boolean);
+  const name = lines[0] ?? "";
+  const notes = lines.slice(1).join("\n");
+  return { name, phone, email, notes };
 }
 
 async function completeReservation(msg: TgMessage, fichaText: string): Promise<void> {
@@ -395,11 +407,14 @@ async function completeReservation(msg: TgMessage, fichaText: string): Promise<v
     return;
   }
 
-  const { name, phone, notes } = parseContact(msg.text ?? "");
+  const { name, phone, email, notes } = parseContact(msg.text ?? "");
   if (!name) {
-    await say('No encontré el nombre. Respondé a la ficha con: "Nombre, teléfono".');
+    await say(
+      "No encontré el nombre. Respondé a la ficha con los datos del cliente (nombre, teléfono, email…), uno por línea."
+    );
     return;
   }
+  const hasEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const [firstName, ...lastParts] = name.split(/\s+/);
   const supabase = getSupabaseAdmin();
@@ -410,7 +425,7 @@ async function completeReservation(msg: TgMessage, fichaText: string): Promise<v
       first_name: firstName.slice(0, 80),
       last_name: lastParts.join(" ").slice(0, 80),
       phone: (phone || "(sin teléfono)").slice(0, 40),
-      email: "reservas@dananni.es",
+      email: hasEmail ? email : "reservas@dananni.es",
       reservation_date: date,
       reservation_time: time,
       party_size: partySize,
@@ -431,11 +446,18 @@ async function completeReservation(msg: TgMessage, fichaText: string): Promise<v
   }
 
   const row = data as ReservationRow;
+  // Si dejaron email, el cliente recibe su confirmación con enlace de gestión.
+  if (hasEmail) {
+    await notifyCustomer(row, location, "created").catch((e) =>
+      console.error("[telegram-bot] notifyCustomer error:", e)
+    );
+  }
   await say(
     `✅ Reserva creada — ${location.name}\n` +
       `📅 ${formatReservationDate(row.reservation_date, "es")} · ${time} · ${row.party_size} pax\n` +
       `👤 ${row.first_name} ${row.last_name}`.trimEnd() +
       `${phone ? ` · ${phone}` : ""}\n` +
+      (hasEmail ? `📧 ${email} — confirmación enviada al cliente\n` : "") +
       `Se puede ver y modificar en dananni.es/admin/reservas`
   );
 }
