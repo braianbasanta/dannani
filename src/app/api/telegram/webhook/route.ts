@@ -501,7 +501,9 @@ async function insertTelegramReservation(input: {
       reservation_date: input.date,
       reservation_time: input.time,
       party_size: input.partySize,
-      notes: (input.notes ? `${input.notes}\n` : "") + "Creada desde Telegram.",
+      // El origen ya queda en attribution (tag 📍 telegram en el panel); no
+      // ensuciar las notas, que le llegan al cliente en el email.
+      notes: input.notes || null,
       marketing_opt_in: false,
       locale: "es",
       attribution: { utm_source: "telegram", utm_medium: "manual" },
