@@ -376,6 +376,7 @@ async function handleAiReservation(msg: TgMessage, text: string): Promise<void> 
     tg("sendMessage", {
       chat_id: msg.chat.id,
       reply_to_message_id: msg.message_id,
+      allow_sending_without_reply: true,
       text: t,
       disable_web_page_preview: true,
       ...extra,
@@ -392,6 +393,7 @@ async function handleAiReservation(msg: TgMessage, text: string): Promise<void> 
 
   const today = todayInMadrid();
   const r = await extractReservation(text, today);
+  console.log("[telegram-bot] ai extract:", r ? JSON.stringify(r) : "null");
   if (!r) {
     await say("No pude interpretar el mensaje. Probá de nuevo o usá /reserva con botones.");
     return;
@@ -612,6 +614,7 @@ async function completeReservation(msg: TgMessage, fichaText: string): Promise<v
       chat_id: msg.chat.id,
       text,
       reply_to_message_id: msg.message_id,
+      allow_sending_without_reply: true,
     });
 
   const m = fichaText.match(/#nr (\S+) (\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}) (\d{1,2})/);

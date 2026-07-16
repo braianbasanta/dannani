@@ -99,12 +99,17 @@ export async function extractReservation(
     .map((l) => `- ${l.slug}: ${l.name} (${l.neighborhood})`)
     .join("\n");
 
-  try {
-    const res = await anthropic.messages.create({
-      model: "claude-sonnet-5",
+  // Sonnet 5 primero; si está sobrecargado (529/5xx/429) cae a Haiku 4.5,
+  // que resuelve esta extracción igual de bien y casi nunca está saturado.
+  const MODELS = ["claude-sonnet-5", "claude-haiku-4-5"] as const;
+
+  const request = (model: (typeof MODELS)[number]) =>
+    anthropic.messages.create({
+      model,
       max_tokens: 4000,
       output_config: {
-        effort: "low",
+        // effort no está soportado en Haiku 4.5; solo se manda en Sonnet.
+        ...(model === "claude-sonnet-5" ? { effort: "low" as const } : {}),
         format: { type: "json_schema", schema: EXTRACT_SCHEMA },
       },
       system:
@@ -120,12 +125,20 @@ export async function extractReservation(
       messages: [{ role: "user", content: text }],
     });
 
-    if (res.stop_reason === "refusal") return null;
-    const block = res.content.find((b) => b.type === "text");
-    if (!block || block.type !== "text") return null;
-    return JSON.parse(block.text) as ExtractedReservation;
-  } catch (err) {
-    console.error("[reservation-ai] extracción falló:", err);
-    return null;
+  for (const model of MODELS) {
+    try {
+      const res = await request(model);
+      if (res.stop_reason === "refusal") return null;
+      const block = res.content.find((b) => b.type === "text");
+      if (!block || block.type !== "text") return null;
+      return JSON.parse(block.text) as ExtractedReservation;
+    } catch (err) {
+      const status = err instanceof Anthropic.APIError ? err.status : undefined;
+      const retryable = status === 529 || status === 429 || (status ?? 0) >= 500;
+      console.error(`[reservation-ai] ${model} falló (${status ?? "?"}):`, err);
+      if (!retryable) return null;
+      // sobrecarga → probar el siguiente modelo
+    }
   }
+  return null;
 }
