@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, Public_Sans } from "next/font/google";
+import { Playfair_Display, Public_Sans } from "next/font/google";
 import "../globals.css";
 
 /**
@@ -7,8 +7,8 @@ import "../globals.css";
  * sin Nav/Footer), por eso monta su propio <html>/<body>. El proxy excluye
  * /admin del enrutado de next-intl.
  */
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
   subsets: ["latin"],
 });
 
@@ -30,7 +30,7 @@ export default function AdminLayout({
   return (
     <html
       lang="es"
-      className={`${fraunces.variable} ${publicSans.variable} h-full antialiased`}
+      className={`${playfair.variable} ${publicSans.variable} h-full antialiased`}
     >
       <body className="min-h-full font-sans">{children}</body>
     </html>

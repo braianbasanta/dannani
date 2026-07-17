@@ -116,7 +116,7 @@ export default function NuestraHistoriaPage({
           <div className="grid items-center gap-12 md:grid-cols-2 lg:gap-16">
             <div>
               <p className="eyebrow">{t("eyebrow")}</p>
-              <h1 className="mt-3 font-display text-4xl leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+              <h1 className="mt-3 font-script text-5xl leading-[1.1] sm:text-7xl">
                 {t("title")}
               </h1>
               <p className="mt-6 max-w-md leading-relaxed text-cream/75">
@@ -146,18 +146,18 @@ export default function NuestraHistoriaPage({
       />
 
       <article className="mx-auto max-w-3xl px-4 py-16 font-sans text-cream sm:py-20">
-        <h2 className="font-display text-3xl tracking-tight text-cream sm:text-4xl">
+        <h2 className="font-script text-4xl text-cream sm:text-5xl">
           {t("filosofiaTitle")}
         </h2>
         <p className="mt-3 leading-relaxed">{t("filosofiaText")}</p>
 
-        <h2 className="mt-14 font-display text-3xl tracking-tight text-cream sm:text-4xl">
+        <h2 className="mt-14 font-script text-4xl text-cream sm:text-5xl">
           {t("manifiestoTitle")}
         </h2>
         <p className="mt-3 leading-relaxed">{t("manifiestoIntro")}</p>
         <ul className="mt-6 grid gap-4 sm:grid-cols-3">
           <li className="rounded-[1.25rem] bg-cream/5 p-5 ring-1 ring-cream/10">
-            <p className="font-display text-xl tracking-tight text-electric">
+            <p className="font-script text-2xl text-electric">
               {t("pilarPizzaTitle")}
             </p>
             <p className="mt-2 text-sm leading-relaxed text-cream/80">
@@ -165,7 +165,7 @@ export default function NuestraHistoriaPage({
             </p>
           </li>
           <li className="rounded-[1.25rem] bg-cream/5 p-5 ring-1 ring-cream/10">
-            <p className="font-display text-xl tracking-tight text-electric">
+            <p className="font-script text-2xl text-electric">
               {t("pilarPastaTitle")}
             </p>
             <p className="mt-2 text-sm leading-relaxed text-cream/80">
@@ -173,7 +173,7 @@ export default function NuestraHistoriaPage({
             </p>
           </li>
           <li className="rounded-[1.25rem] bg-cream/5 p-5 ring-1 ring-cream/10">
-            <p className="font-display text-xl tracking-tight text-electric">
+            <p className="font-script text-2xl text-electric">
               {t("pilarHospitalidadTitle")}
             </p>
             <p className="mt-2 text-sm leading-relaxed text-cream/80">
@@ -184,7 +184,7 @@ export default function NuestraHistoriaPage({
 
         <div className="mt-14 grid items-center gap-8 sm:grid-cols-[1.35fr_1fr]">
           <div>
-            <h2 className="font-display text-3xl tracking-tight text-cream sm:text-4xl">
+            <h2 className="font-script text-4xl text-cream sm:text-5xl">
               {t("viajeTitle")}
             </h2>
             <p className="mt-3 leading-relaxed">{t("viajeText")}</p>

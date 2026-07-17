@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
-import { Dancing_Script, Fraunces, Public_Sans } from "next/font/google";
+import { Dancing_Script, Playfair_Display, Public_Sans } from "next/font/google";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -12,11 +12,12 @@ import { CookieConsent } from "@/components/CookieConsent";
 import { AttributionTracker } from "@/components/AttributionTracker";
 import "../globals.css";
 
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
+/* Serif editorial de los títulos (Braian descartó Fraunces jul-2026:
+   no le gustaba el dibujo de la F). */
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
   subsets: ["latin"],
   style: ["normal", "italic"],
-  axes: ["opsz", "SOFT", "WONK"],
 });
 
 const publicSans = Public_Sans({
@@ -26,9 +27,9 @@ const publicSans = Public_Sans({
 
 /* Caligráfica de marca: la clienta usa Monotype Corsiva en menús y
    cartelería (licencia comercial, no embebible); Dancing Script es la
-   sustituta libre más cercana. Alimenta font-script SOLO en las frases
-   del neón (home e historia) — el resto de títulos va en font-display
-   para no multiplicar tipografías. latin-ext por el catalán futuro. */
+   sustituta libre más cercana. Alimenta font-script: los títulos de
+   Nuestra Historia y las frases del neón. En el resto del sitio los
+   títulos van en font-display para no multiplicar tipografías. */
 const dancingScript = Dancing_Script({
   variable: "--font-dancing-script",
   subsets: ["latin", "latin-ext"],
@@ -92,7 +93,7 @@ export default async function LocaleLayout({
       // Next 16 ya no fuerza scroll instantáneo al navegar cuando el CSS tiene
       // scroll-behavior: smooth; este atributo restaura ese comportamiento.
       data-scroll-behavior="smooth"
-      className={`${fraunces.variable} ${publicSans.variable} ${dancingScript.variable} h-full antialiased`}
+      className={`${playfair.variable} ${publicSans.variable} ${dancingScript.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
         <NextIntlClientProvider>
