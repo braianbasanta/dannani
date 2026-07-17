@@ -13,6 +13,7 @@ import {
 } from "@/lib/reservations";
 import { notifyCustomer } from "@/lib/email";
 import { aiConfigured, extractReservation } from "@/lib/reservation-ai";
+import { remainingCapacity, capacityError } from "@/lib/capacity";
 
 export const runtime = "nodejs";
 
@@ -432,6 +433,11 @@ async function handleAiReservation(msg: TgMessage, text: string): Promise<void> 
     );
     return;
   }
+  const left = await remainingCapacity(r.location_slug, r.date, r.time);
+  if (left !== null && r.party_size > left) {
+    await say(`⛔ ${capacityError(left)} (aforo de ${location.name} superado a esa hora)`);
+    return;
+  }
 
   const payload: ExtractedPayload = {
     l: r.location_slug,
@@ -549,6 +555,12 @@ async function confirmAiReservation(msg: TgMessage): Promise<void> {
     return;
   }
 
+  const left = await remainingCapacity(p.l, p.d, p.t);
+  if (left !== null && Number(p.p) > left) {
+    await edit(`⛔ ${capacityError(left)} (aforo de ${location.name} superado a esa hora)`);
+    return;
+  }
+
   const row = await insertTelegramReservation({
     slug: p.l,
     date: p.d,
@@ -647,6 +659,12 @@ async function completeReservation(msg: TgMessage, fichaText: string): Promise<v
     return;
   }
   const hasEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  const left = await remainingCapacity(slug, date, time);
+  if (left !== null && partySize > left) {
+    await say(`⛔ ${capacityError(left)} (aforo de ${location.name} superado a esa hora)`);
+    return;
+  }
 
   const row = await insertTelegramReservation({
     slug,

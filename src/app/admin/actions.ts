@@ -15,6 +15,7 @@ import {
   PARTY_MAX_TOTAL,
   type ReservationRow,
 } from "@/lib/reservations";
+import { remainingCapacity, capacityError } from "@/lib/capacity";
 import { notifyCustomer, notifyManager, notifyReservation } from "@/lib/email";
 
 /** Cambia el estado de una reserva desde el panel y avisa al cliente por email. */
@@ -104,6 +105,14 @@ export async function createManualReservation(
     return { error: "El email no es válido (déjalo vacío si no lo tienes)." };
 
   const notes = String(formData.get("notes") ?? "").trim().slice(0, 1000);
+
+  // Aforo también para el alta manual: evita sobrevender la sala por descuido.
+  const left = await remainingCapacity(locationSlug, date, time);
+  if (left !== null && partySize > left) {
+    return {
+      error: `${capacityError(left)} (aforo del local a esa hora superado)`,
+    };
+  }
 
   const supabase = getSupabaseAdmin();
   const { data, error } = await supabase

@@ -6,6 +6,7 @@ import {
   needsManagerApproval,
   type ReservationRow,
 } from "@/lib/reservations";
+import { remainingCapacity, capacityError } from "@/lib/capacity";
 import { notifyReservation } from "@/lib/email";
 
 export const runtime = "nodejs";
@@ -24,6 +25,13 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: result.error }, { status: 400 });
   }
   const { value, location } = result;
+
+  // Aforo: en locales con capacidad definida no se aceptan más comensales
+  // de los que caben en esa franja (reservas activas solapadas).
+  const left = await remainingCapacity(value.locationSlug, value.date, value.time);
+  if (left !== null && value.partySize > left) {
+    return NextResponse.json({ error: capacityError(left) }, { status: 409 });
+  }
 
   const token = randomBytes(20).toString("base64url");
   const supabase = getSupabaseAdmin();

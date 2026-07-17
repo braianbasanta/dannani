@@ -9,6 +9,7 @@ import {
   PARTY_MAX,
   type ReservationRow,
 } from "@/lib/reservations";
+import { remainingCapacity, capacityError } from "@/lib/capacity";
 import { notifyReservation } from "@/lib/email";
 
 export const runtime = "nodejs";
@@ -76,6 +77,12 @@ export async function POST(
       { error: `Los comensales deben estar entre ${PARTY_MIN} y ${maxParty}.` },
       { status: 400 }
     );
+  }
+
+  // Aforo del destino, descontando la propia reserva que se mueve.
+  const left = await remainingCapacity(row.location_slug, date, time, row.id);
+  if (left !== null && partySize > left) {
+    return NextResponse.json({ error: capacityError(left) }, { status: 409 });
   }
 
   const { data: updated, error } = await supabase

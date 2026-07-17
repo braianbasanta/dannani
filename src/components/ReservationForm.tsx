@@ -105,20 +105,44 @@ export function ReservationForm({
   const location = reservableLocations.find((l) => l.slug === locationSlug);
   const isLargeGroup = partySize > PARTY_MAX;
 
-  const slots = useMemo(
-    () => (location ? computeSlots(location, date, today) : []),
-    [location, date, today]
-  );
+  // Sitios libres por franja (locales con aforo): las horas completas se
+  // ocultan. La respuesta va keyed por local|día para no aplicar datos viejos.
+  const availKey = `${locationSlug}|${date}`;
+  const [avail, setAvail] = useState<{
+    key: string;
+    remaining: Record<string, number> | null;
+  } | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    if (!locationSlug || !date) return;
+    const key = `${locationSlug}|${date}`;
+    fetch(
+      `/api/reservations/availability?location=${encodeURIComponent(locationSlug)}&date=${encodeURIComponent(date)}`
+    )
+      .then((res) => (res.ok ? res.json() : null))
+      .then((json) => {
+        if (!cancelled) setAvail({ key, remaining: json?.remaining ?? null });
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [locationSlug, date]);
+  const remaining = avail?.key === availKey ? avail.remaining : null;
+
+  const slots = useMemo(() => {
+    const all = location ? computeSlots(location, date, today) : [];
+    if (!remaining) return all;
+    return all.filter((s) => (remaining[s] ?? 1) > 0);
+  }, [location, date, today, remaining]);
   const lunchSlots = slots.filter((s) => Number(s.slice(0, 2)) < 17);
   const dinnerSlots = slots.filter((s) => Number(s.slice(0, 2)) >= 17);
 
-  // Al cambiar local o día, si la hora elegida ya no vale, saltar a la primera disponible.
+  // Si la hora elegida deja de valer (cambio de local/día o franja completa),
+  // saltar a la primera disponible.
   useEffect(() => {
-    const loc = reservableLocations.find((l) => l.slug === locationSlug);
-    if (!loc) return;
-    const s = computeSlots(loc, date, today);
-    setTime((prev) => (s.includes(prev) ? prev : s[0] ?? ""));
-  }, [locationSlug, date, today]);
+    setTime((prev) => (slots.includes(prev) ? prev : slots[0] ?? ""));
+  }, [slots]);
 
   const timeValid = time !== "" && slots.includes(time);
 
