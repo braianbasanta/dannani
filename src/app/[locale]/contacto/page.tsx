@@ -73,7 +73,7 @@ export default function ContactoPage({
           {locations.map((l) => localizeLocation(l, locale)).map((location) => (
             <li
               key={location.slug}
-              className="flex flex-col gap-4 rounded-[1.75rem] bg-night-soft p-6 shadow-card ring-1 ring-cream/10 sm:flex-row sm:items-center sm:justify-between sm:p-7"
+              className="flex flex-col gap-5 rounded-[1.75rem] bg-night-soft p-6 shadow-card ring-1 ring-cream/10 sm:p-7"
             >
               <div>
                 <p className="font-display text-xl">{location.name}</p>
