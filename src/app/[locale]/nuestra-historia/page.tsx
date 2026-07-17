@@ -54,7 +54,7 @@ export default function NuestraHistoriaPage({
       copy: t("milestones.m1.copy"),
       href: hrefFor(gotic),
       icon: "pin",
-      image: "/images/llibreteria/03.jpg",
+      image: "/images/llibreteria/10.jpg",
     },
     {
       date: t("milestones.m2.date"),
@@ -62,7 +62,7 @@ export default function NuestraHistoriaPage({
       copy: t("milestones.m2.copy"),
       href: hrefFor(ravalTakeAway),
       icon: "pin",
-      image: "/images/tallers72/06.jpg",
+      image: "/images/tallers72/10.jpg",
     },
     {
       date: t("milestones.m3.date"),
@@ -70,7 +70,7 @@ export default function NuestraHistoriaPage({
       copy: t("milestones.m3.copy"),
       href: hrefFor(poblenou),
       icon: "pin",
-      image: "/images/poblenou/06.jpg",
+      image: "/images/poblenou/11.jpg",
     },
     {
       date: t("milestones.m4.date"),
@@ -78,7 +78,7 @@ export default function NuestraHistoriaPage({
       copy: t("milestones.m4.copy"),
       href: hrefFor(born),
       icon: "pin",
-      image: "/images/rec/03.jpg",
+      image: "/images/rec/11.jpg",
     },
     {
       date: t("milestones.m5.date"),
