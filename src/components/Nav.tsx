@@ -45,20 +45,29 @@ export function Nav() {
   }, []);
 
   // Menú móvil fullscreen: bloquea el scroll de la página mientras está
-  // abierto. El overflow va en <html> además de <body> porque iOS Safari
-  // ignora el de body para el scroll táctil (la página de atrás seguía
-  // moviéndose); overscroll-behavior evita el rubber-banding del documento.
+  // abierto. iOS Safari ignora overflow:hidden en body para el scroll táctil
+  // y descoloca los elementos fixed si se pone en <html> con la página
+  // scrolleada, así que se usa el bloqueo clásico: congelar el body con
+  // position:fixed conservando el offset y restaurar el scroll al cerrar.
   useEffect(() => {
     if (!open) return;
-    const html = document.documentElement.style;
+    const scrollY = window.scrollY;
     const body = document.body.style;
-    html.overflow = "hidden";
-    html.overscrollBehavior = "none";
+    body.position = "fixed";
+    body.top = `-${scrollY}px`;
+    body.left = "0";
+    body.right = "0";
+    body.width = "100%";
     body.overflow = "hidden";
     return () => {
-      html.overflow = "";
-      html.overscrollBehavior = "";
+      body.position = "";
+      body.top = "";
+      body.left = "";
+      body.right = "";
+      body.width = "";
       body.overflow = "";
+      // instant: el scroll-behavior:smooth global animaría el salto de vuelta
+      window.scrollTo({ top: scrollY, behavior: "instant" });
     };
   }, [open]);
 
@@ -103,8 +112,10 @@ export function Nav() {
       {/* -mb-px: el border-b (aun transparente) añade 1px a la altura del nav;
           sin compensarlo, los heros que se suben con -mt-16 dejan ver una
           línea de 1px del fondo night del body arriba del todo. */}
+      {/* Con el menú abierto el body queda congelado (position:fixed) y el
+          sticky dejaría el header fuera de pantalla; se fija al viewport. */}
       <header
-        className={`sticky top-0 z-50 -mb-px border-b transition-colors duration-300 ${
+        className={`${open ? "fixed inset-x-0" : "sticky"} top-0 z-50 -mb-px border-b transition-colors duration-300 ${
           solid
             ? "border-cream/10 bg-night/90 backdrop-blur"
             : "border-transparent bg-transparent"
