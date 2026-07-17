@@ -1,5 +1,6 @@
+import { use } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
@@ -29,7 +30,15 @@ export async function generateMetadata({
   });
 }
 
-export default function RestaurantesPage() {
+export default function RestaurantesPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  // Habilita el prerender estático (next-intl): sin esto la página se
+  // renderiza dinámica en cada request y no cachea en el CDN.
+  const { locale: requestLocale } = use(params);
+  setRequestLocale(requestLocale);
   const t = useTranslations("restaurantes");
   const tNav = useTranslations("nav");
   const locale = useLocale() as Locale;

@@ -49,7 +49,10 @@ export function OtherCartasCarousel({ items }: { items: OtherCartaItem[] }) {
           >
             <Image
               src={item.image}
-              alt={item.name}
+              alt={t("altCarta", {
+                name: item.name,
+                neighborhood: item.neighborhood,
+              })}
               fill
               sizes="(min-width: 640px) 300px, 230px"
               className="object-cover transition-transform duration-700 ease-fluid group-hover:scale-[1.05]"

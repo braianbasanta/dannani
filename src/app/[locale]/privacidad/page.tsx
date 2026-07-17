@@ -1,6 +1,7 @@
+import { use } from "react";
 import type { Metadata } from "next";
 import { useTranslations } from "next-intl";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
 export async function generateMetadata({
   params,
@@ -16,7 +17,15 @@ export async function generateMetadata({
   };
 }
 
-export default function PrivacidadPage() {
+export default function PrivacidadPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  // Habilita el prerender estático (next-intl): sin esto la página se
+  // renderiza dinámica en cada request y no cachea en el CDN.
+  const { locale: requestLocale } = use(params);
+  setRequestLocale(requestLocale);
   const t = useTranslations("legal");
 
   return (

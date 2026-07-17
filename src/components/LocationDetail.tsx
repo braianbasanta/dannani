@@ -93,7 +93,10 @@ export function LocationDetail({
       >
         <Image
           src={heroImageSrc(location)}
-          alt={location.name}
+          alt={t("altFicha", {
+            name: location.name,
+            neighborhood: location.neighborhood,
+          })}
           fill
           preload
           sizes="100vw"
@@ -240,7 +243,11 @@ export function LocationDetail({
             >
               <Image
                 src={`/images/${location.imageFolder}/${n}.jpg`}
-                alt={`${location.name} – foto ${n}`}
+                alt={t("altGaleria", {
+                  name: location.name,
+                  neighborhood: location.neighborhood,
+                  n,
+                })}
                 fill
                 sizes="(min-width: 640px) 33vw, 50vw"
                 loading="lazy"
@@ -270,7 +277,10 @@ export function LocationDetail({
               >
                 <Image
                   src={heroImageSrc(l)}
-                  alt={l.name}
+                  alt={t("altFicha", {
+                    name: l.name,
+                    neighborhood: l.neighborhood,
+                  })}
                   fill
                   sizes="(min-width: 640px) 33vw, 100vw"
                   loading="lazy"

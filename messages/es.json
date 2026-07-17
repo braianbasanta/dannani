@@ -1,7 +1,7 @@
 {
   "meta": {
     "layout": {
-      "title": "Da Nanni – Pizzería Napolitana y Restaurante Italiano en Barcelona",
+      "title": "Da Nanni – Pizzería Napolitana y Trattoria en Barcelona",
       "description": "Pizza napolitana de masa de larga fermentación y trattoria italiana en 6 locales de Barcelona. Proyecto familiar napolitano desde 2018."
     },
     "home": {
@@ -161,7 +161,7 @@
   },
   "home": {
     "eyebrow": "Barcelona · desde 2018",
-    "h1": "<nw>Ristorante e pizzeria</nw><br></br><i>napoletana</i>",
+    "h1": "<nw>Ristorante e pizzeria</nw><br></br><nw><i>napoletana</i> en Barcelona</nw>",
     "claim": "Una familia napolitana. Seis locales. El mismo nivel en todos.",
     "heroResenas": "{count} reseñas en Google",
     "descubre": "Descubre",
@@ -212,7 +212,7 @@
     "infoTitle": "Direcciones y horarios",
     "domicilioHint": "¿Hoy no sales de casa?",
     "domicilioLink": "Pide a domicilio",
-    "metaTitle": "Restaurantes Italianos en Barcelona – Trattoria Napolitana",
+    "metaTitle": "Restaurantes Italianos en Barcelona – 4 Trattorias",
     "metaDescription": "Cuatro restaurantes italianos Da Nanni en Barcelona: trattoria y pizza napolitana de horno de leña en Born, Raval, Gràcia y Poblenou. Reserva tu mesa."
   },
   "contacto": {
@@ -234,7 +234,8 @@
     "metaTitleDineIn": "Carta Da Nanni {name} – Precios y Menú",
     "metaTitleTakeAway": "Carta Da Nanni {name} – Precios y Menú",
     "metaDescriptionDineIn": "Carta y precios de Da Nanni {name}, en {address}. Pizza napolitana, antipasti y carta de vinos italianos.",
-    "metaDescriptionTakeAway": "Carta y precios de Da Nanni {name}, en {address}. Pizza napolitana al corte en 24 y 33 cm."
+    "metaDescriptionTakeAway": "Carta y precios de Da Nanni {name}, en {address}. Pizza napolitana al corte en 24 y 33 cm.",
+    "altCarta": "Carta de {name}, pizzería napolitana en {neighborhood}"
   },
   "paraLlevar": {
     "title": "Pizza para llevar en Barcelona",
@@ -243,8 +244,8 @@
     "infoTitle": "Direcciones y horarios",
     "domicilioHint": "¿Prefieres que te la llevemos a casa?",
     "domicilioLink": "Pide a domicilio",
-    "metaTitle": "Pizza para Llevar en Barcelona – Napolitana desde 3 €",
-    "metaDescription": "Pizza napolitana \"de bolsillo\" desde 3 € en formato 24 cm y desde 6 € en 33 cm, lista en minutos. Da Nanni en el Barrio Gótico y el Raval, todos los días de 12:00 a 22:30h.",
+    "metaTitle": "Pizza Napolitana para Llevar en Barcelona desde 3 €",
+    "metaDescription": "Pizza napolitana \"de bolsillo\" desde 3 € en 24 cm y desde 6 € en 33 cm, lista en minutos. En el Barrio Gótico y el Raval, todos los días de 12:00 a 22:30.",
     "promoBadge": "Solo hasta las 16:00h",
     "promoTitle": "Pizza de bolsillo de 24 cm — Margherita por 3,50 €",
     "promoText": "Por la tarde seguimos con el formato grande de 33 cm hasta las 22:30h.",
@@ -276,9 +277,19 @@
     "recogidaText": "En nuestros locales del Gòtic y el Raval te la preparamos al momento para llevar, y en las trattorias siempre tienes una mesa esperándote.",
     "verParaLlevar": "Ver locales para llevar",
     "verRestaurantes": "Ver restaurantes",
-    "metaTitle": "Pizza a Domicilio en Barcelona – Pide en Glovo o Just Eat",
+    "metaTitle": "Pizza a Domicilio en Barcelona – Glovo y Just Eat",
     "metaDescription": "Pizza napolitana de horno de leña a domicilio en Barcelona. Pide en Glovo o Just Eat desde nuestros locales del Gòtic, Born, Poblenou y Gràcia.",
-    "heroAlt": "Pizza napolitana en su caja para llevar de Da Nanni"
+    "heroAlt": "Pizza napolitana en su caja para llevar de Da Nanni",
+    "faq": {
+      "q1": "¿En qué zonas de Barcelona entregáis a domicilio?",
+      "a1": "Repartimos a través de Glovo y Just Eat desde cuatro locales: Gòtic, Born, Poblenou y Gràcia. La zona exacta la marca cada app según tu dirección: introduce tu calle y verás el Da Nanni que te queda más cerca.",
+      "q2": "¿En qué apps puedo pedir Da Nanni a domicilio?",
+      "a2": "En Glovo y en Just Eat. Cada local tiene su propia tienda en las apps; desde esta página puedes ir directo a la del local que te corresponde.",
+      "q3": "¿Los locales del Raval no hacen delivery?",
+      "a3": "De momento no: los dos locales de Carrer dels Tallers (69 y 72) solo ofrecen recogida y pizza para llevar. Los pedidos a domicilio salen del Gòtic, Born, Poblenou y Gràcia.",
+      "q4": "¿Puedo recoger mi pedido en el local?",
+      "a4": "Sí. Puedes pedir para llevar en cualquiera de los seis locales, y en el Gòtic y el Raval (Tallers 72) hay pizza al corte en formato 24 y 33 cm lista en minutos."
+    }
   },
   "mapa": {
     "cercaDeMi": "Ver el más cercano a mí",
@@ -307,11 +318,13 @@
     "resenasTitle": "Lo que dicen en Google",
     "resenaGoogle": "Reseña de Google",
     "verTodasResenas": "Leer todas las reseñas en Google",
-    "otrosLocales": "Otros locales"
+    "otrosLocales": "Otros locales",
+    "altFicha": "{name} – pizzería napolitana en {neighborhood}",
+    "altGaleria": "Ambiente de {name}, pizzería napolitana en {neighborhood} (foto {n})"
   },
   "historia": {
     "metaTitle": "Nuestra Historia – Un Viaje de Nápoles a Barcelona",
-    "metaDescription": "Da Nanni nace en 2018 de una familia napolitana en Barcelona. Descubre la historia detrás de nuestra sirena Partenope, nuestra mascota Nanni y cada local que hemos abierto.",
+    "metaDescription": "Da Nanni nace en 2018 de una familia napolitana en Barcelona. La historia de nuestra sirena Partenope, la mascota Nanni y cada local que hemos abierto.",
     "eyebrow": "Ristorante e Pizzeria Napoletana",
     "title": "Un viaje de Nápoles a Barcelona, bocado a bocado",
     "intro1": "En 2018, en el corazón vibrante de Barcelona, nace Da Nanni. No un simple restaurante, sino una promesa de amor nacida del encuentro entre dos culturas extraordinarias. La capital catalana nos acogió con los brazos abiertos, convirtiéndose en nuestro segundo hogar: una tierra generosa que hemos decidido corresponder trayendo con nosotros el tesoro más preciado que poseemos, la tradición gastronómica de Nápoles.",
@@ -390,7 +403,7 @@
   },
   "mejorPizzeria": {
     "metaTitle": "Mejor Pizzería de Barcelona – Lo Dicen {count} Reseñas",
-    "metaDescription": "¿Buscas la mejor pizzería de Barcelona? Las 6 pizzerías napolitanas Da Nanni suman {count} reseñas en Google con {rating}★ de media. Del Gòtic a Gràcia, pizza al corte desde 3 € o trattoria con horno de leña.",
+    "metaDescription": "¿La mejor pizzería de Barcelona? Las 6 pizzerías Da Nanni suman {count} reseñas con {rating}★ de media. Pizza al corte desde 3 € o trattoria de horno de leña.",
     "breadcrumbLabel": "Mejor Pizzería de Barcelona",
     "eyebrow": "Barcelona · 6 locales",
     "h1": "¿La mejor pizzería de Barcelona? Lo dicen las reseñas",
@@ -436,7 +449,7 @@
   },
   "pizzeriaNapolitana": {
     "metaTitle": "Pizzería Napolitana en Barcelona – 6 Locales",
-    "metaDescription": "La auténtica pizza napolitana en Barcelona: masa de larga fermentación, horno de leña e ingredientes de la Campania. Seis pizzerías Da Nanni del Gòtic a Gràcia, para comer en mesa, llevar o pedir a domicilio.",
+    "metaDescription": "La auténtica pizza napolitana en Barcelona: masa de larga fermentación, horno de leña e ingredientes de la Campania. Seis locales Da Nanni del Gòtic a Gràcia.",
     "breadcrumbLabel": "Pizzería Napolitana en Barcelona",
     "eyebrow": "Barcelona · Desde 2018",
     "title": "Pizzería napolitana en Barcelona",

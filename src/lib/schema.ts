@@ -1,5 +1,5 @@
 import type { Location } from "@/data/locations";
-import { heroImageSrc } from "@/data/locations";
+import { heroImageSrc, hrefFor } from "@/data/locations";
 import { menuByLocationSlug, type MenuSection } from "@/data/menu";
 import { translateData } from "@/data/translations";
 import { routing, type Locale } from "@/i18n/routing";
@@ -31,6 +31,7 @@ export function organizationSchema(locale: Locale = routing.defaultLocale) {
     "@type": "Organization",
     "@id": `${SITE_URL}/#organization`,
     name: "Da Nanni",
+    legalName: "Nanni 2015 S.L.",
     url: SITE_URL,
     logo: `${SITE_URL}/images/logo/logo-nero.png`,
     foundingDate: "2018",
@@ -39,6 +40,42 @@ export function organizationSchema(locale: Locale = routing.defaultLocale) {
       "https://www.instagram.com/danannibcn/",
       "https://www.facebook.com/profile.php?id=61557151444831",
     ],
+  };
+}
+
+/** Entidad WebSite del sitio, ligada a la Organization. Solo en la home. */
+export function webSiteSchema(locale: Locale = routing.defaultLocale) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${SITE_URL}/#website`,
+    name: "Da Nanni",
+    url: SITE_URL,
+    inLanguage: locale,
+    publisher: { "@id": `${SITE_URL}/#organization` },
+  };
+}
+
+/** ItemList de los locales (home): ayuda a Google a entender la cadena y a
+ * enlazar cada ficha con su entidad Restaurant (mismo @id que en la ficha). */
+export function locationsItemListSchema(
+  locations: Location[],
+  locale: Locale = routing.defaultLocale
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: locations.map((location, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: location.name,
+      item: {
+        "@id": `${SITE_URL}${hrefFor(location)}#restaurant`,
+        "@type": "Restaurant",
+        name: location.name,
+        url: `${SITE_URL}${localePath(locale, hrefFor(location))}`,
+      },
+    })),
   };
 }
 
@@ -109,6 +146,20 @@ export function restaurantSchema(
       longitude: location.coords.lng,
     },
     hasMap: location.gmapsUrl,
+    // Ficha de Google Business del local: refuerza la conexión de entidad.
+    sameAs: location.gmapsUrl ? [location.gmapsUrl] : undefined,
+    // Snapshot manual del rating de Google Business (jul-2026, locations.ts).
+    aggregateRating:
+      location.googleRating !== undefined &&
+      location.googleReviewCount !== undefined
+        ? {
+            "@type": "AggregateRating",
+            ratingValue: location.googleRating,
+            reviewCount: location.googleReviewCount,
+            bestRating: 5,
+            worstRating: 1,
+          }
+        : undefined,
     openingHoursSpecification: location.openingHours.map((spec) => ({
       "@type": "OpeningHoursSpecification",
       dayOfWeek: ALL_DAYS,

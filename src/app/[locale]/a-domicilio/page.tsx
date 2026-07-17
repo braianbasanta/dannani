@@ -1,6 +1,7 @@
+import { use } from "react";
 import Image from "next/image";
 import { useTranslations, useLocale } from "next-intl";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
 import type { Locale } from "@/i18n/routing";
 import { Link } from "@/i18n/navigation";
@@ -11,6 +12,7 @@ import {
 } from "@/data/locations";
 import { DeliveryButtons } from "@/components/DeliveryCTA";
 import { DeliveryMapLazy } from "@/components/DeliveryMapLazy";
+import { FaqSection } from "@/components/FaqSection";
 import { SchemaOrg } from "@/components/SchemaOrg";
 import { breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
@@ -30,7 +32,15 @@ export async function generateMetadata({
   });
 }
 
-export default function ADomicilioPage() {
+export default function ADomicilioPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  // Habilita el prerender estático (next-intl): sin esto la página se
+  // renderiza dinámica en cada request y no cachea en el CDN.
+  const { locale: requestLocale } = use(params);
+  setRequestLocale(requestLocale);
   const t = useTranslations("domicilio");
   const tBadges = useTranslations("badges");
   const tCta = useTranslations("cta");
@@ -153,6 +163,15 @@ export default function ADomicilioPage() {
           </div>
         </div>
       </section>
+
+      <FaqSection
+        items={[
+          { q: t("faq.q1"), a: t("faq.a1") },
+          { q: t("faq.q2"), a: t("faq.a2") },
+          { q: t("faq.q3"), a: t("faq.a3") },
+          { q: t("faq.q4"), a: t("faq.a4") },
+        ]}
+      />
     </>
   );
 }

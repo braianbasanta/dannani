@@ -70,7 +70,13 @@ export function pageMetadata({
       type: "website",
       siteName: "Da Nanni",
       locale: OG_LOCALES[locale],
-      images: [{ url: image ?? OG_DEFAULT_IMAGE }],
+      // La imagen por defecto tiene dimensiones conocidas (1200×630); las
+      // custom (heros de local) llegan sin dims para no declarar tamaños falsos.
+      images: [
+        !image || image === OG_DEFAULT_IMAGE
+          ? { url: OG_DEFAULT_IMAGE, width: 1200, height: 630 }
+          : { url: image },
+      ],
     },
   };
 }

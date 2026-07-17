@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import {
   locations,
   getLocationByUrlSlug,
@@ -41,6 +41,7 @@ export default async function RestauranteLocalPage({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
+  setRequestLocale(locale);
   const location = getLocationByUrlSlug(slug);
 
   if (!location) {

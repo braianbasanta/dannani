@@ -9,6 +9,7 @@ import { ComoLlegar } from "@/components/ComoLlegar";
 
 export function LocationCard({ location: locationProp }: { location: Location }) {
   const tCta = useTranslations("cta");
+  const tLocal = useTranslations("local");
   const locale = useLocale() as Locale;
   const location = localizeLocation(locationProp, locale);
   const href = hrefFor(location);
@@ -24,7 +25,10 @@ export function LocationCard({ location: locationProp }: { location: Location })
       >
         <Image
           src={heroImageSrc(location)}
-          alt={location.name}
+          alt={tLocal("altFicha", {
+            name: location.name,
+            neighborhood: location.neighborhood,
+          })}
           fill
           sizes="(min-width: 768px) 50vw, 100vw"
           className="object-cover transition-transform duration-700 ease-fluid group-hover:scale-[1.04]"

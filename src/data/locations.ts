@@ -70,7 +70,7 @@ export const locations: Location[] = [
     coords: { lat: 41.383163, lng: 2.177386 },
     gmapsUrl: "https://maps.google.com/?cid=2134218690125517522",
     googleRating: 4.5,
-    googleReviewCount: 4218,
+    googleReviewCount: 4238,
     phone: "936 63 85 60",
     phoneHref: "tel:+34936638560",
     delivery: {
@@ -104,7 +104,7 @@ export const locations: Location[] = [
     coords: { lat: 41.38505, lng: 2.166076 },
     gmapsUrl: "https://maps.google.com/?cid=9417165372352837853",
     googleRating: 4.4,
-    googleReviewCount: 1070,
+    googleReviewCount: 1074,
     phone: "931 43 14 69",
     phoneHref: "tel:+34931431469",
     hoursLabel: "Todos los días, 12:00–22:30h",
@@ -131,7 +131,7 @@ export const locations: Location[] = [
     coords: { lat: 41.385295, lng: 2.182703 },
     gmapsUrl: "https://maps.google.com/?cid=6373700541294561102",
     googleRating: 4.0,
-    googleReviewCount: 2811,
+    googleReviewCount: 2816,
     phone: "933 19 79 73",
     phoneHref: "tel:+34933197973",
     delivery: {
@@ -164,7 +164,7 @@ export const locations: Location[] = [
     coords: { lat: 41.384865, lng: 2.167054 },
     gmapsUrl: "https://maps.google.com/?cid=10069641379312775045",
     googleRating: 4.7,
-    googleReviewCount: 980,
+    googleReviewCount: 988,
     phone: "930 08 26 79",
     phoneHref: "tel:+34930082679",
     hoursLabel: "Todos los días, 13:00–16:00h y 20:00–00:00h",
@@ -179,7 +179,7 @@ export const locations: Location[] = [
     heroImage: "05",
     hasMenu: true,
     openedYear: 2023,
-    metaTitle: "Restaurante en el Raval, Barcelona – Pizzería Napolitana",
+    metaTitle: "Pizzería Napolitana en el Raval, Barcelona",
     metaDescription:
       "Trattoria napolitana con servicio de mesa en Carrer dels Tallers, 69, en pleno Raval. Pizza de masa de larga fermentación y cocina italiana. Reserva al 930 08 26 79.",
     h1: "Restaurante y pizzería napolitana en el Raval",
@@ -194,7 +194,7 @@ export const locations: Location[] = [
     coords: { lat: 41.398484, lng: 2.20482 },
     gmapsUrl: "https://maps.google.com/?cid=1575337994830865936",
     googleRating: 4.4,
-    googleReviewCount: 1833,
+    googleReviewCount: 1862,
     phone: "930 11 71 66",
     phoneHref: "tel:+34930117166",
     delivery: {
@@ -210,7 +210,7 @@ export const locations: Location[] = [
     hasMenu: true,
     nearBeach: true,
     openedYear: 2021,
-    metaTitle: "Restaurante en Poblenou, Barcelona – Pizzería Napolitana",
+    metaTitle: "Pizzería Napolitana en Poblenou, Barcelona",
     metaDescription:
       "Trattoria napolitana en la Rambla del Poblenou, 20, a un paseo de la playa. Terraza, horario corrido de 13:00 a 00:00h y pizzas veganas. Reserva al 930 11 71 66.",
     h1: "Restaurante y pizzería napolitana en Poblenou",
@@ -225,7 +225,7 @@ export const locations: Location[] = [
     coords: { lat: 41.403928, lng: 2.156695 },
     gmapsUrl: "https://maps.google.com/?cid=2456074022802591361",
     googleRating: 4.5,
-    googleReviewCount: 850,
+    googleReviewCount: 853,
     phone: "936 59 50 75",
     phoneHref: "tel:+34936595075",
     delivery: {
@@ -244,7 +244,7 @@ export const locations: Location[] = [
     heroImage: "01",
     hasMenu: true,
     openedYear: 2023,
-    metaTitle: "Restaurante en Gràcia, Barcelona – Pizzería Napolitana",
+    metaTitle: "Pizzería Napolitana en Gràcia, Barcelona",
     metaDescription:
       "Trattoria napolitana en Carrer de Verdi, 35, junto a la Plaça del Sol. La carta más completa del grupo: pizza, antipasti y vinos italianos. Reserva al 936 59 50 75.",
     h1: "Restaurante y pizzería napolitana en Gràcia",

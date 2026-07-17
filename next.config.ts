@@ -42,6 +42,11 @@ const nextConfig: NextConfig = {
         destination: "/restaurantes/cartas",
         permanent: true,
       },
+      {
+        source: "/menu",
+        destination: "/restaurantes/cartas",
+        permanent: true,
+      },
       // Slugs internos que no coinciden con el urlSlug público nuevo
       {
         source: "/carta/raval-take-away",

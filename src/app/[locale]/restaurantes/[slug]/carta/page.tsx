@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import {
@@ -61,6 +61,7 @@ export default async function CartaLocalPage({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
+  setRequestLocale(locale);
   const found = getLocationByUrlSlug(slug);
   const menu = found ? menuByLocationSlug[found.slug] : undefined;
   const t = await getTranslations({ locale, namespace: "cartaPage" });

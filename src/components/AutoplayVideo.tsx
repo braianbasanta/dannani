@@ -8,7 +8,9 @@ type AutoplayVideoProps = {
    * del video): el video queda transparente hasta que arranca. */
   poster?: string;
   className?: string;
-  /** Solo para el video del hero: precarga agresiva. El resto usa preload="none". */
+  /** Solo para el video del hero: precarga los metadatos para arrancar rápido.
+   * No usamos preload="auto": el hero se monta dos veces (móvil/desktop) y el
+   * oculto por CSS también descargaría el mp4 entero (~3,8 MB extra). */
   priority?: boolean;
   "aria-label"?: string;
 };
@@ -56,7 +58,7 @@ export function AutoplayVideo({
       muted
       loop
       playsInline
-      preload={priority ? "auto" : "none"}
+      preload={priority ? "metadata" : "none"}
       draggable={false}
       aria-label={ariaLabel}
       className={className}

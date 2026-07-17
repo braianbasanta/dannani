@@ -1,7 +1,7 @@
 {
   "meta": {
     "layout": {
-      "title": "Da Nanni – Pizzeria napoletana e ristorante italiano a Barcellona",
+      "title": "Da Nanni – Pizzeria Napoletana e Trattoria a Barcellona",
       "description": "Pizza napoletana con impasto a lunga fermentazione e trattoria italiana in 6 locali a Barcellona. Progetto familiare napoletano dal 2018."
     },
     "home": {
@@ -161,7 +161,7 @@
   },
   "home": {
     "eyebrow": "Barcellona · dal 2018",
-    "h1": "<nw>Ristorante e pizzeria</nw><br></br><i>napoletana</i>",
+    "h1": "<nw>Ristorante e pizzeria</nw><br></br><nw><i>napoletana</i> a Barcellona</nw>",
     "claim": "Una famiglia napoletana. Sei locali. Lo stesso livello in tutti.",
     "heroResenas": "{count} recensioni su Google",
     "descubre": "Scopri",
@@ -212,7 +212,7 @@
     "infoTitle": "Indirizzi e orari",
     "domicilioHint": "Oggi non esci di casa?",
     "domicilioLink": "Ordina a domicilio",
-    "metaTitle": "Ristoranti italiani a Barcellona – Trattoria Napoletana",
+    "metaTitle": "Ristoranti Italiani a Barcellona – 4 Trattorie",
     "metaDescription": "Quattro ristoranti italiani Da Nanni a Barcellona: trattoria e pizza napoletana cotta nel forno a legna nel Born, nel Raval, a Gràcia e a Poblenou. Prenota il tuo tavolo."
   },
   "contacto": {
@@ -234,7 +234,8 @@
     "metaTitleDineIn": "Menù Da Nanni {name} – Prezzi e piatti",
     "metaTitleTakeAway": "Menù Da Nanni {name} – Prezzi e piatti",
     "metaDescriptionDineIn": "Menù e prezzi di Da Nanni {name}, in {address}. Pizza napoletana, antipasti e carta dei vini italiani.",
-    "metaDescriptionTakeAway": "Menù e prezzi di Da Nanni {name}, in {address}. Pizza napoletana al taglio da 24 e 33 cm."
+    "metaDescriptionTakeAway": "Menù e prezzi di Da Nanni {name}, in {address}. Pizza napoletana al taglio da 24 e 33 cm.",
+    "altCarta": "Menù di {name}, pizzeria napoletana a {neighborhood}"
   },
   "paraLlevar": {
     "title": "Pizza da asporto a Barcellona",
@@ -243,8 +244,8 @@
     "infoTitle": "Indirizzi e orari",
     "domicilioHint": "Preferisci che te la portiamo a casa?",
     "domicilioLink": "Ordina a domicilio",
-    "metaTitle": "Pizza da asporto a Barcellona – Napoletana a partire da 3 €",
-    "metaDescription": "Pizza napoletana “tascabile” a partire da 3 € nel formato da 24 cm e da 6 € in quello da 33 cm, pronta in pochi minuti. Da Nanni nel Quartiere Gotico e nel Raval, tutti i giorni dalle 12:00 alle 22:30.",
+    "metaTitle": "Pizza Napoletana da Asporto a Barcellona da 3 €",
+    "metaDescription": "Pizza napoletana \"tascabile\" da 3 € in 24 cm e da 6 € in 33 cm, pronta in pochi minuti. Nel Barrio Gótico e nel Raval, tutti i giorni dalle 12:00 alle 22:30.",
     "promoBadge": "Solo fino alle 16:00",
     "promoTitle": "Pizza tascabile da 24 cm — Margherita a 3,50 €",
     "promoText": "Nel pomeriggio continuiamo con il formato grande da 33 cm fino alle 22:30.",
@@ -276,9 +277,19 @@
     "recogidaText": "Nei nostri locali del Gòtic e del Raval te la prepariamo al momento da asporto, mentre nelle trattorie c’è sempre un tavolo che ti aspetta.",
     "verParaLlevar": "Vedi i locali con servizio da asporto",
     "verRestaurantes": "Vedi i ristoranti",
-    "metaTitle": "Pizza a domicilio a Barcellona – Ordina su Glovo o Just Eat",
+    "metaTitle": "Pizza a Domicilio a Barcellona – Glovo e Just Eat",
     "metaDescription": "Pizza napoletana cotta nel forno a legna a domicilio a Barcellona. Ordina su Glovo o Just Eat dai nostri locali del Gòtic, del Born, di Poblenou e di Gràcia.",
-    "heroAlt": "Pizza napoletana nel cartone da asporto di Da Nanni"
+    "heroAlt": "Pizza napoletana nel cartone da asporto di Da Nanni",
+    "faq": {
+      "q1": "In quali zone di Barcellona consegnate a domicilio?",
+      "a1": "Consegniamo tramite Glovo e Just Eat da quattro locali: Gòtic, Born, Poblenou e Gràcia. La zona esatta la definisce ogni app in base al tuo indirizzo: inserisci la tua via e vedrai il Da Nanni più vicino.",
+      "q2": "Su quali app posso ordinare Da Nanni a domicilio?",
+      "a2": "Su Glovo e Just Eat. Ogni locale ha il suo negozio nelle app; da questa pagina puoi andare direttamente a quello che ti corrisponde.",
+      "q3": "I locali del Raval non fanno consegne?",
+      "a3": "Per ora no: i due locali di Carrer dels Tallers (69 e 72) offrono solo ritiro e pizza da asporto. Le consegne a domicilio partono da Gòtic, Born, Poblenou e Gràcia.",
+      "q4": "Posso ritirare il mio ordine nel locale?",
+      "a4": "Sì. Puoi ordinare da asporto in uno qualsiasi dei sei locali, e al Gòtic e al Raval (Tallers 72) c'è pizza al taglio nei formati 24 e 33 cm, pronta in pochi minuti."
+    }
   },
   "mapa": {
     "cercaDeMi": "Vedi il locale più vicino a me",
@@ -307,11 +318,13 @@
     "resenasTitle": "Cosa dicono su Google",
     "resenaGoogle": "Recensione su Google",
     "verTodasResenas": "Leggi tutte le recensioni su Google",
-    "otrosLocales": "Altri locali"
+    "otrosLocales": "Altri locali",
+    "altFicha": "{name} – pizzeria napoletana a {neighborhood}",
+    "altGaleria": "L'ambiente di {name}, pizzeria napoletana a {neighborhood} (foto {n})"
   },
   "historia": {
     "metaTitle": "La nostra storia – Un viaggio da Napoli a Barcellona",
-    "metaDescription": "Da Nanni nasce nel 2018 da una famiglia napoletana a Barcellona. Scopri la storia dietro la nostra sirena Partenope, la nostra mascotte Nanni e ogni locale che abbiamo aperto.",
+    "metaDescription": "Da Nanni nasce nel 2018 da una famiglia napoletana a Barcellona. La storia della sirena Partenope, della mascotte Nanni e di ogni locale che abbiamo aperto.",
     "eyebrow": "Ristorante e Pizzeria Napoletana",
     "title": "Un viaggio da Napoli a Barcellona, un morso alla volta",
     "intro1": "Nel 2018, nel cuore vibrante di Barcellona, nasce Da Nanni. Non un semplice ristorante, ma una promessa d'amore nata dall'incontro tra due culture straordinarie. La capitale catalana ci ha accolti a braccia aperte, diventando la nostra seconda casa: una terra generosa che abbiamo deciso di ricambiare portando con noi il tesoro più prezioso che possediamo, la tradizione gastronomica di Napoli.",
@@ -390,7 +403,7 @@
   },
   "mejorPizzeria": {
     "metaTitle": "La migliore pizzeria di Barcellona – Lo dicono {count} recensioni",
-    "metaDescription": "Cerchi la migliore pizzeria di Barcellona? Le 6 pizzerie napoletane Da Nanni contano {count} recensioni su Google con una media di {rating}★. Dal Gòtic a Gràcia, pizza al taglio a partire da 3 € o trattoria con forno a legna.",
+    "metaDescription": "La migliore pizzeria di Barcellona? Le 6 pizzerie Da Nanni sommano {count} recensioni con {rating}★ di media. Pizza al taglio da 3 € o trattoria con forno a legna.",
     "breadcrumbLabel": "La migliore pizzeria di Barcellona",
     "eyebrow": "Barcellona · 6 locali",
     "h1": "La migliore pizzeria di Barcellona? Lo dicono le recensioni",
@@ -436,7 +449,7 @@
   },
   "pizzeriaNapolitana": {
     "metaTitle": "Pizzeria napoletana a Barcellona – 6 locali",
-    "metaDescription": "La vera pizza napoletana a Barcellona: impasto a lunga fermentazione, forno a legna e ingredienti provenienti dalla Campania. Sei pizzerie Da Nanni dal Gòtic a Gràcia, dove puoi mangiare al tavolo, prendere da asporto o ordinare a domicilio.",
+    "metaDescription": "L'autentica pizza napoletana a Barcellona: impasto a lunga fermentazione, forno a legna e ingredienti della Campania. Sei locali Da Nanni dal Gòtic a Gràcia.",
     "breadcrumbLabel": "Pizzeria napoletana a Barcellona",
     "eyebrow": "Barcellona · Dal 2018",
     "title": "Pizzeria napoletana a Barcellona",

@@ -1,6 +1,7 @@
+import { use } from "react";
 import type { Metadata } from "next";
 import { useLocale, useTranslations } from "next-intl";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { locations, cartaHrefFor } from "@/data/locations";
@@ -25,7 +26,15 @@ export async function generateMetadata({
   });
 }
 
-export default function CartasPage() {
+export default function CartasPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  // Habilita el prerender estático (next-intl): sin esto la página se
+  // renderiza dinámica en cada request y no cachea en el CDN.
+  const { locale: requestLocale } = use(params);
+  setRequestLocale(requestLocale);
   const t = useTranslations("cartaPage");
   const tNav = useTranslations("nav");
   const locale = useLocale() as Locale;

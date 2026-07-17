@@ -1,12 +1,17 @@
+import { use } from "react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { pageMetadata, BCP47 } from "@/lib/seo";
 import { SchemaOrg } from "@/components/SchemaOrg";
-import { organizationSchema } from "@/lib/schema";
+import {
+  organizationSchema,
+  webSiteSchema,
+  locationsItemListSchema,
+} from "@/lib/schema";
 import {
   locations,
   dineInLocations,
@@ -154,6 +159,7 @@ function LocationTile({
   location: Location;
   badge: string;
 }) {
+  const tLocal = useTranslations("local");
   return (
     <Link
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -162,7 +168,10 @@ function LocationTile({
     >
       <Image
         src={heroImageSrc(location)}
-        alt={location.name}
+        alt={tLocal("altFicha", {
+          name: location.name,
+          neighborhood: location.neighborhood,
+        })}
         fill
         sizes="(min-width: 640px) 260px, 220px"
         loading="lazy"
@@ -189,7 +198,15 @@ function LocationTile({
   );
 }
 
-export default function HomePage() {
+export default function HomePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  // Habilita el prerender estático (next-intl): sin esto la página se
+  // renderiza dinámica en cada request y no cachea en el CDN.
+  const { locale: requestLocale } = use(params);
+  setRequestLocale(requestLocale);
   const t = useTranslations("home");
   const tBadges = useTranslations("badges");
   const locale = useLocale() as Locale;
@@ -204,6 +221,8 @@ export default function HomePage() {
   return (
     <>
       <SchemaOrg data={organizationSchema(locale)} />
+      <SchemaOrg data={webSiteSchema(locale)} />
+      <SchemaOrg data={locationsItemListSchema(locations, locale)} />
 
       {/* 1 · Hero: claim + reel de elaboración. En móvil el video es el fondo
           a pantalla completa con el texto encima; en desktop va dentro de una
@@ -244,9 +263,10 @@ export default function HomePage() {
         <div className="relative mx-auto grid min-h-[100svh] max-w-6xl content-end items-center gap-12 px-4 pb-20 pt-24 md:content-center md:grid-cols-[1fr_auto] md:gap-16 md:min-h-0 md:pb-24 md:pt-32">
           <div>
             <p className="eyebrow animate-fade-up">{t("eyebrow")}</p>
-            {/* El tamaño móvil se escala con el viewport para que
-                "Ristorante e pizzeria" entre siempre en una línea */}
-            <h1 className="mt-4 max-w-2xl animate-fade-up font-display text-[min(3rem,9.5vw)] leading-[1.05] tracking-tight text-cream [animation-delay:100ms] lg:text-6xl xl:text-7xl">
+            {/* El tamaño se escala para que el H1 quede SIEMPRE en 2 líneas:
+                la 2ª ("napoletana en Barcelona") es ~13% más ancha que la 1ª,
+                por eso va un punto más pequeño que el diseño original */}
+            <h1 className="mt-4 max-w-2xl animate-fade-up font-display text-[min(2.6rem,8.3vw)] leading-[1.05] tracking-tight text-cream [animation-delay:100ms] lg:text-[3.25rem] xl:text-[3.9rem]">
               {t.rich("h1", {
                 i: (chunks) => (
                   <em className="neon-blue italic">{chunks}</em>

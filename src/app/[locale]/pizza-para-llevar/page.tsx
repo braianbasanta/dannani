@@ -1,5 +1,6 @@
+import { use } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
 import type { Locale } from "@/i18n/routing";
 import { Link } from "@/i18n/navigation";
@@ -39,7 +40,15 @@ export async function generateMetadata({
 const gotic = getLocationBySlug("gotic")!;
 const ravalTakeAway = getLocationBySlug("raval-take-away")!;
 
-export default function ParaLlevarPage() {
+export default function ParaLlevarPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  // Habilita el prerender estático (next-intl): sin esto la página se
+  // renderiza dinámica en cada request y no cachea en el CDN.
+  const { locale: requestLocale } = use(params);
+  setRequestLocale(requestLocale);
   const t = useTranslations("paraLlevar");
   const tNav = useTranslations("nav");
   const locale = useLocale() as Locale;

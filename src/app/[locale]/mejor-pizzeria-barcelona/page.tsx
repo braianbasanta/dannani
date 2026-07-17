@@ -1,5 +1,6 @@
+import { use } from "react";
 import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { locations, getLocationBySlug, hrefFor } from "@/data/locations";
@@ -82,7 +83,15 @@ const OCCASIONS = [
   { slug: "raval-take-away" },
 ] as const;
 
-export default function MejorPizzeriaPage() {
+export default function MejorPizzeriaPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  // Habilita el prerender estático (next-intl): sin esto la página se
+  // renderiza dinámica en cada request y no cachea en el CDN.
+  const { locale: requestLocale } = use(params);
+  setRequestLocale(requestLocale);
   const locale = useLocale();
   const t = useTranslations("mejorPizzeria");
   const tNav = useTranslations("nav");

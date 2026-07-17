@@ -1,7 +1,8 @@
+import { use } from "react";
 import Image from "next/image";
 import type { Metadata } from "next";
 import { useTranslations, useLocale } from "next-intl";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { getLocationBySlug, hrefFor, heroImageSrc } from "@/data/locations";
@@ -33,7 +34,15 @@ const born = getLocationBySlug("born")!;
 const raval = getLocationBySlug("raval")!;
 const gracia = getLocationBySlug("gracia")!;
 
-export default function NuestraHistoriaPage() {
+export default function NuestraHistoriaPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  // Habilita el prerender estático (next-intl): sin esto la página se
+  // renderiza dinámica en cada request y no cachea en el CDN.
+  const { locale: requestLocale } = use(params);
+  setRequestLocale(requestLocale);
   const t = useTranslations("historia");
   const tNav = useTranslations("nav");
   const locale = useLocale();

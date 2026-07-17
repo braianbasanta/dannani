@@ -47,7 +47,10 @@ export function HubHero({
           >
             <Image
               src={heroImageSrc(location)}
-              alt={location.name}
+              alt={t("altFicha", {
+                name: location.name,
+                neighborhood: location.neighborhood,
+              })}
               fill
               // Solo las dos primeras compiten por el LCP; el resto carga normal
               preload={index < 2}
