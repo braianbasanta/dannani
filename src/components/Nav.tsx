@@ -19,11 +19,16 @@ const takeAwayByYear = [...takeAwayLocations].sort((a, b) => a.openedYear - b.op
 // take away al final (con su etiqueta). Hoy los 6 locales tienen carta.
 const cartaLocations = [...dineInByYear, ...takeAwayByYear];
 
+type MobileSection = "restaurantes" | "paraLlevar" | "carta";
+
 export function Nav() {
   const t = useTranslations("nav");
   const tLocal = useTranslations("local");
   const tReservar = useTranslations("reservar");
   const [open, setOpen] = useState(false);
+  // Acordeón del menú móvil: cerrado por defecto para que todo el menú
+  // (idiomas y CTAs incluidos) entre en pantalla sin scroll.
+  const [openSection, setOpenSection] = useState<MobileSection | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const sentinelRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
@@ -46,6 +51,15 @@ export function Nav() {
       document.body.style.overflow = "";
     };
   }, [open]);
+
+  // Cierra el menú móvil y repliega el acordeón (estado inicial).
+  const closeMenu = () => {
+    setOpen(false);
+    setOpenSection(null);
+  };
+
+  const toggleSection = (section: MobileSection) =>
+    setOpenSection((current) => (current === section ? null : section));
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -90,7 +104,7 @@ export function Nav() {
           <Link
             href="/"
             className="flex items-center gap-2"
-            onClick={() => setOpen(false)}
+            onClick={closeMenu}
           >
             <Image
               src="/images/logo/logo-nero-nav.png"
@@ -200,21 +214,29 @@ export function Nav() {
             </Link>
           </nav>
 
-          <button
-            type="button"
-            aria-label={t("menuButton")}
-            aria-expanded={open}
-            className="md:hidden"
-            onClick={() => setOpen((v) => !v)}
-          >
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              {open ? (
-                <path d="M6 6l12 12M18 6L6 18" strokeLinecap="round" />
-              ) : (
-                <path d="M4 6h16M4 12h16M4 18h16" strokeLinecap="round" />
-              )}
-            </svg>
-          </button>
+          <div className="flex items-center gap-3 md:hidden">
+            <Link
+              href="/reservar"
+              className="rounded-full bg-electric px-4 py-2 font-sans text-sm font-semibold text-night transition-transform active:scale-[0.98]"
+              onClick={closeMenu}
+            >
+              {tReservar("navLabel")}
+            </Link>
+            <button
+              type="button"
+              aria-label={t("menuButton")}
+              aria-expanded={open}
+              onClick={() => (open ? closeMenu() : setOpen(true))}
+            >
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                {open ? (
+                  <path d="M6 6l12 12M18 6L6 18" strokeLinecap="round" />
+                ) : (
+                  <path d="M4 6h16M4 12h16M4 18h16" strokeLinecap="round" />
+                )}
+              </svg>
+            </button>
+          </div>
         </div>
 
       </header>
@@ -224,91 +246,103 @@ export function Nav() {
       {open && (
         <nav className="fixed inset-x-0 bottom-0 top-16 z-40 flex flex-col justify-between overflow-y-auto bg-night px-6 pb-8 pt-8 font-sans text-cream md:hidden">
           <div>
-            <Link
-              href="/restaurantes"
-              className={`font-display text-3xl tracking-tight ${isActive("/restaurantes") ? "text-electric" : ""}`}
-              onClick={() => setOpen(false)}
+            <button
+              type="button"
+              aria-expanded={openSection === "restaurantes"}
+              className={`flex w-full items-center justify-between font-display text-3xl tracking-tight ${isActive("/restaurantes") ? "text-electric" : ""}`}
+              onClick={() => toggleSection("restaurantes")}
             >
               {t("restaurantes")}
-            </Link>
-            <div className="mt-4 grid grid-cols-2 gap-2">
-              {dineInByYear.map((l) => (
-                <Link
-                  key={l.slug}
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  href={hrefFor(l) as any}
-                  className="rounded-xl bg-cream/5 px-5 py-4 text-lg font-medium ring-1 ring-cream/10 transition-colors active:bg-cream/10"
-                  onClick={() => setOpen(false)}
-                >
-                  {l.neighborhood}
-                </Link>
-              ))}
-            </div>
+              <Chevron open={openSection === "restaurantes"} />
+            </button>
+            {openSection === "restaurantes" && (
+              <div className="mt-4 grid grid-cols-2 gap-2">
+                {dineInByYear.map((l) => (
+                  <Link
+                    key={l.slug}
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    href={hrefFor(l) as any}
+                    className="rounded-xl bg-cream/5 px-5 py-4 text-lg font-medium ring-1 ring-cream/10 transition-colors active:bg-cream/10"
+                    onClick={closeMenu}
+                  >
+                    {l.neighborhood}
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="mt-6">
-            <Link
-              href="/pizza-para-llevar"
-              className={`font-display text-3xl tracking-tight ${isActive("/pizza-para-llevar") ? "text-electric" : ""}`}
-              onClick={() => setOpen(false)}
+            <button
+              type="button"
+              aria-expanded={openSection === "paraLlevar"}
+              className={`flex w-full items-center justify-between font-display text-3xl tracking-tight ${isActive("/pizza-para-llevar") ? "text-electric" : ""}`}
+              onClick={() => toggleSection("paraLlevar")}
             >
               {t("paraLlevar")}
-            </Link>
-            <div className="mt-4 grid grid-cols-2 gap-2">
-              {takeAwayByYear.map((l) => (
-                <Link
-                  key={l.slug}
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  href={hrefFor(l) as any}
-                  className="rounded-xl bg-cream/5 px-5 py-4 text-lg font-medium ring-1 ring-cream/10 transition-colors active:bg-cream/10"
-                  onClick={() => setOpen(false)}
-                >
-                  {l.neighborhood}
-                </Link>
-              ))}
-            </div>
+              <Chevron open={openSection === "paraLlevar"} />
+            </button>
+            {openSection === "paraLlevar" && (
+              <div className="mt-4 grid grid-cols-2 gap-2">
+                {takeAwayByYear.map((l) => (
+                  <Link
+                    key={l.slug}
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    href={hrefFor(l) as any}
+                    className="rounded-xl bg-cream/5 px-5 py-4 text-lg font-medium ring-1 ring-cream/10 transition-colors active:bg-cream/10"
+                    onClick={closeMenu}
+                  >
+                    {l.neighborhood}
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="mt-6">
-            <Link
-              href="/restaurantes/cartas"
-              className={`font-display text-3xl tracking-tight ${isActive("/restaurantes/cartas") ? "text-electric" : ""}`}
-              onClick={() => setOpen(false)}
+            <button
+              type="button"
+              aria-expanded={openSection === "carta"}
+              className={`flex w-full items-center justify-between font-display text-3xl tracking-tight ${isActive("/restaurantes/cartas") ? "text-electric" : ""}`}
+              onClick={() => toggleSection("carta")}
             >
               {t("carta")}
-            </Link>
-            <div className="mt-4 grid grid-cols-2 gap-2">
-              {cartaLocations.map((l) => (
-                <Link
-                  key={l.slug}
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  href={cartaHrefFor(l) as any}
-                  className="rounded-xl bg-cream/5 px-5 py-4 text-lg font-medium ring-1 ring-cream/10 transition-colors active:bg-cream/10"
-                  onClick={() => setOpen(false)}
-                >
-                  {l.neighborhood}
-                  {l.type === "take-away" && (
-                    <span className="block text-xs font-medium text-mustard">
-                      {t("paraLlevar")}
-                    </span>
-                  )}
-                </Link>
-              ))}
-            </div>
+              <Chevron open={openSection === "carta"} />
+            </button>
+            {openSection === "carta" && (
+              <div className="mt-4 grid grid-cols-2 gap-2">
+                {cartaLocations.map((l) => (
+                  <Link
+                    key={l.slug}
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    href={cartaHrefFor(l) as any}
+                    className="rounded-xl bg-cream/5 px-5 py-4 text-lg font-medium ring-1 ring-cream/10 transition-colors active:bg-cream/10"
+                    onClick={closeMenu}
+                  >
+                    {l.neighborhood}
+                    {l.type === "take-away" && (
+                      <span className="block text-xs font-medium text-mustard">
+                        {t("paraLlevar")}
+                      </span>
+                    )}
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="mt-6 flex flex-col gap-6">
             <Link
               href="/a-domicilio"
               className={`font-display text-3xl tracking-tight ${isActive("/a-domicilio") ? "text-electric" : ""}`}
-              onClick={() => setOpen(false)}
+              onClick={closeMenu}
             >
               {t("aDomicilio")}
             </Link>
             <Link
               href="/nuestra-historia"
               className={`font-display text-3xl tracking-tight ${isActive("/nuestra-historia") ? "text-electric" : ""}`}
-              onClick={() => setOpen(false)}
+              onClick={closeMenu}
             >
               {t("nuestraHistoria")}
             </Link>
@@ -319,14 +353,14 @@ export function Nav() {
             <Link
               href="/reservar"
               className="block rounded-full bg-electric px-6 py-3.5 text-center text-sm font-semibold text-night transition-colors hover:bg-electric-dark"
-              onClick={() => setOpen(false)}
+              onClick={closeMenu}
             >
               {tReservar("navLabel")}
             </Link>
             <Link
               href="/contacto"
               className="block rounded-full border border-cream/20 px-6 py-3.5 text-center text-sm font-semibold text-cream transition-colors hover:bg-cream/5"
-              onClick={() => setOpen(false)}
+              onClick={closeMenu}
             >
               {t("contacto")}
             </Link>
@@ -334,5 +368,23 @@ export function Nav() {
         </nav>
       )}
     </>
+  );
+}
+
+/** Flecha de los acordeones del menú móvil: rota 180° al abrir la sección. */
+function Chevron({ open }: { open: boolean }) {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      aria-hidden
+      className={`shrink-0 text-cream/50 transition-transform duration-300 ${open ? "rotate-180" : ""}`}
+    >
+      <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }

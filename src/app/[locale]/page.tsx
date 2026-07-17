@@ -116,9 +116,11 @@ function ArrowIcon() {
 /**
  * CTA premium: pill eléctrica con degradado del azul de marca y halo neón
  * (como los rótulos de los locales), ghost con borde que hereda el color
- * del texto (pasar colores vía className según el fondo del botón), o
+ * del texto (pasar colores vía className según el fondo del botón),
  * hoverElectric: ghost en reposo que se enciende en eléctrico al hover
- * (para pares de CTAs donde ninguno debe destacar sobre el otro).
+ * (para pares de CTAs donde ninguno debe destacar sobre el otro), o
+ * mobileElectric: eléctrico fijo en móvil (donde no existe hover) y
+ * hoverElectric a partir de md.
  */
 function CtaPill({
   href,
@@ -132,7 +134,7 @@ function CtaPill({
     | "/nuestra-historia"
     | "/restaurantes/cartas"
     | "/reservar";
-  variant: "electric" | "ghost" | "hoverElectric";
+  variant: "electric" | "ghost" | "hoverElectric" | "mobileElectric";
   className?: string;
   children: React.ReactNode;
 }) {
@@ -143,7 +145,9 @@ function CtaPill({
       ? "bg-[linear-gradient(160deg,#7bafbc_0%,#5599aa_52%,#3d7e8f_100%)] py-4 text-night ring-1 ring-black/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.45),0_14px_34px_-8px_rgba(0,0,0,0.6),0_0_24px_rgba(85,153,170,0.25)] hover:tracking-[0.22em] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.5),0_22px_46px_-10px_rgba(0,0,0,0.65),0_0_40px_rgba(85,153,170,0.4)]"
       : variant === "hoverElectric"
         ? "bg-cream/10 py-4 text-cream ring-1 ring-cream/25 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_10px_30px_-12px_rgba(0,0,0,0.5)] hover:bg-[linear-gradient(160deg,#7bafbc_0%,#5599aa_52%,#3d7e8f_100%)] hover:text-night hover:tracking-[0.22em] hover:ring-black/20 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.45),0_14px_34px_-8px_rgba(0,0,0,0.6),0_0_24px_rgba(85,153,170,0.25)]"
-        : "border-2 border-current py-[0.85rem] backdrop-blur-sm";
+        : variant === "mobileElectric"
+          ? "bg-[linear-gradient(160deg,#7bafbc_0%,#5599aa_52%,#3d7e8f_100%)] py-4 text-night ring-1 ring-black/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.45),0_14px_34px_-8px_rgba(0,0,0,0.6),0_0_24px_rgba(85,153,170,0.25)] md:bg-none md:bg-cream/10 md:text-cream md:ring-cream/25 md:backdrop-blur-md md:shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_10px_30px_-12px_rgba(0,0,0,0.5)] md:hover:bg-[linear-gradient(160deg,#7bafbc_0%,#5599aa_52%,#3d7e8f_100%)] md:hover:text-night md:hover:tracking-[0.22em] md:hover:ring-black/20 md:hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.45),0_14px_34px_-8px_rgba(0,0,0,0.6),0_0_24px_rgba(85,153,170,0.25)]"
+          : "border-2 border-current py-[0.85rem] backdrop-blur-sm";
   return (
     <Link href={href} className={`${base} ${styles} ${className}`}>
       {children}
@@ -278,7 +282,7 @@ export default function HomePage({
               })}
             </h1>
             <div className="mt-9 flex flex-col gap-3 animate-fade-up [animation-delay:300ms] sm:flex-row sm:flex-wrap sm:items-center">
-              <CtaPill href="/reservar" variant="hoverElectric">
+              <CtaPill href="/reservar" variant="mobileElectric">
                 {t("ctaReservar")}
               </CtaPill>
               <CtaPill href="/restaurantes/cartas" variant="hoverElectric">
