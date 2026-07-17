@@ -59,6 +59,15 @@ export default function ContactoPage({
           {t("title")}
         </h1>
         <p className="mt-3 max-w-2xl text-cream/70">{t("intro")}</p>
+        <p className="mt-2 max-w-2xl text-cream/70">
+          {t("emailNote")}{" "}
+          <a
+            href="mailto:danannipoblenou@gmail.com"
+            className="font-semibold text-electric underline decoration-electric/40 underline-offset-4 transition-colors hover:text-cream"
+          >
+            danannipoblenou@gmail.com
+          </a>
+        </p>
 
         <ul className="mt-10 space-y-4">
           {locations.map((l) => localizeLocation(l, locale)).map((location) => (
@@ -74,6 +83,15 @@ export default function ContactoPage({
                   <br />
                   {hoursParts(location).times}
                 </p>
+                <a
+                  href={location.phoneHref}
+                  className="mt-2 inline-flex items-center gap-2 text-sm font-semibold underline decoration-cream/40 underline-offset-4 transition-colors hover:text-electric"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  {location.phone}
+                </a>
               </div>
               <div className="flex flex-wrap gap-3">
                 <ComoLlegar location={location} />
