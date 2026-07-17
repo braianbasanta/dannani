@@ -12,14 +12,7 @@ import {
   webSiteSchema,
   locationsItemListSchema,
 } from "@/lib/schema";
-import {
-  locations,
-  dineInLocations,
-  takeAwayLocations,
-  hrefFor,
-  heroImageSrc,
-  type Location,
-} from "@/data/locations";
+import { locations } from "@/data/locations";
 import { reviewsByLocationSlug } from "@/data/reviews";
 import { ReviewsMarquee } from "@/components/ReviewsMarquee";
 import { AutoplayVideo } from "@/components/AutoplayVideo";
@@ -133,7 +126,8 @@ function CtaPill({
     | "/pizza-para-llevar"
     | "/nuestra-historia"
     | "/restaurantes/cartas"
-    | "/reservar";
+    | "/reservar"
+    | "#locales";
   variant: "electric" | "ghost" | "hoverElectric" | "mobileElectric";
   className?: string;
   children: React.ReactNode;
@@ -148,6 +142,14 @@ function CtaPill({
         : variant === "mobileElectric"
           ? "bg-[linear-gradient(160deg,#7bafbc_0%,#5599aa_52%,#3d7e8f_100%)] py-4 text-night ring-1 ring-black/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.45),0_14px_34px_-8px_rgba(0,0,0,0.6),0_0_24px_rgba(85,153,170,0.25)] md:bg-none md:bg-cream/10 md:text-cream md:ring-cream/25 md:backdrop-blur-md md:shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_10px_30px_-12px_rgba(0,0,0,0.5)] md:hover:bg-[linear-gradient(160deg,#7bafbc_0%,#5599aa_52%,#3d7e8f_100%)] md:hover:text-night md:hover:tracking-[0.22em] md:hover:ring-black/20 md:hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.45),0_14px_34px_-8px_rgba(0,0,0,0.6),0_0_24px_rgba(85,153,170,0.25)]"
           : "border-2 border-current py-[0.85rem] backdrop-blur-sm";
+  // Las anclas internas van con <a> plano: el Link de next-intl espera rutas.
+  if (href === "#locales") {
+    return (
+      <a href={href} className={`${base} ${styles} ${className}`}>
+        {children}
+      </a>
+    );
+  }
   return (
     <Link href={href} className={`${base} ${styles} ${className}`}>
       {children}
@@ -155,48 +157,53 @@ function CtaPill({
   );
 }
 
-/** Tarjeta vertical estilo "fila de Netflix": póster con zoom sutil al hover. */
-function LocationTile({
-  location,
-  badge,
+/** Tarjeta grande del selector comer aquí / para llevar: foto a sangre con
+    scrim night y CTA eléctrica. Es la decisión principal de la home. */
+function ChooserCard({
+  href,
+  image,
+  alt,
+  barrios,
+  title,
+  text,
+  cta,
 }: {
-  location: Location;
-  badge: string;
+  href: "/restaurantes" | "/pizza-para-llevar";
+  image: string;
+  alt: string;
+  barrios: string;
+  title: string;
+  text: string;
+  cta: string;
 }) {
-  const tLocal = useTranslations("local");
   return (
     <Link
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      href={hrefFor(location) as any}
-      className="group relative block aspect-[2/3] w-[220px] shrink-0 snap-start overflow-hidden rounded-2xl shadow-card transition-all duration-500 ease-fluid hover:scale-[1.02] hover:shadow-card-hover sm:w-[260px]"
+      href={href}
+      className="group relative flex aspect-[4/5] items-end overflow-hidden rounded-[1.75rem] shadow-card ring-1 ring-cream/10 transition-all duration-500 ease-fluid hover:shadow-card-hover md:aspect-[4/3]"
     >
       <Image
-        src={heroImageSrc(location)}
-        alt={tLocal("altFicha", {
-          name: location.name,
-          neighborhood: location.neighborhood,
-        })}
+        src={image}
+        alt={alt}
         fill
-        sizes="(min-width: 640px) 260px, 220px"
         loading="lazy"
-        className="object-cover transition-transform duration-700 ease-fluid group-hover:scale-[1.06]"
+        sizes="(min-width: 768px) 50vw, 100vw"
+        className="object-cover transition-transform duration-700 ease-fluid group-hover:scale-[1.04]"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-night/90 via-night/20 to-transparent" />
-      <span
-        aria-hidden
-        className="absolute right-3 top-3 flex h-9 w-9 -translate-y-1 items-center justify-center rounded-full bg-cream/90 text-night opacity-0 backdrop-blur-sm transition-all duration-500 ease-fluid group-hover:translate-y-0 group-hover:opacity-100"
-      >
-        <span className="-rotate-45">
+      <div className="absolute inset-0 bg-gradient-to-t from-night/95 via-night/25 to-transparent" />
+      <div className="relative w-full p-6 pb-7 text-cream sm:p-8 sm:pb-9">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cream/70">
+          {barrios}
+        </p>
+        <h3 className="mt-2 font-display text-3xl tracking-tight sm:text-4xl">
+          {title}
+        </h3>
+        <p className="mt-2 hidden max-w-md text-sm leading-relaxed text-cream/85 sm:block">
+          {text}
+        </p>
+        <span className="mt-5 inline-flex items-center gap-2 rounded-full bg-electric px-5 py-2.5 font-sans text-sm font-semibold text-night transition-colors duration-300 group-hover:bg-electric-dark group-active:scale-[0.98]">
+          {cta}
           <ArrowIcon />
         </span>
-      </span>
-      <div className="absolute inset-x-0 bottom-0 p-4 text-cream sm:p-5">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-cream/75">
-          {badge}
-        </p>
-        <p className="font-display text-xl tracking-tight sm:text-2xl">
-          {location.neighborhood}
-        </p>
       </div>
     </Link>
   );
@@ -212,7 +219,6 @@ export default function HomePage({
   const { locale: requestLocale } = use(params);
   setRequestLocale(requestLocale);
   const t = useTranslations("home");
-  const tBadges = useTranslations("badges");
   const locale = useLocale() as Locale;
   const ratingFormat = new Intl.NumberFormat(BCP47[locale], {
     minimumFractionDigits: 1,
@@ -285,8 +291,8 @@ export default function HomePage({
               <CtaPill href="/reservar" variant="mobileElectric">
                 {t("ctaReservar")}
               </CtaPill>
-              <CtaPill href="/restaurantes/cartas" variant="hoverElectric">
-                {t("ctaVerCarta")}
+              <CtaPill href="#locales" variant="hoverElectric">
+                {t("dondeRestaurantesCta")}
               </CtaPill>
             </div>
             <div className="mt-8 flex items-center justify-center gap-2 animate-fade-up font-sans text-sm text-cream/80 [animation-delay:400ms] md:justify-start">
@@ -328,7 +334,7 @@ export default function HomePage({
 
         {/* Cue de scroll (solo móvil): avisa de que hay más contenido abajo */}
         <a
-          href="#platos"
+          href="#locales"
           className="absolute inset-x-0 bottom-5 z-10 flex flex-col items-center gap-1.5 md:hidden"
         >
           <span className="font-sans text-[0.7rem] font-semibold uppercase tracking-[0.35em] text-cream/60">
@@ -349,7 +355,41 @@ export default function HomePage({
         </a>
       </section>
 
-      {/* 2 · Platos destacados: crear el antojo antes de pedir la decisión */}
+      {/* 2 · Decisión: comer aquí o para llevar. El CTA "Ver restaurantes"
+          del hero y el cue de scroll anclan aquí (#locales). */}
+      <section id="locales" className="scroll-mt-16 py-20 sm:py-28">
+        <div className="mx-auto max-w-6xl px-4">
+          <Reveal>
+            <h2 className="font-display text-4xl tracking-tight text-cream sm:text-5xl">
+              {t("dondeTitle")}
+            </h2>
+          </Reveal>
+          <Reveal>
+            <div className="mt-10 grid gap-4 sm:mt-12 md:grid-cols-2">
+              <ChooserCard
+                href="/restaurantes"
+                image="/images/home/mesa-restaurante.jpg"
+                alt={t("dondeRestaurantesAlt")}
+                barrios={t("dondeRestaurantesBarrios")}
+                title={t("dondeRestaurantesTitle")}
+                text={t("dondeRestaurantesText")}
+                cta={t("dondeRestaurantesCta")}
+              />
+              <ChooserCard
+                href="/pizza-para-llevar"
+                image="/images/home/pizza-para-llevar-catedral.jpg"
+                alt={t("dondeLlevarAlt")}
+                barrios={t("dondeLlevarBarrios")}
+                title={t("dondeLlevarTitle")}
+                text={t("dondeLlevarText")}
+                cta={t("dondeLlevarCta")}
+              />
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* 3 · Platos destacados: el antojo después de la decisión */}
       <section
         id="platos"
         className="relative overflow-hidden bg-cream/[0.02] py-20 sm:py-28"
@@ -392,89 +432,6 @@ export default function HomePage({
             </CtaPill>
           </div>
         </Reveal>
-      </section>
-
-      {/* 3 · Decisión: comer aquí o para llevar */}
-      <section className="py-20 sm:py-28">
-        <div className="mx-auto max-w-6xl px-4">
-          <Reveal>
-            <h2 className="font-display text-4xl tracking-tight text-cream sm:text-5xl">
-              {t("dondeTitle")}
-            </h2>
-          </Reveal>
-        </div>
-
-        {/* Filas estilo Netflix: cabecera alineada al contenedor, tarjetas
-            a sangre desde el borde izquierdo del viewport */}
-        <div className="mt-12 space-y-14 sm:space-y-16">
-          <Reveal>
-            <div className="mx-auto max-w-6xl px-4">
-              <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cream/50">
-                    {t("dondeRestaurantesBarrios")}
-                  </p>
-                  <h3 className="mt-2 font-display text-2xl tracking-tight text-cream sm:text-3xl">
-                    {t("dondeRestaurantesTitle")}
-                  </h3>
-                  <p className="mt-2 max-w-[55ch] text-cream/70">
-                    {t("dondeRestaurantesText")}
-                  </p>
-                </div>
-                <Link
-                  href="/restaurantes"
-                  className="inline-flex items-center gap-2 font-sans text-sm font-semibold text-electric transition-colors duration-300 hover:text-cream"
-                >
-                  {t("dondeRestaurantesCta")}
-                  <ArrowIcon />
-                </Link>
-              </div>
-            </div>
-            <div className="mt-6 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 scroll-px-4 pb-3 [scrollbar-width:none] sm:gap-4 [&::-webkit-scrollbar]:hidden lg:px-[max(1rem,calc((100vw-72rem)/2))] lg:scroll-px-[max(1rem,calc((100vw-72rem)/2))]">
-              {dineInLocations.map((location) => (
-                <LocationTile
-                  key={location.slug}
-                  location={location}
-                  badge={tBadges("dineIn")}
-                />
-              ))}
-            </div>
-          </Reveal>
-
-          <Reveal>
-            <div className="mx-auto max-w-6xl px-4">
-              <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cream/50">
-                    {t("dondeLlevarBarrios")}
-                  </p>
-                  <h3 className="mt-2 font-display text-2xl tracking-tight text-cream sm:text-3xl">
-                    {t("dondeLlevarTitle")}
-                  </h3>
-                  <p className="mt-2 max-w-[55ch] text-cream/70">
-                    {t("dondeLlevarText")}
-                  </p>
-                </div>
-                <Link
-                  href="/pizza-para-llevar"
-                  className="inline-flex items-center gap-2 font-sans text-sm font-semibold text-electric transition-colors duration-300 hover:text-cream"
-                >
-                  {t("dondeLlevarCta")}
-                  <ArrowIcon />
-                </Link>
-              </div>
-            </div>
-            <div className="mt-6 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 scroll-px-4 pb-3 [scrollbar-width:none] sm:gap-4 [&::-webkit-scrollbar]:hidden lg:px-[max(1rem,calc((100vw-72rem)/2))] lg:scroll-px-[max(1rem,calc((100vw-72rem)/2))]">
-              {takeAwayLocations.map((location) => (
-                <LocationTile
-                  key={location.slug}
-                  location={location}
-                  badge={tBadges("takeAway")}
-                />
-              ))}
-            </div>
-          </Reveal>
-        </div>
       </section>
 
       {/* 4 · Experiencia: el ambiente de los locales, en video */}
