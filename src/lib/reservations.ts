@@ -189,6 +189,97 @@ export function attributionLabel(a: Attribution | null | undefined): string | nu
   return "directo";
 }
 
+/** Canal de adquisición agregado (para el informe de fuentes del admin). */
+export interface AttributionChannel {
+  key: string;
+  label: string;
+}
+
+/** Referrers conocidos → canal legible (se compara contra el hostname). */
+const REFERRER_CHANNELS: [RegExp, AttributionChannel][] = [
+  [/google\./, { key: "google-organic", label: "Google (orgánico / Maps)" }],
+  [/instagram\./, { key: "instagram", label: "Instagram" }],
+  [/facebook\./, { key: "facebook", label: "Facebook" }],
+  [/tiktok\./, { key: "tiktok", label: "TikTok" }],
+  [/twitter\.|(^|\.)x\.com$|(^|\.)t\.co$/, { key: "x", label: "X (Twitter)" }],
+  [/bing\./, { key: "bing", label: "Bing" }],
+  [/duckduckgo\./, { key: "duckduckgo", label: "DuckDuckGo" }],
+  [/tripadvisor\./, { key: "tripadvisor", label: "Tripadvisor" }],
+  [/thefork\.|eltenedor\./, { key: "thefork", label: "TheFork" }],
+  [
+    /chatgpt\.|openai\.|perplexity\.|claude\.|gemini\.google/,
+    { key: "ai", label: "Asistentes IA (ChatGPT…)" },
+  ],
+];
+
+const PAID_MEDIUMS = ["cpc", "ppc", "paid", "ads", "paidsearch", "paid-social", "paid_social"];
+
+/**
+ * Clasifica la atribución de una reserva en un canal agregable: de dónde vino
+ * el cliente (Google Ads, ficha GBP, orgánico, redes, teléfono…). Prioridad:
+ * origen interno (teléfono/telegram) > click IDs de pago > UTMs propios > referrer.
+ */
+export function attributionChannel(
+  a: Attribution | null | undefined
+): AttributionChannel {
+  if (!a) return { key: "direct", label: "Directo / sin datos" };
+
+  const src = (a.utm_source ?? "").toLowerCase().trim();
+  const medium = (a.utm_medium ?? "").toLowerCase().trim();
+  const isPaid = PAID_MEDIUMS.includes(medium);
+
+  // Reservas metidas por el equipo (alta manual del admin / bot de Telegram).
+  if (src === "teléfono" || src === "telefono")
+    return { key: "phone", label: "Teléfono / en persona" };
+  if (src === "telegram") return { key: "telegram", label: "Telegram (equipo)" };
+
+  // Pago: los click IDs mandan aunque falten UTMs.
+  if (a.gclid || (isPaid && src.startsWith("google")))
+    return { key: "google-ads", label: "Google Ads" };
+  if (a.msclkid) return { key: "microsoft-ads", label: "Microsoft Ads" };
+  const isMetaSrc = ["facebook", "instagram", "fb", "ig", "meta"].includes(src);
+  if (isPaid && (isMetaSrc || a.fbclid))
+    return { key: "meta-ads", label: "Meta Ads" };
+
+  // UTMs propios (links etiquetados: ficha GBP, email, QR…). Las fichas de GBP
+  // llevan utm_campaign="gbp-<local>" (así se distingue qué local trae la reserva).
+  const campaign = (a.utm_campaign ?? "").toLowerCase().trim();
+  if (
+    campaign.startsWith("gbp") ||
+    ["gbp", "google-business", "google_business", "business.google.com"].includes(src)
+  )
+    return { key: "gbp", label: "Ficha de Google (GBP)" };
+  if (src) return { key: `utm:${src}`, label: `Campaña: ${src}` };
+
+  // Sin UTMs: clasificar por referrer. fbclid sin medium de pago = link desde FB/IG.
+  if (a.fbclid) return { key: "facebook", label: "Facebook" };
+  if (a.referrer) {
+    let host = a.referrer;
+    try {
+      host = new URL(a.referrer).hostname.replace(/^www\./, "");
+    } catch {
+      // referrer no-URL: se usa tal cual como etiqueta
+    }
+    for (const [re, ch] of REFERRER_CHANNELS) if (re.test(host)) return ch;
+    return { key: `ref:${host}`, label: host };
+  }
+
+  return { key: "direct", label: "Directo / sin datos" };
+}
+
+/** Detalle fino dentro de un canal (campaña > página de aterrizaje) para el desglose. */
+export function attributionDetail(a: Attribution | null | undefined): string | null {
+  if (!a) return null;
+  if (a.utm_campaign) return a.utm_campaign;
+  if (a.landing && a.landing !== "/") {
+    // Aterrizajes en la página de gestión (volvió desde el email de su reserva):
+    // agrupar sin exponer el token.
+    if (/^(\/(en|it|ca))?\/reserva\//.test(a.landing)) return "link del email (gestión)";
+    return a.landing;
+  }
+  return null;
+}
+
 export interface ReservationInput {
   locationSlug: string;
   firstName: string;

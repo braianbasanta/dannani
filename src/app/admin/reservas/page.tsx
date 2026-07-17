@@ -106,6 +106,12 @@ export default async function AdminReservasPage({
               comensales
             </span>
             <Link
+              href="/admin/reservas/fuentes"
+              className="rounded-full px-3 py-1.5 text-xs ring-1 ring-cream/15 hover:bg-cream/5"
+            >
+              Fuentes
+            </Link>
+            <Link
               href="/admin/reservas/nueva"
               className="rounded-full bg-electric px-3 py-1.5 text-xs font-bold text-night transition hover:bg-electric-dark"
             >
