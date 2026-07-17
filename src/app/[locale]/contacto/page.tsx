@@ -5,9 +5,6 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Locale } from "@/i18n/routing";
 import { locations, hoursParts } from "@/data/locations";
 import { localizeLocation } from "@/data/translations";
-import { ReservaCTA } from "@/components/ReservaCTA";
-import { DeliveryCTA } from "@/components/DeliveryCTA";
-import { ComoLlegar } from "@/components/ComoLlegar";
 import { SchemaOrg } from "@/components/SchemaOrg";
 import { breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
@@ -73,7 +70,7 @@ export default function ContactoPage({
           {locations.map((l) => localizeLocation(l, locale)).map((location) => (
             <li
               key={location.slug}
-              className="flex flex-col gap-5 rounded-[1.75rem] bg-night-soft p-6 shadow-card ring-1 ring-cream/10 sm:p-7"
+              className="flex flex-col gap-4 rounded-[1.75rem] bg-night-soft p-6 shadow-card ring-1 ring-cream/10 sm:flex-row sm:items-center sm:justify-between sm:p-7"
             >
               <div>
                 <p className="font-display text-xl">{location.name}</p>
@@ -94,9 +91,6 @@ export default function ContactoPage({
                   </svg>
                   {location.phone}
                 </a>
-                <ComoLlegar location={location} />
-                <DeliveryCTA location={location} />
-                <ReservaCTA location={location} />
               </div>
             </li>
           ))}
