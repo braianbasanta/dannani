@@ -278,6 +278,8 @@ export function attributionChannel(
 export function attributionDetail(a: Attribution | null | undefined): string | null {
   if (!a) return null;
   if (a.utm_campaign) return a.utm_campaign;
+  // La bio de Instagram etiqueta con utm_content=link_in_bio (sin campaign).
+  if (a.utm_content) return a.utm_content;
   if (a.landing && a.landing !== "/") {
     // Aterrizajes en la página de gestión (volvió desde el email de su reserva):
     // agrupar sin exponer el token.
