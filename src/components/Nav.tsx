@@ -44,11 +44,21 @@ export function Nav() {
     return () => observer.disconnect();
   }, []);
 
-  // Menú móvil fullscreen: bloquea el scroll del body mientras está abierto.
+  // Menú móvil fullscreen: bloquea el scroll de la página mientras está
+  // abierto. El overflow va en <html> además de <body> porque iOS Safari
+  // ignora el de body para el scroll táctil (la página de atrás seguía
+  // moviéndose); overscroll-behavior evita el rubber-banding del documento.
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
+    if (!open) return;
+    const html = document.documentElement.style;
+    const body = document.body.style;
+    html.overflow = "hidden";
+    html.overscrollBehavior = "none";
+    body.overflow = "hidden";
     return () => {
-      document.body.style.overflow = "";
+      html.overflow = "";
+      html.overscrollBehavior = "";
+      body.overflow = "";
     };
   }, [open]);
 
@@ -244,7 +254,7 @@ export function Nav() {
       {/* Menú móvil fullscreen. Vive fuera del <header> porque su
           backdrop-blur crearía un containing block y rompería el fixed. */}
       {open && (
-        <nav className="fixed inset-x-0 bottom-0 top-16 z-40 flex flex-col justify-between overflow-y-auto bg-night px-6 pb-8 pt-8 font-sans text-cream md:hidden">
+        <nav className="fixed inset-x-0 bottom-0 top-16 z-40 flex flex-col justify-between overflow-y-auto overscroll-contain bg-night px-6 pb-8 pt-8 font-sans text-cream md:hidden">
           <div>
             <button
               type="button"
