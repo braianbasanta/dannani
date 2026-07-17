@@ -254,7 +254,7 @@ export function Nav() {
       {/* Menú móvil fullscreen. Vive fuera del <header> porque su
           backdrop-blur crearía un containing block y rompería el fixed. */}
       {open && (
-        <nav className="fixed inset-x-0 bottom-0 top-16 z-40 flex flex-col justify-between overflow-y-auto overscroll-contain bg-night px-6 pb-8 pt-8 font-sans text-cream md:hidden">
+        <nav className="fixed inset-x-0 bottom-0 top-16 z-40 flex flex-col overflow-y-auto overscroll-contain bg-night px-6 pb-8 pt-8 font-sans text-cream md:hidden">
           <div>
             <button
               type="button"
@@ -358,7 +358,7 @@ export function Nav() {
             </Link>
           </div>
 
-          <div className="flex flex-col gap-3 pt-6">
+          <div className="mt-auto flex flex-col gap-3 pt-6">
             <LanguageSwitcher variant="mobile" onNavigate={() => setOpen(false)} />
             <Link
               href="/reservar"
