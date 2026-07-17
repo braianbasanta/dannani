@@ -357,17 +357,18 @@ export default function HomePage({
 
       {/* 2 · Decisión: comer aquí o para llevar. El CTA "Ver restaurantes"
           del hero y el cue de scroll anclan aquí (#locales). */}
-      {/* En móvil las dos tarjetas caben en un viewport (36svh cada una):
-          tras el scroll del ancla se ven ambas opciones sin scrollear más. */}
-      <section id="locales" className="scroll-mt-16 py-14 sm:py-28">
+      {/* En móvil todo el bloque (titular a 2 líneas + 2 tarjetas de 34svh)
+          cabe en el viewport CHICO de iOS (barras desplegadas): tras el
+          scroll del ancla se ven ambas opciones completas y encuadradas. */}
+      <section id="locales" className="scroll-mt-16 pb-14 pt-6 sm:pb-28 sm:pt-28">
         <div className="mx-auto max-w-6xl px-4">
           <Reveal>
-            <h2 className="font-display text-4xl tracking-tight text-cream sm:text-5xl">
+            <h2 className="font-display text-3xl tracking-tight text-cream sm:text-5xl">
               {t("dondeTitle")}
             </h2>
           </Reveal>
           <Reveal>
-            <div className="mt-8 grid gap-3 sm:mt-12 sm:gap-4 md:grid-cols-2">
+            <div className="mt-6 grid gap-3 sm:mt-12 sm:gap-4 md:grid-cols-2">
               <ChooserCard
                 href="/restaurantes"
                 image="/images/home/mesa-restaurante.jpg"
