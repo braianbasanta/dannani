@@ -113,7 +113,7 @@ export default function PizzeriaNapolitanaPage({
         </p>
         <ul className="mt-8 grid gap-4 sm:grid-cols-3">
           <li className="rounded-[1.25rem] bg-cream/5 p-5 ring-1 ring-cream/10">
-            <p className="font-script text-2xl text-electric">
+            <p className="font-display text-xl tracking-tight text-electric">
               {t("card1Title")}
             </p>
             <p className="mt-2 text-sm leading-relaxed text-cream/80">
@@ -121,7 +121,7 @@ export default function PizzeriaNapolitanaPage({
             </p>
           </li>
           <li className="rounded-[1.25rem] bg-cream/5 p-5 ring-1 ring-cream/10">
-            <p className="font-script text-2xl text-electric">
+            <p className="font-display text-xl tracking-tight text-electric">
               {t("card2Title")}
             </p>
             <p className="mt-2 text-sm leading-relaxed text-cream/80">
@@ -129,7 +129,7 @@ export default function PizzeriaNapolitanaPage({
             </p>
           </li>
           <li className="rounded-[1.25rem] bg-cream/5 p-5 ring-1 ring-cream/10">
-            <p className="font-script text-2xl text-electric">
+            <p className="font-display text-xl tracking-tight text-electric">
               {t("card3Title")}
             </p>
             <p className="mt-2 text-sm leading-relaxed text-cream/80">

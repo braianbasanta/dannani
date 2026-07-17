@@ -250,7 +250,7 @@ export default function MejorPizzeriaPage({
                 href={hrefFor(location) as any}
                 className="group rounded-[1.75rem] bg-night-soft p-6 shadow-card ring-1 ring-cream/10 transition-all duration-500 ease-fluid hover:-translate-y-1 sm:p-7"
               >
-                <p className="font-script text-2xl text-electric">
+                <p className="font-display text-xl tracking-tight text-electric">
                   {t(`occasions.t${n}` as "occasions.t1")}
                 </p>
                 <p className="mt-2 text-sm leading-relaxed text-cream/80">

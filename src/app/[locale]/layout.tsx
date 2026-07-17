@@ -26,8 +26,9 @@ const publicSans = Public_Sans({
 
 /* Caligráfica de marca: la clienta usa Monotype Corsiva en menús y
    cartelería (licencia comercial, no embebible); Dancing Script es la
-   sustituta libre más cercana. Alimenta font-script: historia, frases
-   neón y detalles. latin-ext por el catalán futuro. */
+   sustituta libre más cercana. Alimenta font-script SOLO en las frases
+   del neón (home e historia) — el resto de títulos va en font-display
+   para no multiplicar tipografías. latin-ext por el catalán futuro. */
 const dancingScript = Dancing_Script({
   variable: "--font-dancing-script",
   subsets: ["latin", "latin-ext"],
