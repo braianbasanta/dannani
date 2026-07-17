@@ -241,6 +241,13 @@ export function attributionChannel(
   if (isPaid && (isMetaSrc || a.fbclid))
     return { key: "meta-ads", label: "Meta Ads" };
 
+  // Redes sin medium de pago (p. ej. link etiquetado de la bio de Instagram):
+  // mismo canal que las visitas detectadas por referrer.
+  if (["instagram", "ig"].includes(src))
+    return { key: "instagram", label: "Instagram" };
+  if (isMetaSrc) return { key: "facebook", label: "Facebook" };
+  if (src === "tiktok") return { key: "tiktok", label: "TikTok" };
+
   // UTMs propios (links etiquetados: ficha GBP, email, QR…). Las fichas de GBP
   // llevan utm_campaign="gbp-<local>" (así se distingue qué local trae la reserva).
   const campaign = (a.utm_campaign ?? "").toLowerCase().trim();
