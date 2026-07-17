@@ -83,17 +83,17 @@ export default function ContactoPage({
                   <br />
                   {hoursParts(location).times}
                 </p>
+              </div>
+              <div className="flex flex-wrap gap-3">
                 <a
                   href={location.phoneHref}
-                  className="mt-2 inline-flex items-center gap-2 text-sm font-semibold underline decoration-cream/40 underline-offset-4 transition-colors hover:text-electric"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-cream/10 px-4 py-3 font-sans text-xs font-bold uppercase tracking-[0.14em] text-cream ring-1 ring-cream/25 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_10px_30px_-12px_rgba(0,0,0,0.5)] transition-all duration-300 ease-fluid hover:-translate-y-0.5 hover:bg-[linear-gradient(160deg,#7bafbc_0%,#5599aa_52%,#3d7e8f_100%)] hover:text-night hover:ring-black/20 active:scale-[0.98]"
                 >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
                     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                   {location.phone}
                 </a>
-              </div>
-              <div className="flex flex-wrap gap-3">
                 <ComoLlegar location={location} />
                 <DeliveryCTA location={location} />
                 <ReservaCTA location={location} />
