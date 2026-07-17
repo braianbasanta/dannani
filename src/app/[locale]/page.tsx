@@ -179,7 +179,7 @@ function ChooserCard({
   return (
     <Link
       href={href}
-      className="group relative flex aspect-[4/5] items-end overflow-hidden rounded-[1.75rem] shadow-card ring-1 ring-cream/10 transition-all duration-500 ease-fluid hover:shadow-card-hover md:aspect-[4/3]"
+      className="group relative flex h-[34svh] min-h-[13rem] items-end overflow-hidden rounded-[1.75rem] shadow-card ring-1 ring-cream/10 transition-all duration-500 ease-fluid hover:shadow-card-hover md:h-auto md:aspect-[4/3]"
     >
       <Image
         src={image}
@@ -357,7 +357,9 @@ export default function HomePage({
 
       {/* 2 · Decisión: comer aquí o para llevar. El CTA "Ver restaurantes"
           del hero y el cue de scroll anclan aquí (#locales). */}
-      <section id="locales" className="scroll-mt-16 py-20 sm:py-28">
+      {/* En móvil las dos tarjetas caben en un viewport (36svh cada una):
+          tras el scroll del ancla se ven ambas opciones sin scrollear más. */}
+      <section id="locales" className="scroll-mt-16 py-14 sm:py-28">
         <div className="mx-auto max-w-6xl px-4">
           <Reveal>
             <h2 className="font-display text-4xl tracking-tight text-cream sm:text-5xl">
@@ -365,7 +367,7 @@ export default function HomePage({
             </h2>
           </Reveal>
           <Reveal>
-            <div className="mt-10 grid gap-4 sm:mt-12 md:grid-cols-2">
+            <div className="mt-8 grid gap-3 sm:mt-12 sm:gap-4 md:grid-cols-2">
               <ChooserCard
                 href="/restaurantes"
                 image="/images/home/mesa-restaurante.jpg"
