@@ -2,30 +2,43 @@ import Anthropic from "@anthropic-ai/sdk";
 import { reservableLocations } from "@/lib/reservations";
 
 /**
- * Extracción de reservas en lenguaje natural para el bot de Telegram
- * (@DaNanni_bot): el staff escribe "@bot reserva en poblenou el sábado a las
- * 20 para 20, Manolito 600..." y Claude devuelve los campos estructurados.
- * Modelo: claude-sonnet-5 con structured outputs (JSON garantizado) y
- * effort low (extracción barata y rápida). Si falta ANTHROPIC_API_KEY,
- * devuelve null y el bot lo indica.
+ * Interpretación de mensajes del staff para el bot de Telegram
+ * (@DaNanni_bot): crear, modificar o cancelar reservas en lenguaje natural.
+ * Modelo: claude-sonnet-5 (con fallback a claude-opus-4-8 solo si Sonnet
+ * está sobrecargado — nunca un modelo menor: aquí prima no equivocarse).
+ * Structured outputs garantizan el JSON. Sin ANTHROPIC_API_KEY devuelve null.
  */
 
-export interface ExtractedReservation {
-  location_slug: string; // "" si no se menciona
-  date: string; // YYYY-MM-DD, "" si falta
-  time: string; // HH:MM, "" si falta
-  party_size: number; // 0 si falta
+export interface ExtractedIntent {
+  intent: "create" | "modify" | "cancel" | "other";
+  // create
+  location_slug: string;
+  date: string; // YYYY-MM-DD
+  time: string; // HH:MM
+  party_size: number;
   name: string;
   phone: string;
   email: string;
   notes: string;
-  missing: string; // pregunta en español si falta algo esencial, "" si completo
+  // modify / cancel — localizar la reserva existente
+  find_name: string;
+  find_date: string; // YYYY-MM-DD
+  find_location_slug: string;
+  // modify — cambios pedidos ("" / 0 = sin cambio)
+  new_date: string;
+  new_time: string;
+  new_party_size: number;
+  // pregunta breve si falta algo esencial
+  missing: string;
 }
+
+const SLUGS = ["born", "raval", "poblenou", "gracia", ""] as const;
 
 const EXTRACT_SCHEMA = {
   type: "object",
   additionalProperties: false,
   required: [
+    "intent",
     "location_slug",
     "date",
     "time",
@@ -34,36 +47,73 @@ const EXTRACT_SCHEMA = {
     "phone",
     "email",
     "notes",
+    "find_name",
+    "find_date",
+    "find_location_slug",
+    "new_date",
+    "new_time",
+    "new_party_size",
     "missing",
   ],
   properties: {
+    intent: {
+      type: "string",
+      enum: ["create", "modify", "cancel", "other"],
+      description:
+        "create = reserva nueva; modify = cambiar una existente; cancel = anular una existente; other = el mensaje no pide nada de eso.",
+    },
     location_slug: {
       type: "string",
-      enum: ["born", "raval", "poblenou", "gracia", ""],
-      description: "Slug del restaurante mencionado; cadena vacía si no está claro.",
+      enum: SLUGS,
+      description: "Solo para create: restaurante de la reserva nueva; '' si no está claro.",
     },
     date: {
       type: "string",
       description:
-        "Fecha resuelta en formato YYYY-MM-DD (resolver 'mañana', 'este sábado', '24/07'…); vacía si falta.",
+        "Solo para create: fecha resuelta YYYY-MM-DD (resolver 'mañana', 'este sábado', '24/07'…); '' si falta.",
     },
     time: {
       type: "string",
-      description: "Hora en formato HH:MM de 24h ('a las 8 de la tarde' → '20:00'); vacía si falta.",
+      description: "Solo para create: hora HH:MM de 24h ('a las 8 de la tarde' → '20:00'); '' si falta.",
     },
-    party_size: { type: "integer", description: "Número de comensales; 0 si falta." },
-    name: { type: "string", description: "Nombre del cliente; vacío si falta." },
-    phone: { type: "string", description: "Teléfono del cliente; vacío si falta." },
-    email: { type: "string", description: "Email del cliente; vacío si falta." },
+    party_size: { type: "integer", description: "Solo para create: comensales; 0 si falta." },
+    name: { type: "string", description: "Solo para create: nombre del cliente; '' si falta." },
+    phone: { type: "string", description: "Solo para create: teléfono; '' si falta." },
+    email: { type: "string", description: "Solo para create: email; '' si falta." },
     notes: {
       type: "string",
+      description: "Solo para create: peticiones extra en una línea (terraza, alergias, trona…); '' si no hay.",
+    },
+    find_name: {
+      type: "string",
+      description: "Para modify/cancel: nombre del cliente de la reserva a localizar; '' si no lo dicen.",
+    },
+    find_date: {
+      type: "string",
       description:
-        "Peticiones extra en una línea (terraza, alergias, trona, ocasión…); vacío si no hay.",
+        "Para modify/cancel: fecha ACTUAL de la reserva a localizar, YYYY-MM-DD resuelta; '' si no la dicen.",
+    },
+    find_location_slug: {
+      type: "string",
+      enum: SLUGS,
+      description: "Para modify/cancel: restaurante de la reserva a localizar; '' si no lo dicen.",
+    },
+    new_date: {
+      type: "string",
+      description: "Solo para modify: NUEVA fecha YYYY-MM-DD si piden cambiarla; '' si no cambia.",
+    },
+    new_time: {
+      type: "string",
+      description: "Solo para modify: NUEVA hora HH:MM si piden cambiarla; '' si no cambia.",
+    },
+    new_party_size: {
+      type: "integer",
+      description: "Solo para modify: NUEVO nº de comensales si piden cambiarlo; 0 si no cambia.",
     },
     missing: {
       type: "string",
       description:
-        "Si falta restaurante, fecha, hora, nº de personas o nombre: UNA pregunta breve en español pidiendo lo que falta. Vacía si no falta nada esencial.",
+        "Si falta algo esencial para ejecutar el intent (p. ej. en create: restaurante/fecha/hora/personas/nombre): UNA pregunta breve en español pidiéndolo. '' si no falta nada.",
     },
   },
 } as const;
@@ -79,11 +129,16 @@ export function aiConfigured(): boolean {
   return Boolean(process.env.ANTHROPIC_API_KEY);
 }
 
-/** Extrae los datos de una reserva de un mensaje libre del staff. Null si falla. */
+/**
+ * Interpreta un mensaje libre del staff. `context` es el mensaje del bot al
+ * que están respondiendo (si aplica), para que los seguimientos tipo
+ * "mejor a las 22" tengan sentido. Null si falla.
+ */
 export async function extractReservation(
   text: string,
-  todayISO: string
-): Promise<ExtractedReservation | null> {
+  todayISO: string,
+  context?: string
+): Promise<ExtractedIntent | null> {
   const anthropic = getClient();
   if (!anthropic) return null;
 
@@ -99,30 +154,37 @@ export async function extractReservation(
     .map((l) => `- ${l.slug}: ${l.name} (${l.neighborhood})`)
     .join("\n");
 
-  // Sonnet 5 primero; si está sobrecargado (529/5xx/429) cae a Haiku 4.5,
-  // que resuelve esta extracción igual de bien y casi nunca está saturado.
-  const MODELS = ["claude-sonnet-5", "claude-haiku-4-5"] as const;
+  const userContent = context
+    ? `El staff responde a este mensaje anterior del bot:\n"""${context}"""\n\nMensaje del staff:\n${text}`
+    : text;
+
+  // Sonnet 5 siempre; solo si está sobrecargado (529/429/5xx) reintenta con
+  // Opus 4.8 (igual o más capaz — nunca degradar a un modelo menor).
+  const MODELS = ["claude-sonnet-5", "claude-opus-4-8"] as const;
 
   const request = (model: (typeof MODELS)[number]) =>
     anthropic.messages.create({
       model,
       max_tokens: 4000,
-      output_config: {
-        // effort no está soportado en Haiku 4.5; solo se manda en Sonnet.
-        ...(model === "claude-sonnet-5" ? { effort: "low" as const } : {}),
-        format: { type: "json_schema", schema: EXTRACT_SCHEMA },
-      },
+      output_config: { format: { type: "json_schema", schema: EXTRACT_SCHEMA } },
       system:
-        `Extraes datos de reservas de mesa de mensajes del staff de Da Nanni (grupo de trattorias napolitanas en Barcelona). ` +
+        `Interpretas mensajes del staff de Da Nanni (grupo de trattorias napolitanas en Barcelona) sobre reservas de mesa. ` +
         `Hoy es ${todayLong} (${todayISO}) en Madrid.\n\n` +
         `Restaurantes (slug: nombre):\n${locales}\n` +
         `Alias frecuentes: "tallers", "tallers 69" o "raval" → raval; "gràcia"/"gracia" → gracia.\n\n` +
+        `Intents:\n` +
+        `- create: piden apuntar una reserva nueva.\n` +
+        `- modify: piden cambiar una reserva que ya existe (los datos para LOCALIZARLA van en find_*; los cambios en new_*).\n` +
+        `- cancel: piden anular una reserva existente (localizarla con find_*).\n` +
+        `- other: el mensaje no pide nada de lo anterior.\n\n` +
         `Reglas:\n` +
         `- Resuelve fechas relativas respecto a hoy ("mañana", "este sábado", "el viernes que viene").\n` +
         `- Horas en 24h; en un restaurante "a las 8"/"a las 9" sin más contexto es por la noche (20:00/21:00).\n` +
-        `- No inventes datos: si algo no está en el mensaje, deja el campo vacío (o 0).\n` +
+        `- No inventes datos: si algo no está en el mensaje (ni en el contexto), deja el campo vacío (o 0).\n` +
+        `- En modify, no confundas la fecha de la reserva actual (find_date) con la nueva (new_date): ` +
+        `"cambia la del sábado a las 22" → find_date=ese sábado y new_time=22:00.\n` +
         `- El mensaje puede estar en español, italiano, catalán o inglés.`,
-      messages: [{ role: "user", content: text }],
+      messages: [{ role: "user", content: userContent }],
     });
 
   for (const model of MODELS) {
@@ -131,7 +193,7 @@ export async function extractReservation(
       if (res.stop_reason === "refusal") return null;
       const block = res.content.find((b) => b.type === "text");
       if (!block || block.type !== "text") return null;
-      return JSON.parse(block.text) as ExtractedReservation;
+      return JSON.parse(block.text) as ExtractedIntent;
     } catch (err) {
       const status = err instanceof Anthropic.APIError ? err.status : undefined;
       const retryable = status === 529 || status === 429 || (status ?? 0) >= 500;

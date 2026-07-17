@@ -2,29 +2,31 @@ import { NextResponse } from "next/server";
 import { randomBytes } from "crypto";
 import { getSupabaseAdmin, RESERVATIONS_TABLE } from "@/lib/supabase";
 import {
-  reservableLocations,
   getReservableLocation,
   getSlotsForLocation,
   formatReservationDate,
+  normalizeTime,
   todayInMadrid,
   PARTY_MIN,
   PARTY_MAX_TOTAL,
   type ReservationRow,
 } from "@/lib/reservations";
 import { notifyCustomer } from "@/lib/email";
-import { aiConfigured, extractReservation } from "@/lib/reservation-ai";
+import { aiConfigured, extractReservation, type ExtractedIntent } from "@/lib/reservation-ai";
 import { remainingCapacity, capacityError } from "@/lib/capacity";
 
 export const runtime = "nodejs";
 
 /**
- * Webhook del bot @DaNanni_bot: permite CREAR reservas desde Telegram
- * (grupo "DaNanni Reservas"), además de recibir los avisos.
+ * Webhook del bot @DaNanni_bot: el staff CREA, MODIFICA y CANCELA reservas
+ * hablándole en lenguaje natural (mencionándolo en el grupo "DaNanni
+ * Reservas", respondiendo a sus mensajes, o por privado si su user id está
+ * en la allowlist). Claude interpreta el mensaje y el bot SIEMPRE pide
+ * confirmación con botones antes de tocar la base de datos.
  *
- * Flujo (sin estado en DB — todo viaja en callback_data y en el texto):
- *   /reserva → teclado de restaurantes → día → hora → comensales →
- *   el bot manda una "ficha" con una línea máquina `#nr slug fecha hora pax`
- *   y el manager RESPONDE a ese mensaje con "Nombre, teléfono" (+ notas).
+ * Sin estado en DB: la acción pendiente viaja en una línea máquina dentro
+ * del propio mensaje de confirmación (#nrc crear, #nrm modificar, #nrx
+ * cancelar) y el callback la relee de ahí.
  *
  * Seguridad: header `x-telegram-bot-api-secret-token` (setWebhook) y solo
  * chats/usuarios listados en TELEGRAM_CHAT_IDS.
@@ -59,8 +61,6 @@ interface TgUpdate {
   message?: TgMessage;
   callback_query?: TgCallbackQuery;
 }
-
-type InlineKeyboard = { text: string; callback_data: string }[][];
 
 async function tg(
   method: string,
@@ -111,89 +111,17 @@ function isAllowed(chatId: number, userId?: number): boolean {
   );
 }
 
-/* ------------------------------------------------------------------ *
- * Helpers de fechas y teclados
- * ------------------------------------------------------------------ */
-
-function addDaysISO(dateStr: string, n: number): string {
-  const d = new Date(`${dateStr}T12:00:00Z`);
-  d.setUTCDate(d.getUTCDate() + n);
-  return d.toISOString().slice(0, 10);
-}
-
-/** "vie 17/07" para los botones de día. */
-function dayLabel(dateStr: string, today: string): string {
-  if (dateStr === today) return "Hoy";
-  if (dateStr === addDaysISO(today, 1)) return "Mañana";
-  const d = new Date(`${dateStr}T12:00:00Z`);
-  const wd = new Intl.DateTimeFormat("es-ES", {
-    weekday: "short",
-    timeZone: "Europe/Madrid",
-  }).format(d);
-  const [, m, day] = dateStr.split("-");
-  return `${wd} ${day}/${m}`;
-}
-
-function chunk<T>(arr: T[], size: number): T[][] {
-  const out: T[][] = [];
-  for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
-  return out;
-}
-
-const CANCEL_ROW = [{ text: "✖️ Cancelar", callback_data: "nr|x" }];
-
-function restaurantsKeyboard(presetDate?: string): InlineKeyboard {
-  const suffix = presetDate ? `|${presetDate}` : "";
-  return [
-    ...reservableLocations.map((l) => [
-      { text: `${l.name} · ${l.neighborhood}`, callback_data: `nr|${l.slug}${suffix}` },
-    ]),
-    CANCEL_ROW,
-  ];
-}
-
-function datesKeyboard(slug: string, today: string): InlineKeyboard {
-  const days = Array.from({ length: 7 }, (_, i) => addDaysISO(today, i));
-  return [
-    ...chunk(
-      days.map((d) => ({ text: dayLabel(d, today), callback_data: `nr|${slug}|${d}` })),
-      3
-    ),
-    [{ text: "📅 Otra fecha", callback_data: `nr|${slug}|otra` }],
-    CANCEL_ROW,
-  ];
-}
-
-/** Parsea "DD/MM" o "DD/MM/YYYY"; si ya pasó este año, salta al siguiente. */
-function parseDateArg(arg: string, today: string): string | null {
-  const m = arg.match(/^(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?$/);
-  if (!m) return null;
-  const day = Number(m[1]);
-  const month = Number(m[2]);
-  let year = m[3] ? Number(m[3]) : Number(today.slice(0, 4));
-  if (year < 100) year += 2000;
-  const pad = (n: number) => String(n).padStart(2, "0");
-  let iso = `${year}-${pad(month)}-${pad(day)}`;
-  if (!m[3] && iso < today) iso = `${year + 1}-${pad(month)}-${pad(day)}`;
-  const check = new Date(`${iso}T12:00:00Z`);
-  if (
-    Number.isNaN(check.getTime()) ||
-    check.getUTCMonth() + 1 !== month ||
-    check.getUTCDate() !== day
-  )
-    return null;
-  return iso;
-}
-
-/* ------------------------------------------------------------------ *
- * Pasos del flujo
- * ------------------------------------------------------------------ */
-
 const HELP =
-  "🍕 Bot de reservas de Da Nanni.\n\n" +
-  "• /reserva — crear una reserva (teléfono/walk-in)\n" +
-  "• /reserva 24/07 — lo mismo, con la fecha ya elegida\n\n" +
+  "🍕 Bot de reservas de Da Nanni. Habladme directamente (mencionadme en el grupo) y yo me ocupo:\n\n" +
+  '• "Reserva en poblenou el sábado a las 20 para 6, Ana López, 612 345 678, ana@mail.com"\n' +
+  '• "Cambia la reserva de Ana López del sábado a las 21:30"\n' +
+  '• "Cancela la reserva de Ana López del sábado"\n\n' +
+  "Siempre os pido confirmación con un botón antes de tocar nada. " +
   "También aviso aquí de cada reserva que entra por la web.";
+
+/* ------------------------------------------------------------------ *
+ * Mensajes entrantes
+ * ------------------------------------------------------------------ */
 
 async function handleMessage(msg: TgMessage): Promise<void> {
   if (msg.migrate_to_chat_id) {
@@ -204,175 +132,45 @@ async function handleMessage(msg: TgMessage): Promise<void> {
   }
   if (!isAllowed(msg.chat.id, msg.from?.id)) return;
 
-  // ¿Respuesta a una ficha del bot? → completar la reserva.
-  const replied = msg.reply_to_message;
-  if (replied && replied.from?.id === botUserId() && replied.text?.includes("#nr ")) {
-    await completeReservation(msg, replied.text);
-    return;
-  }
-
   const text = (msg.text ?? "").trim();
+  if (!text) return;
 
-  // Mención al bot (o mensaje directo en privado) → alta por lenguaje natural.
-  const mention = /@dananni_bot/i;
-  const isPrivate = msg.chat.id > 0;
-  if (!text.startsWith("/") && (mention.test(text) || (isPrivate && text))) {
-    const cleaned = text.replace(mention, "").trim();
-    if (cleaned) await handleAiReservation(msg, cleaned);
-    return;
-  }
-
-  if (!text.startsWith("/")) return;
-  const [cmdRaw, ...args] = text.split(/\s+/);
-  const cmd = cmdRaw.split("@")[0].toLowerCase();
-
-  if (cmd === "/start" || cmd === "/ayuda" || cmd === "/help") {
+  if (text.startsWith("/")) {
+    const cmd = text.split(/\s+/)[0].split("@")[0].toLowerCase();
+    if (cmd === "/reserva" || cmd === "/nueva") {
+      await tg("sendMessage", {
+        chat_id: msg.chat.id,
+        text:
+          "Los botones se retiraron: ahora simplemente escribime la reserva.\n" +
+          'Ej: "reserva en tallers mañana a las 21 para 4, Juan Pérez, 600 111 222"',
+      });
+      return;
+    }
     await tg("sendMessage", { chat_id: msg.chat.id, text: HELP });
     return;
   }
 
-  if (cmd === "/reserva" || cmd === "/nueva") {
-    const today = todayInMadrid();
-    let presetDate: string | undefined;
-    if (args[0]) {
-      const parsed = parseDateArg(args[0], today);
-      if (!parsed || parsed < today) {
-        await tg("sendMessage", {
-          chat_id: msg.chat.id,
-          text: "No entendí la fecha. Usá /reserva DD/MM (ej: /reserva 24/07).",
-        });
-        return;
-      }
-      presetDate = parsed;
-    }
-    await tg("sendMessage", {
-      chat_id: msg.chat.id,
-      text: presetDate
-        ? `📝 Nueva reserva para el ${formatReservationDate(presetDate, "es")}. ¿En qué restaurante?`
-        : "📝 Nueva reserva. ¿En qué restaurante?",
-      reply_markup: { inline_keyboard: restaurantsKeyboard(presetDate) },
-    });
-  }
-}
-
-async function handleCallback(cb: TgCallbackQuery): Promise<void> {
-  // Cortar el "relojito" del botón siempre, pase lo que pase después.
-  await tg("answerCallbackQuery", { callback_query_id: cb.id });
-
-  const msg = cb.message;
-  if (!msg || !isAllowed(msg.chat.id, cb.from.id)) return;
-  const parts = (cb.data ?? "").split("|");
-
-  // Confirmación del alta por lenguaje natural.
-  if (parts[0] === "nrc" && parts[1] === "ok") {
-    await confirmAiReservation(msg);
+  // ¿Responde a un mensaje del bot? → seguimiento con ese contexto.
+  const replied = msg.reply_to_message;
+  if (replied && replied.from?.id === botUserId()) {
+    await handleAi(msg, text, replied.text);
     return;
   }
 
-  if (parts[0] !== "nr") return;
-
-  const edit = (text: string, keyboard?: InlineKeyboard) =>
-    tg("editMessageText", {
-      chat_id: msg.chat.id,
-      message_id: msg.message_id,
-      text,
-      ...(keyboard ? { reply_markup: { inline_keyboard: keyboard } } : {}),
-    });
-
-  const today = todayInMadrid();
-  const [, slug, date, time, paxStr] = parts;
-
-  if (slug === "x") {
-    await edit("✖️ Reserva cancelada. Empezá de nuevo con /reserva.");
-    return;
+  // Mención en grupo, o cualquier texto en privado.
+  const mention = /@dananni_bot/gi;
+  const isPrivate = msg.chat.id > 0;
+  if (mention.test(text) || isPrivate) {
+    const cleaned = text.replace(mention, "").trim();
+    if (cleaned) await handleAi(msg, cleaned);
   }
-
-  const location = getReservableLocation(slug);
-  if (!location) {
-    await edit("Ese local ya no acepta reservas. Empezá de nuevo con /reserva.");
-    return;
-  }
-
-  // Paso 2: elegir día.
-  if (!date) {
-    await edit(`📍 ${location.name}. ¿Para qué día?`, datesKeyboard(slug, today));
-    return;
-  }
-  if (date === "otra") {
-    await edit(
-      `📍 ${location.name}. Para otra fecha escribí /reserva DD/MM (ej: /reserva 31/07) y volvé a elegir restaurante.`
-    );
-    return;
-  }
-  if (date < today) {
-    await edit("Esa fecha ya pasó. Empezá de nuevo con /reserva.");
-    return;
-  }
-
-  // Paso 3: elegir hora (respeta turnos fijos y bloqueos del día).
-  if (!time) {
-    const slots = getSlotsForLocation(location, date);
-    if (slots.length === 0) {
-      await edit(
-        `📍 ${location.name} no tiene horas disponibles el ${formatReservationDate(date, "es")}.`
-      );
-      return;
-    }
-    await edit(
-      `📍 ${location.name} · ${formatReservationDate(date, "es")}. ¿A qué hora?`,
-      [
-        ...chunk(
-          slots.map((s) => ({ text: s, callback_data: `nr|${slug}|${date}|${s}` })),
-          4
-        ),
-        CANCEL_ROW,
-      ]
-    );
-    return;
-  }
-
-  // Paso 4: comensales.
-  if (!paxStr) {
-    await edit(
-      `📍 ${location.name} · ${formatReservationDate(date, "es")} · ${time}. ¿Cuántas personas? (para más de 20, usar dananni.es/admin/reservas/nueva)`,
-      [
-        ...chunk(
-          Array.from({ length: 20 }, (_, i) => ({
-            text: String(i + 1),
-            callback_data: `nr|${slug}|${date}|${time}|${i + 1}`,
-          })),
-          5
-        ),
-        CANCEL_ROW,
-      ]
-    );
-    return;
-  }
-
-  // Paso 5: ficha + pedir nombre y teléfono respondiendo al mensaje.
-  await edit(
-    `📍 ${location.name} · ${formatReservationDate(date, "es")} · ${time} · ${paxStr} pax\n⬇️ Falta el cliente: respondé al siguiente mensaje.`
-  );
-  await tg("sendMessage", {
-    chat_id: msg.chat.id,
-    text:
-      `📝 ${location.name} · ${formatReservationDate(date, "es")} · ${time} · ${paxStr} pax\n\n` +
-      `RESPONDÉ a este mensaje con los datos del cliente, uno por línea:\n\n` +
-      `Nombre y apellido\n` +
-      `Teléfono\n` +
-      `Email (opcional: le llega la confirmación)\n` +
-      `Notas (opcional)\n\n` +
-      `Solo el nombre es obligatorio.\n\n` +
-      `#nr ${slug} ${date} ${time} ${paxStr}`,
-    reply_markup: { force_reply: true, selective: true },
-  });
 }
 
 /* ------------------------------------------------------------------ *
- * Alta por lenguaje natural (mención al bot + Claude)
+ * Interpretación con Claude y fichas de confirmación
  * ------------------------------------------------------------------ */
 
-async function handleAiReservation(msg: TgMessage, text: string): Promise<void> {
+async function handleAi(msg: TgMessage, text: string, context?: string): Promise<void> {
   const say = (t: string, extra: Record<string, unknown> = {}) =>
     tg("sendMessage", {
       chat_id: msg.chat.id,
@@ -384,44 +182,58 @@ async function handleAiReservation(msg: TgMessage, text: string): Promise<void> 
     });
 
   if (!aiConfigured()) {
-    await say(
-      "El alta por lenguaje natural aún no está activa (falta la API key). Usá /reserva con botones."
-    );
+    await say("El asistente no está activo (falta la API key). Usad dananni.es/admin/reservas/nueva.");
     return;
   }
 
   await tg("sendChatAction", { chat_id: msg.chat.id, action: "typing" });
 
   const today = todayInMadrid();
-  const r = await extractReservation(text, today);
+  const r = await extractReservation(text, today, context);
   console.log("[telegram-bot] ai extract:", r ? JSON.stringify(r) : "null");
   if (!r) {
-    await say("No pude interpretar el mensaje. Probá de nuevo o usá /reserva con botones.");
+    await say("No pude interpretar el mensaje. Probá a escribirlo de otra forma.");
     return;
   }
 
-  // ¿Falta algo esencial? Preguntar y que lo manden completo de nuevo.
+  if (r.intent === "create") {
+    await proposeCreate(say, r, today);
+    return;
+  }
+  if (r.intent === "modify" || r.intent === "cancel") {
+    await proposeModifyOrCancel(say, r, today);
+    return;
+  }
+  await say(
+    "Decime qué reserva querés crear, modificar o cancelar. Ej:\n" +
+      '"reserva en gracia el viernes a las 21 para 4, Marta Gil, 600 111 222"'
+  );
+}
+
+type Say = (t: string, extra?: Record<string, unknown>) => Promise<unknown>;
+
+const CONFIRM_BUTTONS = (okData: string, okLabel: string) => ({
+  reply_markup: {
+    inline_keyboard: [
+      [
+        { text: okLabel, callback_data: okData },
+        { text: "✖️ No, dejalo", callback_data: "nr|x" },
+      ],
+    ],
+  },
+});
+
+async function proposeCreate(say: Say, r: ExtractedIntent, today: string): Promise<void> {
   const location = getReservableLocation(r.location_slug);
-  const essentialsMissing =
-    !location || !r.date || !r.time || !r.party_size || !r.name.trim();
-  if (essentialsMissing) {
-    await say(
-      (r.missing ||
-        "Me falta algún dato (restaurante, día, hora, personas o nombre).") +
-        "\nMandá el mensaje completo de nuevo mencionándome."
-    );
+  if (!location || !r.date || !r.time || !r.party_size || !r.name.trim()) {
+    await say(r.missing || "Me falta algún dato (restaurante, día, hora, personas o nombre).");
     return;
   }
-
   if (r.date < today) {
     await say("Esa fecha ya pasó. Revisá el día y mandalo de nuevo.");
     return;
   }
-  if (
-    !Number.isInteger(r.party_size) ||
-    r.party_size < PARTY_MIN ||
-    r.party_size > PARTY_MAX_TOTAL
-  ) {
+  if (!Number.isInteger(r.party_size) || r.party_size < PARTY_MIN || r.party_size > PARTY_MAX_TOTAL) {
     await say(`Los comensales deben estar entre ${PARTY_MIN} y ${PARTY_MAX_TOTAL}.`);
     return;
   }
@@ -439,7 +251,7 @@ async function handleAiReservation(msg: TgMessage, text: string): Promise<void> 
     return;
   }
 
-  const payload: ExtractedPayload = {
+  const payload: CreatePayload = {
     l: r.location_slug,
     d: r.date,
     t: r.time,
@@ -459,57 +271,203 @@ async function handleAiReservation(msg: TgMessage, text: string): Promise<void> 
   if (payload.no) lines.push(`📝 ${payload.no}`);
   lines.push("", `#nrc ${JSON.stringify(payload)}`);
 
-  await say(lines.join("\n"), {
-    reply_markup: {
-      inline_keyboard: [
-        [
-          { text: "✅ Crear reserva", callback_data: "nrc|ok" },
-          { text: "✖️ Cancelar", callback_data: "nr|x" },
-        ],
-      ],
-    },
-  });
+  await say(lines.join("\n"), CONFIRM_BUTTONS("nrc|ok", "✅ Crear reserva"));
 }
 
-interface ExtractedPayload {
-  l: string; // slug
-  d: string; // fecha YYYY-MM-DD
-  t: string; // hora HH:MM
-  p: number; // pax
-  n: string; // nombre
-  ph: string; // teléfono
-  e: string; // email
-  no: string; // notas
+async function proposeModifyOrCancel(say: Say, r: ExtractedIntent, today: string): Promise<void> {
+  const matches = await findReservations(r.find_name, r.find_date, r.find_location_slug);
+  if (matches.length === 0) {
+    await say(
+      "No encontré ninguna reserva activa que encaje" +
+        (r.find_name ? ` con "${r.find_name}"` : "") +
+        ". Fijate en dananni.es/admin/reservas."
+    );
+    return;
+  }
+  if (matches.length > 1) {
+    const list = matches
+      .slice(0, 5)
+      .map((m) => {
+        const loc = getReservableLocation(m.location_slug);
+        return `• ${m.first_name} ${m.last_name} — ${loc?.name ?? m.location_slug}, ${formatReservationDate(m.reservation_date, "es")} ${normalizeTime(m.reservation_time)}, ${m.party_size} pax`;
+      })
+      .join("\n");
+    await say(
+      `Encontré ${matches.length} reservas que encajan:\n${list}\n\nConcretá más (nombre completo, día o local).`
+    );
+    return;
+  }
+
+  const row = matches[0];
+  const location = getReservableLocation(row.location_slug);
+  if (!location) {
+    await say("Esa reserva es de un local que ya no acepta reservas.");
+    return;
+  }
+  const current = `${formatReservationDate(row.reservation_date, "es")} · ${normalizeTime(row.reservation_time)} · ${row.party_size} pax`;
+
+  if (r.intent === "cancel") {
+    await say(
+      `🗑 ¿Cancelo esta reserva?\n` +
+        `👤 ${row.first_name} ${row.last_name} · ${location.name}\n` +
+        `📅 ${current}\n` +
+        (hasRealEmail(row) ? `📧 Se le avisará por email.\n` : "") +
+        `\n#nrx ${JSON.stringify({ id: row.id })}`,
+      CONFIRM_BUTTONS("nrx|ok", "✅ Sí, cancelar")
+    );
+    return;
+  }
+
+  // modify: valores finales = lo pedido o lo que ya tenía.
+  const newDate = r.new_date || row.reservation_date;
+  const newTime = r.new_time || normalizeTime(row.reservation_time);
+  const newParty = r.new_party_size || row.party_size;
+
+  if (
+    newDate === row.reservation_date &&
+    newTime === normalizeTime(row.reservation_time) &&
+    newParty === row.party_size
+  ) {
+    await say("¿Y qué le cambio? Decime nueva fecha, hora o nº de personas.");
+    return;
+  }
+  if (newDate < today) {
+    await say("Esa fecha nueva ya pasó. Revisá el día.");
+    return;
+  }
+  const maxParty = Math.max(PARTY_MAX_TOTAL, row.party_size);
+  if (!Number.isInteger(newParty) || newParty < PARTY_MIN || newParty > maxParty) {
+    await say(`Los comensales deben estar entre ${PARTY_MIN} y ${maxParty}.`);
+    return;
+  }
+  const keepsSlot =
+    newDate === row.reservation_date && newTime === normalizeTime(row.reservation_time);
+  if (!keepsSlot && !getSlotsForLocation(location, newDate).includes(newTime)) {
+    const slots = getSlotsForLocation(location, newDate);
+    await say(
+      `Las ${newTime} no están disponibles en ${location.name} ese día.\n` +
+        (slots.length ? `Horas posibles: ${slots.join(", ")}` : "Ese día no hay horas disponibles.")
+    );
+    return;
+  }
+  const left = await remainingCapacity(row.location_slug, newDate, newTime, row.id);
+  if (left !== null && newParty > left) {
+    await say(`⛔ ${capacityError(left)} (aforo de ${location.name} superado a esa hora)`);
+    return;
+  }
+
+  await say(
+    `✏️ ¿Modifico esta reserva?\n` +
+      `👤 ${row.first_name} ${row.last_name} · ${location.name}\n` +
+      `Antes: ${current}\n` +
+      `Ahora: ${formatReservationDate(newDate, "es")} · ${newTime} · ${newParty} pax\n` +
+      (hasRealEmail(row) ? `📧 Se le avisará por email.\n` : "") +
+      `\n#nrm ${JSON.stringify({ id: row.id, d: newDate, t: newTime, p: newParty })}`,
+    CONFIRM_BUTTONS("nrm|ok", "✅ Confirmar cambio")
+  );
 }
 
-/** Inserta una reserva confirmada creada desde Telegram. Null si falla. */
-async function insertTelegramReservation(input: {
-  slug: string;
-  date: string;
-  time: string;
-  partySize: number;
-  name: string;
-  phone: string;
-  email: string;
-  notes: string;
-}): Promise<ReservationRow | null> {
-  const hasEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.email);
-  const [firstName, ...lastParts] = input.name.split(/\s+/);
+/* ------------------------------------------------------------------ *
+ * Callbacks de confirmación
+ * ------------------------------------------------------------------ */
+
+async function handleCallback(cb: TgCallbackQuery): Promise<void> {
+  // Cortar el "relojito" del botón siempre, pase lo que pase después.
+  await tg("answerCallbackQuery", { callback_query_id: cb.id });
+
+  const msg = cb.message;
+  if (!msg || !isAllowed(msg.chat.id, cb.from.id)) return;
+  const data = cb.data ?? "";
+
+  const edit = (text: string) =>
+    tg("editMessageText", {
+      chat_id: msg.chat.id,
+      message_id: msg.message_id,
+      text,
+      disable_web_page_preview: true,
+    });
+
+  if (data === "nr|x") {
+    await edit("✖️ Cancelado, no he tocado nada.");
+    return;
+  }
+  if (data === "nrc|ok") {
+    await confirmCreate(msg, edit);
+    return;
+  }
+  if (data === "nrm|ok") {
+    await confirmModify(msg, edit);
+    return;
+  }
+  if (data === "nrx|ok") {
+    await confirmCancel(msg, edit);
+    return;
+  }
+  // Botones del flujo antiguo (/reserva) que quedaron en mensajes viejos.
+  if (data.startsWith("nr|")) {
+    await edit(
+      "Este flujo con botones se retiró: ahora escribime la reserva directamente (mencionándome) y la gestiono yo."
+    );
+  }
+}
+
+type Edit = (text: string) => Promise<unknown>;
+
+/** Lee la línea máquina `#tag {json}` del propio mensaje de confirmación. */
+function readPayload<T>(msg: TgMessage, tag: string): T | null {
+  const m = (msg.text ?? "").match(new RegExp(`#${tag} (\\{.*\\})`));
+  if (!m) return null;
+  try {
+    return JSON.parse(m[1]) as T;
+  } catch {
+    return null;
+  }
+}
+
+interface CreatePayload {
+  l: string;
+  d: string;
+  t: string;
+  p: number;
+  n: string;
+  ph: string;
+  e: string;
+  no: string;
+}
+
+async function confirmCreate(msg: TgMessage, edit: Edit): Promise<void> {
+  const p = readPayload<CreatePayload>(msg, "nrc");
+  if (!p) {
+    await edit("No pude leer la ficha. Empezá de nuevo.");
+    return;
+  }
+  const location = getReservableLocation(p.l);
+  const today = todayInMadrid();
+  if (!location || !p.d || p.d < today || !getSlotsForLocation(location, p.d).includes(p.t)) {
+    await edit("Esa reserva ya no es válida (fecha u hora no disponible). Empezá de nuevo.");
+    return;
+  }
+  const left = await remainingCapacity(p.l, p.d, p.t);
+  if (left !== null && Number(p.p) > left) {
+    await edit(`⛔ ${capacityError(left)} (aforo de ${location.name} superado a esa hora)`);
+    return;
+  }
+
+  const hasEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(p.e);
+  const [firstName, ...lastParts] = p.n.split(/\s+/);
   const supabase = getSupabaseAdmin();
   const { data, error } = await supabase
     .from(RESERVATIONS_TABLE)
     .insert({
-      location_slug: input.slug,
+      location_slug: p.l,
       first_name: firstName.slice(0, 80),
       last_name: lastParts.join(" ").slice(0, 80),
-      phone: (input.phone || "(sin teléfono)").slice(0, 40),
-      email: hasEmail ? input.email : "reservas@dananni.es",
-      reservation_date: input.date,
-      reservation_time: input.time,
-      party_size: input.partySize,
-      // El origen ya queda en attribution (tag 📍 telegram en el panel); no
-      // ensuciar las notas, que le llegan al cliente en el email.
-      notes: input.notes || null,
+      phone: (p.ph || "(sin teléfono)").slice(0, 40),
+      email: hasEmail ? p.e : "reservas@dananni.es",
+      reservation_date: p.d,
+      reservation_time: p.t,
+      party_size: Number(p.p),
+      notes: p.no || null,
       marketing_opt_in: false,
       locale: "es",
       attribution: { utm_source: "telegram", utm_medium: "manual" },
@@ -520,63 +478,11 @@ async function insertTelegramReservation(input: {
     .single();
   if (error || !data) {
     console.error("[telegram-bot] insert error:", error);
-    return null;
-  }
-  return data as ReservationRow;
-}
-
-/** Callback ✅ del alta por IA: lee el #nrc del propio mensaje y crea la reserva. */
-async function confirmAiReservation(msg: TgMessage): Promise<void> {
-  const edit = (text: string) =>
-    tg("editMessageText", {
-      chat_id: msg.chat.id,
-      message_id: msg.message_id,
-      text,
-      disable_web_page_preview: true,
-    });
-
-  const m = (msg.text ?? "").match(/#nrc (\{.*\})/);
-  if (!m) {
-    await edit("No pude leer la ficha. Empezá de nuevo mencionando al bot.");
-    return;
-  }
-  let p: ExtractedPayload;
-  try {
-    p = JSON.parse(m[1]) as ExtractedPayload;
-  } catch {
-    await edit("La ficha está dañada. Empezá de nuevo mencionando al bot.");
-    return;
-  }
-
-  const location = getReservableLocation(p.l);
-  const today = todayInMadrid();
-  if (!location || !p.d || p.d < today || !getSlotsForLocation(location, p.d).includes(p.t)) {
-    await edit("Esa reserva ya no es válida (fecha u hora no disponible). Empezá de nuevo.");
-    return;
-  }
-
-  const left = await remainingCapacity(p.l, p.d, p.t);
-  if (left !== null && Number(p.p) > left) {
-    await edit(`⛔ ${capacityError(left)} (aforo de ${location.name} superado a esa hora)`);
-    return;
-  }
-
-  const row = await insertTelegramReservation({
-    slug: p.l,
-    date: p.d,
-    time: p.t,
-    partySize: Number(p.p),
-    name: p.n,
-    phone: p.ph,
-    email: p.e,
-    notes: p.no,
-  });
-  if (!row) {
     await edit("⚠️ No pude guardar la reserva. Probá de nuevo o usá dananni.es/admin/reservas/nueva.");
     return;
   }
+  const row = data as ReservationRow;
 
-  const hasEmail = row.email !== "reservas@dananni.es";
   if (hasEmail) {
     await notifyCustomer(row, location, "created").catch((e) =>
       console.error("[telegram-bot] notifyCustomer error:", e)
@@ -592,108 +498,161 @@ async function confirmAiReservation(msg: TgMessage): Promise<void> {
   );
 }
 
-/**
- * Parsea la respuesta del manager a la ficha. Formato flexible: líneas
- * separadas (nombre / teléfono / email / notas, en cualquier orden) o todo en
- * una línea con comas. El email y el teléfono se detectan por su forma; la
- * primera línea que no es ninguno de los dos es el nombre y el resto, notas.
- */
-function parseContact(text: string): {
-  name: string;
-  phone: string;
-  email: string;
-  notes: string;
-} {
-  let rest = text;
-
-  const emailMatch = rest.match(/[^\s@,;]+@[^\s@,;]+\.[^\s@,;]+/);
-  const email = emailMatch ? emailMatch[0] : "";
-  if (emailMatch) rest = rest.replace(emailMatch[0], " ");
-
-  const phoneMatch = rest.match(/\+?\d[\d\s.\-()]{5,}\d/);
-  const phone = phoneMatch ? phoneMatch[0].replace(/\s+/g, " ").trim() : "";
-  if (phoneMatch) rest = rest.replace(phoneMatch[0], " ");
-
-  const clean = (s: string) =>
-    s.replace(/\s+/g, " ").replace(/^[\s,;]+|[\s,;]+$/g, "").trim();
-  const lines = rest.split("\n").map(clean).filter(Boolean);
-  const name = lines[0] ?? "";
-  const notes = lines.slice(1).join("\n");
-  return { name, phone, email, notes };
-}
-
-async function completeReservation(msg: TgMessage, fichaText: string): Promise<void> {
-  const say = (text: string) =>
-    tg("sendMessage", {
-      chat_id: msg.chat.id,
-      text,
-      reply_to_message_id: msg.message_id,
-      allow_sending_without_reply: true,
-    });
-
-  const m = fichaText.match(/#nr (\S+) (\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}) (\d{1,2})/);
-  if (!m) return;
-  const [, slug, date, time, paxStr] = m;
-  const location = getReservableLocation(slug);
-  const partySize = Number(paxStr);
+async function confirmModify(msg: TgMessage, edit: Edit): Promise<void> {
+  const p = readPayload<{ id: string; d: string; t: string; p: number }>(msg, "nrm");
+  if (!p) {
+    await edit("No pude leer la ficha. Empezá de nuevo.");
+    return;
+  }
+  const row = await getRow(p.id);
+  if (!row || row.status === "cancelled" || row.status === "rejected") {
+    await edit("Esa reserva ya no está activa. Fijate en dananni.es/admin/reservas.");
+    return;
+  }
+  const location = getReservableLocation(row.location_slug);
   const today = todayInMadrid();
-
-  if (!location || !Number.isInteger(partySize) || partySize < PARTY_MIN || partySize > PARTY_MAX_TOTAL) {
-    await say("Esa ficha ya no es válida. Empezá de nuevo con /reserva.");
+  const keepsSlot =
+    p.d === row.reservation_date && p.t === normalizeTime(row.reservation_time);
+  if (!location || !p.d || p.d < today) {
+    await edit("Ese cambio ya no es válido. Empezá de nuevo.");
     return;
   }
-  if (date < today) {
-    await say("La fecha de esa ficha ya pasó. Empezá de nuevo con /reserva.");
+  if (!keepsSlot && !getSlotsForLocation(location, p.d).includes(p.t)) {
+    await edit("Esa hora ya no está disponible. Empezá de nuevo.");
     return;
   }
-  if (!getSlotsForLocation(location, date).includes(time)) {
-    await say("Esa hora ya no está disponible en ese local. Empezá de nuevo con /reserva.");
-    return;
-  }
-
-  const { name, phone, email, notes } = parseContact(msg.text ?? "");
-  if (!name) {
-    await say(
-      "No encontré el nombre. Respondé a la ficha con los datos del cliente (nombre, teléfono, email…), uno por línea."
-    );
-    return;
-  }
-  const hasEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-  const left = await remainingCapacity(slug, date, time);
-  if (left !== null && partySize > left) {
-    await say(`⛔ ${capacityError(left)} (aforo de ${location.name} superado a esa hora)`);
+  const left = await remainingCapacity(row.location_slug, p.d, p.t, row.id);
+  if (left !== null && Number(p.p) > left) {
+    await edit(`⛔ ${capacityError(left)} (aforo de ${location.name} superado a esa hora)`);
     return;
   }
 
-  const row = await insertTelegramReservation({
-    slug,
-    date,
-    time,
-    partySize,
-    name,
-    phone,
-    email,
-    notes,
-  });
-  if (!row) {
-    await say("⚠️ No pude guardar la reserva. Probá de nuevo o usá dananni.es/admin/reservas/nueva.");
+  const supabase = getSupabaseAdmin();
+  const { data, error } = await supabase
+    .from(RESERVATIONS_TABLE)
+    .update({
+      reservation_date: p.d,
+      reservation_time: p.t,
+      party_size: Number(p.p),
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", row.id)
+    .select()
+    .single();
+  if (error || !data) {
+    console.error("[telegram-bot] update error:", error);
+    await edit("⚠️ No pude aplicar el cambio. Probá desde dananni.es/admin/reservas.");
     return;
   }
-  // Si dejaron email, el cliente recibe su confirmación con enlace de gestión.
-  if (hasEmail) {
-    await notifyCustomer(row, location, "created").catch((e) =>
+  const updated = data as ReservationRow;
+
+  if (hasRealEmail(updated)) {
+    await notifyCustomer(updated, location, "rescheduled").catch((e) =>
       console.error("[telegram-bot] notifyCustomer error:", e)
     );
   }
-  await say(
-    `✅ Reserva creada — ${location.name}\n` +
-      `📅 ${formatReservationDate(row.reservation_date, "es")} · ${time} · ${row.party_size} pax\n` +
-      `👤 ${row.first_name} ${row.last_name}`.trimEnd() +
-      `${phone ? ` · ${phone}` : ""}\n` +
-      (hasEmail ? `📧 ${email} — confirmación enviada al cliente\n` : "") +
-      `Se puede ver y modificar en dananni.es/admin/reservas`
+  await edit(
+    `✅ Reserva modificada — ${location.name}\n` +
+      `👤 ${updated.first_name} ${updated.last_name}\n` +
+      `📅 ${formatReservationDate(updated.reservation_date, "es")} · ${normalizeTime(updated.reservation_time)} · ${updated.party_size} pax` +
+      (hasRealEmail(updated) ? `\n📧 Aviso enviado al cliente` : "")
   );
+}
+
+async function confirmCancel(msg: TgMessage, edit: Edit): Promise<void> {
+  const p = readPayload<{ id: string }>(msg, "nrx");
+  if (!p) {
+    await edit("No pude leer la ficha. Empezá de nuevo.");
+    return;
+  }
+  const row = await getRow(p.id);
+  if (!row) {
+    await edit("No encontré esa reserva. Fijate en dananni.es/admin/reservas.");
+    return;
+  }
+  if (row.status === "cancelled") {
+    await edit("Esa reserva ya estaba cancelada.");
+    return;
+  }
+  const location = getReservableLocation(row.location_slug);
+
+  const supabase = getSupabaseAdmin();
+  const { data, error } = await supabase
+    .from(RESERVATIONS_TABLE)
+    .update({ status: "cancelled", updated_at: new Date().toISOString() })
+    .eq("id", row.id)
+    .select()
+    .single();
+  if (error || !data) {
+    console.error("[telegram-bot] cancel error:", error);
+    await edit("⚠️ No pude cancelarla. Probá desde dananni.es/admin/reservas.");
+    return;
+  }
+  const updated = data as ReservationRow;
+
+  if (location && hasRealEmail(updated)) {
+    await notifyCustomer(updated, location, "cancelled").catch((e) =>
+      console.error("[telegram-bot] notifyCustomer error:", e)
+    );
+  }
+  await edit(
+    `🗑 Reserva cancelada — ${location?.name ?? updated.location_slug}\n` +
+      `👤 ${updated.first_name} ${updated.last_name}\n` +
+      `📅 ${formatReservationDate(updated.reservation_date, "es")} · ${normalizeTime(updated.reservation_time)} · ${updated.party_size} pax` +
+      (hasRealEmail(updated) ? `\n📧 Aviso enviado al cliente` : "")
+  );
+}
+
+/* ------------------------------------------------------------------ *
+ * Acceso a datos
+ * ------------------------------------------------------------------ */
+
+function hasRealEmail(row: ReservationRow): boolean {
+  return Boolean(row.email) && row.email !== "reservas@dananni.es";
+}
+
+async function getRow(id: string): Promise<ReservationRow | null> {
+  const supabase = getSupabaseAdmin();
+  const { data, error } = await supabase
+    .from(RESERVATIONS_TABLE)
+    .select("*")
+    .eq("id", id)
+    .single();
+  if (error || !data) return null;
+  return data as ReservationRow;
+}
+
+/** Reservas activas próximas que encajan con nombre/fecha/local (JS-filter por nombre). */
+async function findReservations(
+  name: string,
+  date: string,
+  slug: string
+): Promise<ReservationRow[]> {
+  const supabase = getSupabaseAdmin();
+  let query = supabase
+    .from(RESERVATIONS_TABLE)
+    .select("*")
+    .gte("reservation_date", todayInMadrid())
+    .in("status", ["confirmed", "pending"])
+    .order("reservation_date", { ascending: true })
+    .order("reservation_time", { ascending: true })
+    .limit(100);
+  if (date) query = query.eq("reservation_date", date);
+  if (slug) query = query.eq("location_slug", slug);
+  const { data, error } = await query;
+  if (error || !data) {
+    console.error("[telegram-bot] búsqueda falló:", error);
+    return [];
+  }
+  const rows = data as ReservationRow[];
+  if (!name.trim()) return rows;
+  const norm = (s: string) =>
+    s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const tokens = norm(name).split(/\s+/).filter(Boolean);
+  return rows.filter((r) => {
+    const full = norm(`${r.first_name} ${r.last_name}`);
+    return tokens.every((t) => full.includes(t));
+  });
 }
 
 /* ------------------------------------------------------------------ *
