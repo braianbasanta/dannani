@@ -64,15 +64,24 @@ export function captureAttribution(): void {
   }
 }
 
-/** Devuelve la atribución capturada en esta sesión (o null), saneada a claves conocidas. */
+/**
+ * Devuelve la atribución capturada en esta sesión (o null), saneada a claves
+ * conocidas, más la decisión del banner de cookies en este momento (`consent`).
+ * El consentimiento se lee al vuelo — no en la captura first-touch — porque el
+ * usuario puede aceptar el banner después de aterrizar y antes de reservar.
+ */
 export function readAttribution(): Attribution | null {
   if (typeof window === "undefined") return null;
   const stored = readStore();
-  if (!stored) return null;
   const out: Attribution = {};
   for (const key of ATTRIBUTION_KEYS) {
-    const v = stored[key];
+    const v = stored?.[key];
     if (typeof v === "string" && v) out[key] = v;
+  }
+  try {
+    out.consent = window.localStorage.getItem("dananni-cookie-consent") ?? "unset";
+  } catch {
+    out.consent = "unset";
   }
   return Object.keys(out).length ? out : null;
 }

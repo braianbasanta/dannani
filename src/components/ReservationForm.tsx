@@ -13,6 +13,7 @@ import {
 } from "@/lib/reservations";
 import { DEFAULT_COUNTRY_ISO, dialForIso } from "@/lib/countries";
 import { readAttribution } from "@/lib/attribution";
+import { trackReservationConversion } from "@/lib/ads-conversions";
 import { InlineCalendar } from "./InlineCalendar";
 import { CountrySelect } from "./CountrySelect";
 
@@ -195,6 +196,9 @@ export function ReservationForm({
       }
       setManageToken(data.token);
       setStatus("done");
+      // No hay página de gracias (la reserva no cambia de URL), así que la
+      // conversión de Google Ads se dispara aquí.
+      trackReservationConversion();
       onSuccess?.();
     } catch {
       setError(t("errorGeneric"));

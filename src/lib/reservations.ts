@@ -136,6 +136,10 @@ export interface Attribution {
   referrer?: string;
   landing?: string; // pathname de aterrizaje
   ts?: string; // ISO de captura (first-touch)
+  /** "accepted" | "rejected" | "unset" — decisión del banner de cookies en el
+   * momento de reservar. La necesita la importación offline de conversiones a
+   * Google Ads para mandar el estado de consentimiento correcto (Consent Mode). */
+  consent?: string;
 }
 
 /** Claves aceptadas en el objeto de atribución (whitelist anti-inyección de basura). */
@@ -151,6 +155,7 @@ export const ATTRIBUTION_KEYS: (keyof Attribution)[] = [
   "referrer",
   "landing",
   "ts",
+  "consent",
 ];
 
 /**

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { ADS_CONVERSION_IDS } from "@/lib/ads-conversions";
 
 /** IDs de las herramientas de análisis. GA_ID queda vacío hasta que exista
  * la propiedad GA4; con "" simplemente no se carga. */
@@ -50,6 +51,9 @@ function loadAnalytics() {
     w.gtag = gtag;
     gtag("js", new Date());
     gtag("config", GA_ID);
+    // Mismo gtag para las cuentas de Google Ads: sin esto el evento de
+    // conversión de reserva no llega (ver src/lib/ads-conversions.ts).
+    for (const id of ADS_CONVERSION_IDS) gtag("config", id);
   }
 }
 
