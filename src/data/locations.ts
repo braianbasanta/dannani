@@ -41,6 +41,9 @@ export interface Location {
   /** Plataformas de delivery del local. Ausente = sin reparto a domicilio
    * (solo recogida/mesa). Raval (Tallers 69 y 72) no tiene delivery hoy. */
   delivery?: DeliveryLinks;
+  /** Slug del restaurante en Cover Manager (campo "Slug" en Ajustes del
+   * establecimiento → Integraciones). Solo dine-in; ausente = módulo de grupo. */
+  coverManagerSlug?: string;
   hoursLabel: string;
   /** Todos los locales activos abren los 7 días con el mismo horario. */
   openingHours: OpeningHoursSpec[];
@@ -137,6 +140,7 @@ export const locations: Location[] = [
     delivery: {
       justEat: `https://www.just-eat.es/restaurants-pizzeria-da-nanni-barcelona-08003/menu?${WEB_UTM}`,
     },
+    coverManagerSlug: "restaurante-da-nanni-el-born",
     hoursLabel: "Todos los días, 13:00–16:00h y 20:00–00:00h",
     openingHours: [
       { opens: "13:00", closes: "16:00" },
@@ -167,6 +171,7 @@ export const locations: Location[] = [
     googleReviewCount: 988,
     phone: "930 08 26 79",
     phoneHref: "tel:+34930082679",
+    coverManagerSlug: "restaurante-da-nanni-tallers-69",
     hoursLabel: "Todos los días, 13:00–16:00h y 20:00–00:00h",
     openingHours: [
       { opens: "13:00", closes: "16:00" },
@@ -200,6 +205,7 @@ export const locations: Location[] = [
     delivery: {
       glovo: `https://glovoapp.com/es/es/barcelona/stores/pizzeria-da-nanni-rambla-del-poblenou-barcelona?${WEB_UTM}`,
     },
+    coverManagerSlug: "restaurante-nanni-poblenou",
     hoursLabel: "Todos los días, 13:00–00:00h (horario corrido)",
     openingHours: [{ opens: "13:00", closes: "00:00" }],
     description:
@@ -232,6 +238,7 @@ export const locations: Location[] = [
       glovo: `https://glovoapp.com/es/es/barcelona/stores/da-nanni-gracia-barcelona?${WEB_UTM}`,
       justEat: `https://www.just-eat.es/restaurants-da-nanni-pizzeria-and-trattoria-08012/menu?${WEB_UTM}`,
     },
+    coverManagerSlug: "restaurante-da-nanni-gracia",
     hoursLabel: "Todos los días, 13:00–16:00h y 20:00–00:00h",
     openingHours: [
       { opens: "13:00", closes: "16:00" },

@@ -1,15 +1,15 @@
 "use client";
 
 import { createPortal } from "react-dom";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import type { Location } from "@/data/locations";
-import { ReservationForm } from "./ReservationForm";
+import { CoverManagerWidget } from "./CoverManagerWidget";
 
 /**
  * Modal del flujo de reserva online (solo dine-in). Más ancho y scrollable
- * que CtaModal porque contiene el formulario completo. Mantiene un enlace de
- * "llamar" como alternativa. Se monta por portal en document.body para que el
- * `fixed` cubra el viewport aunque el CTA viva dentro de un ancestro con
+ * que CtaModal porque contiene el widget de Cover Manager. Mantiene un enlace
+ * de "llamar" como alternativa. Se monta por portal en document.body para que
+ * el `fixed` cubra el viewport aunque el CTA viva dentro de un ancestro con
  * transform/filter (ver nota en CtaModal).
  */
 export function ReservationModal({
@@ -20,8 +20,6 @@ export function ReservationModal({
   onClose: () => void;
 }) {
   const t = useTranslations("reservar");
-  const tCta = useTranslations("cta");
-  const locale = useLocale();
 
   return createPortal(
     <div
@@ -60,7 +58,7 @@ export function ReservationModal({
           </button>
         </div>
 
-        <ReservationForm fixedLocationSlug={location.slug} locale={locale} />
+        <CoverManagerWidget restaurantSlug={location.coverManagerSlug} />
 
         <p className="mt-5 border-t border-cream/10 pt-4 text-center text-xs text-cream/50">
           {t("orCall")}{" "}

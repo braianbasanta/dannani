@@ -9,8 +9,8 @@ import { DeliveryButtons } from "./DeliveryCTA";
 
 /**
  * CTA de reserva (dine-in) / pedido (take-away). En dine-in abre el modal de
- * reserva online (formulario propio, puente hasta Cover Manager). En take-away
- * abre un modal con llamada directa + delivery (Glovo/Just Eat).
+ * reserva online (widget de Cover Manager). En take-away abre un modal con
+ * llamada directa + delivery (Glovo/Just Eat).
  */
 export function ReservaCTA({
   location,

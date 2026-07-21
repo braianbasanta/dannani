@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { useLocale, useTranslations } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Locale } from "@/i18n/routing";
-import { ReservationForm } from "@/components/ReservationForm";
+import { CoverManagerWidget } from "@/components/CoverManagerWidget";
 import { SchemaOrg } from "@/components/SchemaOrg";
 import { breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
@@ -58,8 +58,8 @@ export default function ReservarPage({
           <p className="mx-auto mt-3 max-w-xl text-cream/70">{t("subtitle")}</p>
         </div>
 
-        <div className="mt-10 rounded-[1.75rem] bg-night-soft p-6 shadow-card ring-1 ring-cream/10 sm:p-8">
-          <ReservationForm locale={locale} />
+        <div className="mt-10 rounded-[1.75rem] bg-night-soft p-4 shadow-card ring-1 ring-cream/10 sm:p-6">
+          <CoverManagerWidget />
         </div>
       </section>
     </>
