@@ -11,6 +11,7 @@ import {
   hrefFor,
   cartaHrefFor,
   getLocationBySlug,
+  toMapLocation,
 } from "@/data/locations";
 import { localizeLocation } from "@/data/translations";
 import { HubHero } from "@/components/HubHero";
@@ -111,7 +112,7 @@ export default function ParaLlevarPage({
         </p>
 
         <div className="mt-8 rounded-[1.75rem] bg-cream/5 p-2 ring-1 ring-cream/10">
-          <LocationsMapLazy locations={takeAwayLocations} />
+          <LocationsMapLazy locations={takeAwayLocations.map(toMapLocation)} />
         </div>
 
         <ul className="mt-10 grid gap-4 sm:grid-cols-2">

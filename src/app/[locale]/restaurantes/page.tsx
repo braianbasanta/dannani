@@ -4,7 +4,12 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
-import { dineInLocations, heroImageSrc, hoursParts } from "@/data/locations";
+import {
+  dineInLocations,
+  heroImageSrc,
+  hoursParts,
+  toMapLocation,
+} from "@/data/locations";
 import { localizeLocation } from "@/data/translations";
 import { HubHero } from "@/components/HubHero";
 import { ComoLlegar } from "@/components/ComoLlegar";
@@ -78,7 +83,7 @@ export default function RestaurantesPage({
         </p>
 
         <div className="mt-8 rounded-[1.75rem] bg-cream/5 p-2 ring-1 ring-cream/10">
-          <LocationsMapLazy locations={dineInLocations} />
+          <LocationsMapLazy locations={dineInLocations.map(toMapLocation)} />
         </div>
 
         <ul className="mt-10 grid gap-4 sm:grid-cols-2">

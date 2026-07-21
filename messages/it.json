@@ -234,8 +234,8 @@
     "sufijoParaLlevar": "(da asporto)",
     "metaTitle": "Menù – Pizze, Antipasti e Vini",
     "metaDescription": "Pizza napoletana, antipasti e vini italiani. Consulta il menù e i prezzi di ogni locale Da Nanni a Barcellona.",
-    "metaTitleDineIn": "Menù Da Nanni {name} – Prezzi e piatti",
-    "metaTitleTakeAway": "Menù Da Nanni {name} – Prezzi e piatti",
+    "metaTitleDineIn": "Menù di {name} – Prezzi e piatti",
+    "metaTitleTakeAway": "Menù di {name} – Prezzi e piatti",
     "metaDescriptionDineIn": "Menù e prezzi di Da Nanni {name}, in {address}. Pizza napoletana, antipasti e carta dei vini italiani.",
     "metaDescriptionTakeAway": "Menù e prezzi di Da Nanni {name}, in {address}. Pizza napoletana al taglio da 24 e 33 cm.",
     "altCarta": "Menù di {name}, pizzeria napoletana a {neighborhood}"
@@ -318,6 +318,7 @@
     "platosTitle": "I nostri piatti",
     "dondeEstamos": "Dove siamo",
     "cartaNoDisponible": "Stiamo aggiornando il menù di questo locale. Nel frattempo, dai un’occhiata al menù generale.",
+    "domicilioNota": "Non riesci a passare? Facciamo anche <link>pizza a domicilio a Barcellona</link> con Glovo e Just Eat.",
     "resenasTitle": "Cosa dicono su Google",
     "resenaGoogle": "Recensione su Google",
     "verTodasResenas": "Leggi tutte le recensioni su Google",

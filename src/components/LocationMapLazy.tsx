@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import type { Location } from "@/data/locations";
+import type { MapLocation } from "@/data/locations";
 
 /**
  * Carga diferida del mapa de un local (Leaflet no soporta SSR). Mejora
@@ -17,6 +17,6 @@ const LocationMap = dynamic(
   }
 );
 
-export function LocationMapLazy({ location }: { location: Location }) {
+export function LocationMapLazy({ location }: { location: MapLocation }) {
   return <LocationMap location={location} />;
 }

@@ -10,6 +10,7 @@ import {
   cartaHrefFor,
   heroImageSrc,
   hoursParts,
+  toMapLocation,
 } from "@/data/locations";
 import { menuByLocationSlug } from "@/data/menu";
 import { reviewsByLocationSlug } from "@/data/reviews";
@@ -175,6 +176,20 @@ export function LocationDetail({
           <RichText text={location.description} />
         </p>
 
+        <p className="mt-4 max-w-[65ch] text-cream/70">
+          {t.rich("domicilioNota", {
+            link: (chunks) => (
+              <Link
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                href={"/a-domicilio" as any}
+                className="underline decoration-cream/40 underline-offset-4 transition-colors hover:text-electric"
+              >
+                {chunks}
+              </Link>
+            ),
+          })}
+        </p>
+
         <h2 className="mt-20 font-display text-3xl tracking-tight sm:text-4xl">
           {t("platosTitle")}
         </h2>
@@ -261,7 +276,7 @@ export function LocationDetail({
           {t("dondeEstamos")}
         </h2>
         <div className="mt-6">
-          <LocationMapLazy location={location} />
+          <LocationMapLazy location={toMapLocation(location)} />
         </div>
 
         <h2 className="mt-20 font-display text-3xl tracking-tight sm:text-4xl">

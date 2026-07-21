@@ -149,7 +149,7 @@ export const locations: Location[] = [
     heroImage: "02",
     hasMenu: true,
     openedYear: 2022,
-    metaTitle: "Restaurante Italiano en el Born, Barcelona",
+    metaTitle: "Restaurante Italiano y Pizzería Napolitana en el Born",
     metaDescription:
       "Trattoria y pizzería napolitana junto a Santa Maria del Mar. Horno de leña, pasta fresca y vinos italianos en Carrer del Rec, 30. Reserva llamando al 933 19 79 73.",
     h1: "Restaurante italiano y pizzería napolitana en el Born",
@@ -280,17 +280,37 @@ export const heroImageSrc = (location: Location) =>
 /** Todos los locales viven bajo /restaurantes/<urlSlug> (los take away
  * incluidos: para Google son restaurantes; "Para Llevar" es solo el nombre
  * del botón). La carta de cada local cuelga en /restaurantes/<urlSlug>/carta. */
-export const hrefFor = (location: Location) =>
+export const hrefFor = (location: Pick<Location, "urlSlug">) =>
   `/restaurantes/${location.urlSlug}`;
 
-export const cartaHrefFor = (location: Location) =>
+export const cartaHrefFor = (location: Pick<Location, "urlSlug">) =>
   `/restaurantes/${location.urlSlug}/carta`;
+
+/** Subconjunto de Location que necesitan los mapas (client components):
+ * pasar solo esto evita serializar el resto de la ficha (horarios, metas,
+ * descripciones…) en el payload RSC de cada página con mapa. */
+export type MapLocation = Pick<
+  Location,
+  "slug" | "urlSlug" | "name" | "neighborhood" | "address" | "coords" | "gmapsUrl"
+>;
+
+export const toMapLocation = (location: Location): MapLocation => ({
+  slug: location.slug,
+  urlSlug: location.urlSlug,
+  name: location.name,
+  neighborhood: location.neighborhood,
+  address: location.address,
+  coords: location.coords,
+  gmapsUrl: location.gmapsUrl,
+});
 
 /** Abre la ficha del negocio en Google Maps (no la ruta directa): ahí el
  * cliente ve fotos, reseñas y horario, y decide si pulsa "Cómo llegar".
  * Usa el enlace oficial de la ficha (gmapsUrl) y, si faltara, cae a una
  * búsqueda por nombre + dirección. */
-export const mapsUrl = (location: Location) =>
+export const mapsUrl = (
+  location: Pick<Location, "gmapsUrl" | "neighborhood" | "address">
+) =>
   location.gmapsUrl ??
   `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
     `Da Nanni ${location.neighborhood}, ${location.address}`

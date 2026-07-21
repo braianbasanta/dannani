@@ -6,7 +6,7 @@ import type { Map as LeafletMap } from "leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useTranslations } from "next-intl";
-import type { Location, Coords } from "@/data/locations";
+import type { MapLocation, Coords } from "@/data/locations";
 import { mapsUrl } from "@/data/locations";
 import { pinIcon, userIcon } from "./mapIcons";
 
@@ -14,7 +14,7 @@ import { pinIcon, userIcon } from "./mapIcons";
  * Mapa de un solo local: pin del negocio, botón para mostrar tu ubicación
  * (encuadra tu posición y el local) y enlace a la ficha de Google Maps.
  */
-export function LocationMap({ location }: { location: Location }) {
+export function LocationMap({ location }: { location: MapLocation }) {
   const t = useTranslations("mapa");
   const tCta = useTranslations("cta");
   const mapRef = useRef<LeafletMap | null>(null);

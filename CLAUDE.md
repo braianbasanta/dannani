@@ -40,12 +40,9 @@ Todas las rutas de página cuelgan de `src/app/[locale]/`. La config vive en `sr
 
 ### Modelo de datos: locations (el corazón del sitio)
 
-`src/data/locations.ts` es la fuente de verdad de los 6 locales. Cada `Location` tiene un `type: "dine-in" | "take-away"` que determina en qué sección del sitio vive y qué ruta genera:
+`src/data/locations.ts` es la fuente de verdad de los 6 locales. Cada `Location` tiene un `type: "dine-in" | "take-away"`, pero **todas las fichas viven bajo `/restaurantes/[urlSlug]`** (los take away incluidos: para Google son restaurantes; "Para Llevar" es solo el botón). Las rutas antiguas `/para-llevar/<slug>` redirigen 301 desde `next.config.ts`. La carta de cada local cuelga de `/restaurantes/[urlSlug]/carta`, y `/pizza-para-llevar` es la landing de servicio take away (usa `takeAwayLocations`).
 
-- `dine-in` → `/restaurantes/[slug]` (usa `dineInLocations`)
-- `take-away` → `/para-llevar/[slug]` (usa `takeAwayLocations`)
-
-Ambas páginas `[slug]/page.tsx` son casi idénticas: resuelven el location vía `getLocationByUrlSlug(type, slug)` y delegan el render a `<LocationDetail>`. `slug` (interno) puede diferir de `urlSlug` (público) — existe para evitar colisiones cuando un mismo barrio tiene local dine-in y take-away (ver Raval: `slug: "raval"` vs `"raval-take-away"`, ambos con `urlSlug: "raval"`).
+La página `[slug]/page.tsx` resuelve el location vía `getLocationByUrlSlug(slug)` y delega el render a `<LocationDetail>`. `slug` (interno) puede diferir de `urlSlug` (público) — ver Raval: el dine-in de Tallers 69 es `slug: "raval"` / `urlSlug: "tallers"`, y el take away de Tallers 72 es `slug: "raval-take-away"` / `urlSlug: "raval"`.
 
 Helpers clave en `locations.ts`: `hrefFor(location)` (URL pública según type), `mapsUrl(location)` (deep link a Google Maps).
 

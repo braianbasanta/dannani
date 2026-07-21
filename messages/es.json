@@ -234,8 +234,8 @@
     "sufijoParaLlevar": "(para llevar)",
     "metaTitle": "Carta – Pizzas, Antipasti y Vinos",
     "metaDescription": "Pizza napolitana, antipasti y vinos italianos. Consulta la carta y precios de cada local Da Nanni en Barcelona.",
-    "metaTitleDineIn": "Carta Da Nanni {name} – Precios y Menú",
-    "metaTitleTakeAway": "Carta Da Nanni {name} – Precios y Menú",
+    "metaTitleDineIn": "Carta de {name} – Precios y Menú",
+    "metaTitleTakeAway": "Carta de {name} – Precios y Menú",
     "metaDescriptionDineIn": "Carta y precios de Da Nanni {name}, en {address}. Pizza napolitana, antipasti y carta de vinos italianos.",
     "metaDescriptionTakeAway": "Carta y precios de Da Nanni {name}, en {address}. Pizza napolitana al corte en 24 y 33 cm.",
     "altCarta": "Carta de {name}, pizzería napolitana en {neighborhood}"
@@ -318,6 +318,7 @@
     "platosTitle": "Nuestros platos",
     "dondeEstamos": "Dónde estamos",
     "cartaNoDisponible": "Estamos actualizando la carta de este local. Mientras tanto, consulta la carta general.",
+    "domicilioNota": "¿No te va bien acercarte? También hacemos <link>pizza a domicilio en Barcelona</link> con Glovo y Just Eat.",
     "resenasTitle": "Lo que dicen en Google",
     "resenaGoogle": "Reseña de Google",
     "verTodasResenas": "Leer todas las reseñas en Google",

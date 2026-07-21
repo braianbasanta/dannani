@@ -19,6 +19,10 @@ const nextConfig: NextConfig = {
   // Ahora todo cuelga de /restaurantes. OJO: /restaurantes/raval cambió de
   // dueño (antes el dine-in de Tallers, hoy el take away de Raval), por eso
   // no se puede redirigir.
+  // Las URLs del WP viejo indexadas CON barra final ("/rambla-del-poblenou/")
+  // atraviesan dos 308 (normalización de slash → redirect custom): la
+  // normalización de Next corre ANTES que estos redirects (verificado en dev,
+  // jul-2026), así que no se puede dejar en un salto desde aquí. Tolerable.
   async redirects() {
     return [
       {

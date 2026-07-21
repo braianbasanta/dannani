@@ -234,8 +234,8 @@
     "sufijoParaLlevar": "(takeaway)",
     "metaTitle": "Menu – Pizzas, Antipasti and Wines",
     "metaDescription": "Neapolitan pizza, antipasti and Italian wines. Check the menu and prices for each Da Nanni branch in Barcelona.",
-    "metaTitleDineIn": "Da Nanni {name} Menu – Prices and Dishes",
-    "metaTitleTakeAway": "Da Nanni {name} Menu – Prices and Dishes",
+    "metaTitleDineIn": "{name} Menu – Prices and Dishes",
+    "metaTitleTakeAway": "{name} Menu – Prices and Dishes",
     "metaDescriptionDineIn": "Menu and prices for Da Nanni {name}, at {address}. Neapolitan pizza, antipasti and an Italian wine list.",
     "metaDescriptionTakeAway": "Menu and prices for Da Nanni {name}, at {address}. Neapolitan pizza by the slice in 24 and 33 cm sizes.",
     "altCarta": "Menu of {name}, Neapolitan pizzeria in {neighborhood}"
@@ -318,6 +318,7 @@
     "platosTitle": "Our dishes",
     "dondeEstamos": "Where to find us",
     "cartaNoDisponible": "We’re updating the menu for this branch. In the meantime, take a look at the general menu.",
+    "domicilioNota": "Can’t make it in person? We also offer <link>pizza delivery in Barcelona</link> via Glovo and Just Eat.",
     "resenasTitle": "What people are saying on Google",
     "resenaGoogle": "Google review",
     "verTodasResenas": "Read all the reviews on Google",

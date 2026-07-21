@@ -12,7 +12,7 @@ import {
   webSiteSchema,
   locationsItemListSchema,
 } from "@/lib/schema";
-import { locations } from "@/data/locations";
+import { locations, toMapLocation } from "@/data/locations";
 import { reviewsByLocationSlug } from "@/data/reviews";
 import { ReviewsMarquee } from "@/components/ReviewsMarquee";
 import { AutoplayVideo } from "@/components/AutoplayVideo";
@@ -40,14 +40,16 @@ const aggregateRating =
 // hay que actualizar cada vez que se suma alguna reseña nueva en Google.
 const roundedReviewCount = Math.floor(totalReviewCount / 50) * 50;
 
-// Todas las reseñas reales (src/data/reviews.ts) de los 6 locales. Las
-// tarjetas muestran siempre 5 estrellas (decisión de Braian, jul-2026): son
-// reseñas seleccionadas, no un promedio del local.
+// Reseñas reales (src/data/reviews.ts) de los 6 locales. Las tarjetas
+// muestran siempre 5 estrellas (decisión de Braian, jul-2026): son reseñas
+// seleccionadas, no un promedio del local. Solo 3 por local: la pista
+// completa (63, duplicadas para el loop) triplicaba el HTML de la home y
+// nadie llega a ver el marquee entero; cada ficha ya muestra las suyas.
 const marqueeReviews = Object.entries(reviewsByLocationSlug).flatMap(
   ([slug, reviews]) => {
     const location = locations.find((l) => l.slug === slug);
     if (!location) return [];
-    return reviews.map((review) => ({
+    return reviews.slice(0, 3).map((review) => ({
       author: review.author,
       text: review.text,
       neighborhood: location.neighborhood,
@@ -550,7 +552,7 @@ export default function HomePage({
           </Reveal>
           <Reveal delay={120}>
             <div className="mt-8 rounded-[1.75rem] bg-cream/5 p-2 shadow-card ring-1 ring-cream/10">
-              <LocationsMapLazy locations={locations} />
+              <LocationsMapLazy locations={locations.map(toMapLocation)} />
             </div>
           </Reveal>
         </div>

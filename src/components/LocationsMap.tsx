@@ -7,14 +7,14 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import type { Location, Coords } from "@/data/locations";
+import type { MapLocation, Coords } from "@/data/locations";
 import { hrefFor, mapsUrl } from "@/data/locations";
 import { pinIcon, userIcon } from "./mapIcons";
 import { haversineKm, kmFormat } from "@/lib/geo";
 import { BCP47 } from "@/lib/seo";
 import type { Locale } from "@/i18n/routing";
 
-export function LocationsMap({ locations }: { locations: Location[] }) {
+export function LocationsMap({ locations }: { locations: MapLocation[] }) {
   const t = useTranslations("mapa");
   const locale = useLocale() as Locale;
   const tCta = useTranslations("cta");
@@ -32,7 +32,7 @@ export function LocationsMap({ locations }: { locations: Location[] }) {
 
   const nearest = useMemo(() => {
     if (!userPos) return null;
-    let best: { location: Location; km: number } | null = null;
+    let best: { location: MapLocation; km: number } | null = null;
     for (const location of locations) {
       const km = haversineKm(userPos, location.coords);
       if (!best || km < best.km) best = { location, km };
@@ -51,7 +51,7 @@ export function LocationsMap({ locations }: { locations: Location[] }) {
         const p = { lat: pos.coords.latitude, lng: pos.coords.longitude };
         setUserPos(p);
         setStatus("idle");
-        let bestL: Location | null = null;
+        let bestL: MapLocation | null = null;
         let bestKm = Infinity;
         for (const location of locations) {
           const km = haversineKm(p, location.coords);
